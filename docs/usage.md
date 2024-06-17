@@ -5,7 +5,7 @@
 - [Generate Domains](#generate-domains)
 - [Options](#options)
     - [Data Loader](#data-loader)
-    - [Chunking Strategy](#chunking-stragegy)
+    - [Chunking Strategy](#chunking-strategy)
     - [Embedding Model](#embedding-model)
     - [Vector Store](#vector-store)
     - [Similarity Top K](#similarity-top-k)
