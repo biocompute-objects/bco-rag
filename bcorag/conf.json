@@ -7,7 +7,7 @@
         "PDFReader"
       ],
       "default": "SimpleDirectoryReader",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#data-loader"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#data-loader"
     },
     "chunking_config": {
       "list": [
@@ -18,7 +18,7 @@
         "semantic"
       ],
       "default": "1024 chunk size/20 chunk overlap",
-      "documentation": "https://github.com/seankim658/biocompute-object-llm/blob/main/rag/docs/usage.md#chunking-stragegy"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#chunking-strategy"
     },
     "embedding_model": {
       "list": [
@@ -27,14 +27,14 @@
         "text-embedding-ada-002"
       ],
       "default": "text-embedding-3-small",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#embedding-model"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#embedding-model"
     },
     "vector_store": {
       "list": [
         "VectorStoreIndex"
       ],
       "default": "VectorStoreIndex",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#vector-store"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#vector-store"
     },
     "similarity_top_k": {
       "list": [
@@ -45,7 +45,7 @@
         "5"
       ],
       "default": "1",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#similarity-top-k"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#similarity-top-k"
     },
     "llm": {
       "list": [
@@ -55,7 +55,7 @@
         "gpt-4"
       ],
       "default": "gpt-4-turbo",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#llm-model"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#llm-model"
     },
     "mode": {
       "list": [
@@ -63,7 +63,7 @@
         "production"
       ],
       "default": "production",
-      "documentation": "https://github.com/biocompute-objects/biocompute-object-llm/blob/main/rag/docs/usage.md#mode"
+      "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#mode"
     }
   }
 }
