@@ -6,11 +6,23 @@
 
 ## Documentation
 
+- [Background](#background)
+- [Approach Justification](#approach-justification)
+  - [Issues with Long Context Windows](#issues-with-long-context-windows)
+  - [Training Data and False Extrapolation](#training-data-and-false-extrapolation)
+
+## Usage Guides
+
 - [Installation and Setup](./docs/installation.md)
 - [Usage](./docs/usage.md)
-- [Future Direction](./docs/future.md)
 
-## Approach Justification and Background
+## Background
+
+The BioCompute Object (BCO) project is a community-driven open standards framework for standardizing and sharing computations and analyses. With the exponential increase in both the quantity and complexity of biological data and the workflows used to analyze and transform the data, the need for standardization in documentation is imperative for experimental preservation, transparency, accuracy, and reproducability.
+
+As with any documentation standard, the main hurdles to continued adoption are the overhead required to maintain the quality and accuracy of a BCO in parallel as the research evolves over time and retroactively documenting pre-existing research. With the recent improvements in large language models (LLMs), the feasibility and utility of an automated BCO creation assistant is an intriguing use case.
+
+## Approach Justification
 
 This BioCompute Object (BCO) assistant will assist users in automatically creating specific BCO domains from user uploaded papers. This proof of concept uses a **Retrieval Augmented Generation** ([RAG](https://arxiv.org/abs/2005.11401)) approach rather than a standalone (or fine-tuned) large language model (LLM). Our use case is somewhat antithetical to what LLMs were originally designed for. LLMs were designed for creative, free text responses that represent plausible natural language. BCOs, on the other hand, were designed for deterministic, accurate, non-ambiguous, and reproduceable documentation. Given this, there are two main initial questions that have to be considered:
 
