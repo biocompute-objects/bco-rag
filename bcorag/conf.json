@@ -1,5 +1,5 @@
 {
-  "paper_directory": "../papers/",
+  "paper_directory": "./bcorag/test_papers/",
   "options": {
     "loader": {
       "list": [
