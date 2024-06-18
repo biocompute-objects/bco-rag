@@ -9,7 +9,10 @@ DESCRIPTION_DOMAIN: The description domain specific prompt and schema.
 EXECUTION_DOMAIN: The execution domain specific prompt and schema.
 PARAMETRIC_DOMAIN: The parametric domain specific prompt and schema.
 ERROR_DOMAIN: The error domain specific prompt and schema.
+DOMAIN_MAP: The domain map for the BcoRag object.
 """
+
+from .custom_types import DomainMap
 
 QUERY_PROMPT = "Can you give me a BioCompute Object {} domain for the provided paper. The return response must be valid JSON and must validate against the JSON schema I am providing you. {}"
 
@@ -634,3 +637,42 @@ ERROR_DOMAIN = """The error domain can be used to determine what range of input 
     }
 }
 """
+
+DOMAIN_MAP: DomainMap = {
+    "usability": {
+        "prompt": USABILITY_DOMAIN,
+        "top_level": False,
+        "user_prompt": "[u]sability",
+        "code": "u",
+    },
+    "io": {
+        "prompt": IO_DOMAIN,
+        "top_level": True,
+        "user_prompt": "[i]o",
+        "code": "i",
+    },
+    "description": {
+        "prompt": DESCRIPTION_DOMAIN,
+        "top_level": True,
+        "user_prompt": "[d]escription",
+        "code": "d",
+    },
+    "execution": {
+        "prompt": EXECUTION_DOMAIN,
+        "top_level": True,
+        "user_prompt": "[e]xecution",
+        "code": "e",
+    },
+    "parametric": {
+        "prompt": PARAMETRIC_DOMAIN,
+        "top_level": False,
+        "user_prompt": "[p]arametric",
+        "code": "p",
+    },
+    "error": {
+        "prompt": ERROR_DOMAIN,
+        "top_level": False,
+        "user_prompt": "[err]or",
+        "code": "err",
+    },
+}

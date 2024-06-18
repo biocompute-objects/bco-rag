@@ -7,12 +7,13 @@ import os
 import re
 from pick import pick
 from bcorag import misc_functions as misc_fns
-from typing import Tuple, Any
+from typing import Literal, Tuple, Optional
+from .custom_types import UserSelections, GitData
 
 EXIT_OPTION = "Exit"
 
 
-def initialize_picker(filetype: str = "pdf") -> dict | None:
+def initialize_picker(filetype: str = "pdf") -> Optional[UserSelections]:
     """Kicks off the initial pipeline step where the user picks their
     PDF file to index and chooser the data loader from a pre-set list.
 
@@ -24,22 +25,17 @@ def initialize_picker(filetype: str = "pdf") -> dict | None:
 
     Returns
     -------
-    dicdict or None
-        Returns this dictionary:
-        {
-            "filename": <value>,
-            "filepath": <value>,
-            "loader": <value>,
-            "embedding_model: <value>,
-            "vector_store": <value>,
-            "llm": <value>
-        }
-        or None if the user selects to exit at any point in the process.
+    UserSelections or None
+        The user selections or None indicating user chose to exit or error.
     """
 
     presets = misc_fns.load_json("./bcorag/conf.json")
+    if presets is None or isinstance(presets, list):
+        print(f"Error reading config file. Got type `{type(presets)}` for `presets`.")
+        misc_fns.graceful_exit()
 
-    return_data: dict[str, Any] = {
+    # set base keys
+    return_data: UserSelections = {  # type: ignore
         f"{option}": None for option in presets["options"].keys()
     }
 
@@ -58,12 +54,12 @@ def initialize_picker(filetype: str = "pdf") -> dict | None:
         )
         if target_option is None:
             return None
-        return_data[option] = target_option
+        return_data[option] = int(target_option) if option in {"similarity_top_k"} else target_option  # type: ignore
 
     repo_data = _repo_picker()
-    if repo_data is None:
+    if repo_data == 0:
         return None
-    if repo_data["user"] is None:
+    if repo_data is None:
         return_data["git_data"] = None
     else:
         return_data["git_data"] = repo_data
@@ -71,7 +67,7 @@ def initialize_picker(filetype: str = "pdf") -> dict | None:
     return return_data
 
 
-def _file_picker(path: str, filetype: str = "pdf") -> Tuple[str, str] | None:
+def _file_picker(path: str, filetype: str = "pdf") -> Optional[Tuple[str, str]]:
     """Create the CLI menu to pick the PDF file from the papers directory.
 
     Parameters
@@ -98,30 +94,33 @@ def _file_picker(path: str, filetype: str = "pdf") -> Tuple[str, str] | None:
     return str(option), f"{path}{option}"
 
 
-def _repo_picker() -> dict | None:
+def _repo_picker() -> Optional[GitData] | Literal[0]:
     """Allows the user to input a github repository link to be included in the indexing.
 
     Returns
     -------
-    dict or None
-        Returns parsed repo information from the link or None if the user exits.
+    GitData, None, or 0
+        Returns parsed repo information from the link, None if the user skips this step,
+        or 0 (exit status) if the user chooses to exit.
     """
     pattern = r"https://github\.com/([^/]+)/([^/]+)"
-    return_data: dict[str, str | None] = {"user": None, "repo": None}
     while True:
         url = input(
             'If you would like to include a Github repository enter the URL below. Enter "x" to exit or leave blank to skip.\n'
         )
         url = url.strip()
         if not url or url is None:
-            return return_data
-        elif url == "x":
             return None
-        match = re.match(pattern, url.lower())
+        elif url == "x":
+            return 0
+        match = re.match(pattern, url.lower().strip())
         if match is None:
             print("Error parsing repository URL.")
             continue
-        return_data = {"user": match.groups()[0], "repo": match.groups()[1]}
+        branch = input("Repo branch to index (case sensitive):\n")
+        user = str(match.groups()[0].strip().lower())
+        repo = str(match.groups()[1].strip().lower())
+        return_data: GitData = {"user": user, "repo": repo, "branch": branch.strip()}
         return return_data
 
 
@@ -129,8 +128,8 @@ def _create_picker(
     title_keyword: str,
     documentation: str,
     option_list: list[str],
-    default: str | None = None,
-) -> str | None:
+    default: Optional[str] = None,
+) -> Optional[str]:
     """Creates a general picker CLI based on a list of options and the
     functionality to optionally mark one option as the default.
 
