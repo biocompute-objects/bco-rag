@@ -3,11 +3,17 @@
 
 import sys
 import json
+import csv
 import logging
 import os
+import datetime
+import pytz
+from typing import Optional, NoReturn, cast
+from . import TIMEZONE, TIMESTAMP_FORMAT
+from .custom_types import OutputTrackerFile
 
 
-def graceful_exit():
+def graceful_exit() -> NoReturn:
     """Gracefully exits the program with a 0 exit code."""
     print("Exiting...")
     logging.info("Exiting with status code 0.")
@@ -17,8 +23,9 @@ def graceful_exit():
     sys.exit(0)
 
 
-def load_json(filepath: str) -> dict:
-    """Loads a JSON file and returns the deserialized data.
+def load_json(filepath: str) -> Optional[dict]:
+    """Loads a JSON file and returns the deserialized data (or
+    an empty dict if the file doesn't exist).
 
     Parameters
     ----------
@@ -27,14 +34,40 @@ def load_json(filepath: str) -> dict:
 
     Returns
     -------
-    dict
-        The deserialized JSON data.
+    dict or None
+        The deserialized JSON data or None if the file doesn't exist.
     """
+    if not os.path.isfile(filepath):
+        return None
     with open(filepath, "r") as f:
-        return json.load(f)
+        data = json.load(f)
+        return data
 
 
-def write_json(output_path: str, data: dict | list) -> bool:
+def load_output_tracker(filepath: str) -> Optional[OutputTrackerFile]:
+    """Loads the JSON output tracker file or returns None if it doesn't
+    exist (or on some other unforeseen error).
+
+    Parameters
+    ----------
+    filepath : str
+        File path to the JSON file to load.
+
+    Returns
+    -------
+    OutputTrackerFile or None
+        Casted OutputTrackerFile or None on some type of error.
+    """
+    naive_load_data = load_json(filepath)
+    if naive_load_data is None:
+        return None
+    if isinstance(naive_load_data, dict):
+        output_tracker_data = cast(OutputTrackerFile, naive_load_data)
+        return output_tracker_data
+    return None
+
+
+def write_json(output_path: str, data: dict | list | OutputTrackerFile) -> bool:
     """Writes JSON out to the output path. Will create the file if it doesn't exist.
 
     Parameters
@@ -51,11 +84,60 @@ def write_json(output_path: str, data: dict | list) -> bool:
     """
     try:
         with open(output_path, "w") as f:
-            json.dump(data, f)
+            json.dump(data, f, indent=4)
         return True
     except Exception as e:
         logging.error(f"Failed to dump JSON to output path '{output_path}'.\n{e}")
         return False
+
+
+def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
+    """Dumps the OutputTrackerFile object into a TSV table for better
+    human readability.
+
+    Parameters
+    ----------
+    output_path : str
+        The output file path.
+    data: OutputTrackerFile
+        The OutputTrackerFile object to format for a TSV file.
+    """
+    with open(output_path, mode="w", newline="") as out_file:
+        tsv_writer = csv.writer(out_file, delimiter="\t")
+        tsv_writer.writerow(
+            [
+                "timestamp",
+                "domain",
+                "txt_file",
+                "json_file",
+                "hash_string",
+                "index",
+                "loader",
+                "vector_store",
+                "llm",
+                "embedding_model",
+                "similarity_top_k",
+                "chunking_config",
+                "git_user",
+                "git_repo",
+                "git_branch",
+            ]
+        )
+    # TODO : finish implementation
+
+
+def dump_string(output_path: str, data: str):
+    """Dumps a string to a text file.
+
+    Parameters
+    ----------
+    output_path : str
+        The output file path.
+    data: str
+        The string to dump.
+    """
+    with open(output_path, "w") as f:
+        f.write(data)
 
 
 def check_dir(path: str):
@@ -115,3 +197,17 @@ def setup_document_logger(name: str, parent_logger: str = "bcorag") -> logging.L
     """
     document_logger_name = f"{parent_logger}.{name}"
     return logging.getLogger(document_logger_name)
+
+
+def create_timestamp() -> str:
+    """Creates a current timestamp.
+
+    Returns
+    -------
+    str
+        The current timestamp as a string.
+    """
+    timestamp = datetime.datetime.now(pytz.timezone(TIMEZONE)).strftime(
+        TIMESTAMP_FORMAT
+    )
+    return timestamp
