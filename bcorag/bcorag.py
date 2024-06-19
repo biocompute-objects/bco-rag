@@ -412,7 +412,7 @@ class BcoRag:
         )
 
         output_map_json = misc_fns.load_output_tracker(
-            f"{self._output_path}/result_map.json"
+            f"{self._output_path}/output_map.json"
         )
 
         # Create a new output file if one doesn't exist
@@ -524,8 +524,12 @@ class BcoRag:
         misc_fns.dump_string(txt_file, response)
         misc_fns.dump_string(source_file, source_str)
         # writes the output mapping files
-        misc_fns.write_json(os.path.join(self._output_path, "output_map.json"), output_data)
-        misc_fns.dump_output_file_map_tsv(os.path.join(self._output_path, "output_map.tsv"), output_data)
+        misc_fns.write_json(
+            os.path.join(self._output_path, "output_map.json"), output_data
+        )
+        misc_fns.dump_output_file_map_tsv(
+            os.path.join(self._output_path, "output_map.tsv"), output_data
+        )
 
     def _display_info(
         self,
