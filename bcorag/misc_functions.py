@@ -8,9 +8,9 @@ import logging
 import os
 import datetime
 import pytz
-from typing import Optional, NoReturn, cast
+from typing import Optional, NoReturn, cast, get_args
 from . import TIMEZONE, TIMESTAMP_FORMAT
-from .custom_types import OutputTrackerFile
+from .custom_types import OutputTrackerFile, DomainKey
 
 
 def graceful_exit() -> NoReturn:
@@ -110,6 +110,7 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                 "domain",
                 "txt_file",
                 "json_file",
+                "node_source_file",
                 "hash_string",
                 "index",
                 "loader",
@@ -123,7 +124,29 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                 "git_branch",
             ]
         )
-    # TODO : finish implementation
+        domain: DomainKey
+        for domain in get_args(DomainKey):
+            domain_entry_list = data[domain]
+            for entry_set in domain_entry_list:
+                for entry in entry_set["entries"]["runs"]:
+                    row = [
+                        entry["timestamp"],
+                        domain,
+                        entry["txt_file"],
+                        entry["json_file"],
+                        entry["source_node_file"],
+                        entry_set["hash_str"],
+                        entry_set["entries"]["params"]["loader"],
+                        entry_set["entries"]["params"]["vector_store"],
+                        entry_set["entries"]["params"]["llm"],
+                        entry_set["entries"]["params"]["embedding_model"],
+                        entry_set["entries"]["params"]["similarity_top_k"],
+                        entry_set["entries"]["params"]["chunking_config"],
+                        entry_set["entries"]["params"]["git_user"],
+                        entry_set["entries"]["params"]["git_repo"],
+                        entry_set["entries"]["params"]["git_branch"],
+                    ]
+                    tsv_writer.writerow(row)
 
 
 def dump_string(output_path: str, data: str):
