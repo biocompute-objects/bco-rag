@@ -110,6 +110,7 @@ def _repo_picker() -> Optional[GitData] | Literal[0]:
         )
         url = url.strip()
         if not url or url is None:
+            print("Skipping Github repo...")
             return None
         elif url == "x":
             return 0
