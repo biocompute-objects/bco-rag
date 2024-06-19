@@ -400,15 +400,15 @@ class BcoRag:
             return False
 
         txt_file_unindexed = os.path.join(
-            self._output_path, f"{domain}-{self._parameter_set_hash}-(index).txt"
+            self._output_path, f"{domain}-(index)-{self._parameter_set_hash}.txt"
         )
         json_file_unindexed = os.path.join(
-            self._output_path, f"{domain}-{self._parameter_set_hash}-(index).json"
+            self._output_path, f"{domain}-(index)-{self._parameter_set_hash}.json"
         )
         source_file_unindexed = os.path.join(
             self._output_path,
             "reference_sources",
-            f"{domain}-{self._parameter_set_hash}-(index).txt",
+            f"{domain}-(index)-{self._parameter_set_hash}.txt",
         )
 
         output_map_json = misc_fns.load_output_tracker(
