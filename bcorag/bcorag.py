@@ -276,10 +276,10 @@ class BcoRag:
 
         if self._debug:
             self._display_info(query_prompt, f"QUERY PROMPT for the {domain} domain:")
-            self.token_counts["input"] += self.token_counter.prompt_llm_token_count  # type: ignore
-            self.token_counts["output"] += self.token_counter.completion_llm_token_count  # type: ignore
-            self.token_counts["total"] += self.token_counter.total_llm_token_count  # type: ignore
-            self.token_counts["embedding"] += self.token_counter.total_embedding_token_count  # type: ignore
+            self._token_counts["input"] += self._token_counter.prompt_llm_token_count  # type: ignore
+            self._token_counts["output"] += self._token_counter.completion_llm_token_count  # type: ignore
+            self._token_counts["total"] += self._token_counter.total_llm_token_count  # type: ignore
+            self._token_counts["embedding"] += self._token_counter.total_embedding_token_count  # type: ignore
             self._display_info(self._token_counts, "Updated token counts:")
             self._display_info(source_str, "Retrieval source(s):")
 
@@ -403,7 +403,7 @@ class BcoRag:
             self._output_path, f"{domain}-{self._parameter_set_hash}-(index).txt"
         )
         json_file_unindexed = os.path.join(
-            self._output_path, f"{domain}-{self._parameter_set_hash}-(index).txt"
+            self._output_path, f"{domain}-{self._parameter_set_hash}-(index).json"
         )
         source_file_unindexed = os.path.join(
             self._output_path,
@@ -524,8 +524,8 @@ class BcoRag:
         misc_fns.dump_string(txt_file, response)
         misc_fns.dump_string(source_file, source_str)
         # writes the output mapping files
-        misc_fns.write_json(self._output_path, output_data)
-        misc_fns.dump_output_file_map_tsv(self._output_path, output_data)
+        misc_fns.write_json(os.path.join(self._output_path, "output_map.json"), output_data)
+        misc_fns.dump_output_file_map_tsv(os.path.join(self._output_path, "output_map.tsv"), output_data)
 
     def _display_info(
         self,
