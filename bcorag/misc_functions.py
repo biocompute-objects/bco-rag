@@ -132,10 +132,11 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                     row = [
                         entry["timestamp"],
                         domain,
-                        entry["txt_file"],
-                        entry["json_file"],
-                        entry["source_node_file"],
+                        os.path.basename(entry["txt_file"]),
+                        os.path.basename(entry["json_file"]),
+                        os.path.basename(entry["source_node_file"]),
                         entry_set["hash_str"],
+                        entry["index"],
                         entry_set["entries"]["params"]["loader"],
                         entry_set["entries"]["params"]["vector_store"],
                         entry_set["entries"]["params"]["llm"],
@@ -159,6 +160,7 @@ def dump_string(output_path: str, data: str):
     data: str
         The string to dump.
     """
+    check_dir(os.path.split(output_path)[0])
     with open(output_path, "w") as f:
         f.write(data)
 
