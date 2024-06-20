@@ -33,7 +33,7 @@ On startup, you will be prompted to choose some configuration options. More deta
 
 ## Generate Domains
 
-After your configurations selections are confirmed, you'll be asked which domain you would like to generate. You can enter either the one letter shortcode for each domain or the full domain name. A new output subdirectory will be created in the `output/` directory named after the PDF file. Each domain will have at least one output file on each generation. The code will attempt to serialize the return response into a valid JSON object and if successful, will dump the JSON object in a file called `<selected_domain>_domain.json`. Regardless if the JSON serialization succeeds, the raw return response will be dumped in a text file with the file name format of `<selected domain>_domain.txt`. If you re-run the same domain multiple times in the same run instance, the output files will be overwritten with the latest generated response for that domain.
+After your configurations selections are confirmed, you'll be asked which domain you would like to generate. You can enter either the one letter shortcode for each domain or the full domain name. A new output subdirectory will be created in the `output/` directory named after the PDF file. Each domain will have at least one output file on each generation. The code will attempt to serialize the return response into a valid JSON object. Regardless if the JSON serialization succeeds, the raw return response will be dumped in a text file. More detailed information about the output behaviour and structure can be found in the [output structure](/docs/output_structure.md) documentation.
 
 ## Options
 
