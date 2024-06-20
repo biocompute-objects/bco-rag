@@ -15,6 +15,7 @@
 
 - [Installation and Setup](./docs/installation.md)
 - [Usage](./docs/usage.md)
+- [Output Structure](./docs/output_structure.md)
 
 ## Background
 
