@@ -20,6 +20,7 @@ from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.readers.github import GithubRepositoryReader, GithubClient  # type: ignore
 from dotenv import load_dotenv
 import tiktoken
+import time
 import sys
 from pathlib import Path
 from hashlib import md5
@@ -274,6 +275,7 @@ class BcoRag:
         str
             The generated domain.
         """
+        query_start_time = time.time()
         query_prompt = QUERY_PROMPT.format(domain, self._domain_map[domain]["prompt"])
         if self._domain_map[domain]["top_level"]:
             query_prompt += f"\n{SUPPLEMENT_PROMPT}"
@@ -312,7 +314,8 @@ class BcoRag:
         if self._faithfulness_evaluator and self._relevancy_evaluator:
             for idx, source_node in enumerate(response_object.source_nodes):
                 faithfulness_eval = self._faithfulness_evaluator.evaluate(
-                    response=response_object.response, contexts=[source_node.get_content()]
+                    response=response_object.response,
+                    contexts=[source_node.get_content()],
                 )
                 relevancy_eval = self._relevancy_evaluator.evaluate(
                     query=query_prompt,
@@ -341,7 +344,8 @@ class BcoRag:
             self._display_info(self._token_counts, "Updated token counts:")
             self._display_info(source_str, "Retrieval source(s):")
 
-        self._process_output(domain, query_response, source_str)
+        query_elapsed_time = time.time() - query_start_time
+        self._process_output(domain, query_response, source_str, round(query_elapsed_time, 2))
 
         return query_response
 
@@ -419,7 +423,9 @@ class BcoRag:
             )
         return domain_selection
 
-    def _process_output(self, domain: DomainKey, response: str, source_str: str):
+    def _process_output(
+        self, domain: DomainKey, response: str, source_str: str, elapsed_time: float
+    ):
         """Attempts to serialize the response into a JSON object and dumps the output.
         Also dumps the raw text regardless if JSON serialization was successful. The
         file dumps are dumped to the `output` directory located in the root of this
@@ -434,6 +440,8 @@ class BcoRag:
             The generated response to dump.
         source_str : str
             The formatted source string for the query.
+        elapsed_time : float
+            The query generation elapsed time.
         """
 
         def dump_json_response(fp: str, response_string: str) -> bool:
@@ -491,6 +499,7 @@ class BcoRag:
                 txt_file,
                 json_file,
                 source_file,
+                elapsed_time,
             )
 
             param_set = create_output_tracker_param_set(
@@ -541,6 +550,7 @@ class BcoRag:
                         txt_file,
                         json_file,
                         source_file,
+                        elapsed_time,
                     )
 
                     domain_map_entry["entries"]["runs"].append(run_entry)
@@ -557,7 +567,12 @@ class BcoRag:
                     json_file = "NA"
 
                 run_entry = create_output_tracker_runs_entry(
-                    1, misc_fns.create_timestamp(), txt_file, json_file, source_file
+                    1,
+                    misc_fns.create_timestamp(),
+                    txt_file,
+                    json_file,
+                    source_file,
+                    elapsed_time,
                 )
 
                 param_set = create_output_tracker_param_set(
