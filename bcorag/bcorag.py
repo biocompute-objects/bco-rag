@@ -345,7 +345,9 @@ class BcoRag:
             self._display_info(source_str, "Retrieval source(s):")
 
         query_elapsed_time = time.time() - query_start_time
-        self._process_output(domain, query_response, source_str, round(query_elapsed_time, 2))
+        self._process_output(
+            domain, query_response, source_str, round(query_elapsed_time, 2)
+        )
 
         return query_response
 

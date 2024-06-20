@@ -122,6 +122,8 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                 "git_user",
                 "git_repo",
                 "git_branch",
+                "elapsed_time",
+                "version",
             ]
         )
         domain: DomainKey
@@ -146,6 +148,8 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                         entry_set["entries"]["params"]["git_user"],
                         entry_set["entries"]["params"]["git_repo"],
                         entry_set["entries"]["params"]["git_branch"],
+                        entry["elapsed_time"],
+                        entry["version"],
                     ]
                     tsv_writer.writerow(row)
 
