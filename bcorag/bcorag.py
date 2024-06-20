@@ -58,7 +58,7 @@ class BcoRag:
         The source file (paper) name.
     _file_path : str
         The file path to the source file (paper).
-    _output_path : str
+    _output_path_root : str
         Path to the specific document directory to dump the outputs.
     _debug : bool
         Whether in debug mode or not.
@@ -111,7 +111,7 @@ class BcoRag:
         self._domain_map = DOMAIN_MAP
         self._file_name = user_selections["filename"]
         self._file_path = user_selections["filepath"]
-        self._output_path = os.path.join(
+        self._output_path_root = os.path.join(
             output_dir,
             os.path.splitext(self._file_name.lower().replace(" ", "_").strip())[0],
         )
@@ -144,7 +144,7 @@ class BcoRag:
         if self._git_data is not None and not github_token:
             raise EnvironmentError("Github token not found.")
 
-        misc_fns.check_dir(self._output_path)
+        misc_fns.check_dir(self._output_path_root)
         self._display_info(user_selections, "User selections:")
 
         Settings.embed_model = self._embed_model
@@ -399,20 +399,23 @@ class BcoRag:
                 )
             return False
 
+        generated_dir = os.path.join(self._output_path_root, "generated_domains")
+        misc_fns.check_dir(generated_dir)
+
         txt_file_unindexed = os.path.join(
-            self._output_path, f"{domain}-(index)-{self._parameter_set_hash}.txt"
+            generated_dir, f"{domain}-(index)-{self._parameter_set_hash}.txt"
         )
         json_file_unindexed = os.path.join(
-            self._output_path, f"{domain}-(index)-{self._parameter_set_hash}.json"
+            generated_dir, f"{domain}-(index)-{self._parameter_set_hash}.json"
         )
         source_file_unindexed = os.path.join(
-            self._output_path,
+            self._output_path_root,
             "reference_sources",
             f"{domain}-(index)-{self._parameter_set_hash}.txt",
         )
 
         output_map_json = misc_fns.load_output_tracker(
-            f"{self._output_path}/output_map.json"
+            os.path.join(self._output_path_root, "output_map.json")
         )
 
         # Create a new output file if one doesn't exist
@@ -525,10 +528,10 @@ class BcoRag:
         misc_fns.dump_string(source_file, source_str)
         # writes the output mapping files
         misc_fns.write_json(
-            os.path.join(self._output_path, "output_map.json"), output_data
+            os.path.join(self._output_path_root, "output_map.json"), output_data
         )
         misc_fns.dump_output_file_map_tsv(
-            os.path.join(self._output_path, "output_map.tsv"), output_data
+            os.path.join(self._output_path_root, "output_map.tsv"), output_data
         )
 
     def _display_info(
