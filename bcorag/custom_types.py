@@ -89,6 +89,7 @@ class OutputTrackerRunsEntry(TypedDict):
     txt_file: str
     json_file: str
     source_node_file: str
+    elapsed_time: float
     version: str
 
 
@@ -98,6 +99,7 @@ def create_output_tracker_runs_entry(
     txt_file: str,
     json_file: str,
     source_node_file: str,
+    elapsed_time: float,
     version: str = __version__,
 ) -> OutputTrackerRunsEntry:
     """Constructor for the OutputTrackerRunsEntry TypedDict."""
@@ -107,6 +109,7 @@ def create_output_tracker_runs_entry(
         "txt_file": txt_file,
         "json_file": json_file,
         "source_node_file": source_node_file,
+        "elapsed_time": elapsed_time,
         "version": version,
     }
     return return_data
