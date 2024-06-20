@@ -8,21 +8,25 @@ from llama_index.core import (
     Settings,
     download_loader,
     get_response_synthesizer,
+    Response,
 )
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
+from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 from llama_index.llms.openai import OpenAI  # type: ignore
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.readers.github import GithubRepositoryReader, GithubClient  # type: ignore
 from dotenv import load_dotenv
 import tiktoken
+import sys
 from pathlib import Path
 from hashlib import md5
 import os
 from contextlib import contextmanager, redirect_stderr, redirect_stdout
 import json
+from . import EVALUATION_LLM
 from .custom_types import (
     GitData,
     create_output_tracker_param_set,
@@ -34,7 +38,7 @@ from .custom_types import (
     DomainKey,
 )
 import bcorag.misc_functions as misc_fns
-from bcorag.prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
+from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
 
 
 @contextmanager
@@ -86,6 +90,10 @@ class BcoRag:
         The token counts or None if in production mode.
     _git_data : GitData or None
         The git data or None if no github repo was included.
+    _faithfulness_evaluator : Optional[FaithfulnessEvaluator]
+        The faithfulness evalauator instance.
+    _relevancy_evaluator : Optional[RelevancyEvaluator]
+        The relevancy evaluator instance.
     _documents : list[Documents]
         The list of documents (containers for the data source).
     _index : VectorStoreIndex
@@ -94,7 +102,12 @@ class BcoRag:
         The query engine.
     """
 
-    def __init__(self, user_selections: UserSelections, output_dir: str = "./output"):
+    def __init__(
+        self,
+        user_selections: UserSelections,
+        output_dir: str = "./output",
+        evaluation_metrics: bool = False,
+    ):
         """Constructor.
 
         Parameters
@@ -104,6 +117,8 @@ class BcoRag:
         output_dir : str (default: "./output")
             The directory to dump the outputs (relative to main.py entry point
             in the repo root).
+        evaluation_metrics : bool (default: False)
+            Whether or not to calculate Faithfulness and Relevancy metrics.
         """
         load_dotenv()
 
@@ -135,6 +150,12 @@ class BcoRag:
             if user_selections["git_data"] is not None
             else None
         )
+        self._faithfulness_evaluator: Optional[FaithfulnessEvaluator] = None
+        self._relevancy_evaluator: Optional[RelevancyEvaluator] = None
+        if evaluation_metrics:
+            _evaluation_llm = OpenAI(model=EVALUATION_LLM, temperature=0.0)
+            self._faithfulness_evaluator = FaithfulnessEvaluator(llm=_evaluation_llm)
+            self._relevancy_evaluator = RelevancyEvaluator(llm=_evaluation_llm)
 
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if not openai_api_key:
@@ -257,7 +278,21 @@ class BcoRag:
         if self._domain_map[domain]["top_level"]:
             query_prompt += f"\n{SUPPLEMENT_PROMPT}"
         response_object = self._query_engine.query(query_prompt)
-        query_response = str(response_object)
+        if isinstance(response_object, Response):
+            response_object = Response(
+                response=response_object.response,
+                metadata=response_object.metadata,
+                source_nodes=response_object.source_nodes,
+            )
+        else:
+            self._logger.error(
+                f"Error parsing response object, expected type Response, got type `{type(response_object)}`."
+            )
+            print(
+                f"Error parsing response object, expected type Response, got type `{type(response_object)}`."
+            )
+            sys.exit(1)
+        query_response = str(response_object.response)
 
         source_str = ""
         for idx, source_node in enumerate(response_object.source_nodes):
@@ -273,6 +308,29 @@ class BcoRag:
                 f"\nRetrieved Text:\n{source_node.node.get_content().strip()}\n"
             )
             source_str += "\n"
+
+        if self._faithfulness_evaluator and self._relevancy_evaluator:
+            for idx, source_node in enumerate(response_object.source_nodes):
+                faithfulness_eval = self._faithfulness_evaluator.evaluate(
+                    response=response_object.response, contexts=[source_node.get_content()]
+                )
+                relevancy_eval = self._relevancy_evaluator.evaluate(
+                    query=query_prompt,
+                    response=response_object.response,
+                    contexts=[source_node.get_content()],
+                )
+                for name, eval in {
+                    "faithfulness": faithfulness_eval,
+                    "relevancy": relevancy_eval,
+                }.items():
+                    self._display_info(
+                        {
+                            "passing": eval.passing,
+                            "score": eval.score,
+                            "feedback": eval.feedback,
+                        },
+                        f"{name.title()} Evaluation for node {idx + 1}:",
+                    )
 
         if self._debug:
             self._display_info(query_prompt, f"QUERY PROMPT for the {domain} domain:")
