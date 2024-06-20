@@ -1,3 +1,5 @@
+"""Entry point for a singular, manual run."""
+
 from bcorag import misc_functions as misc_fns
 from bcorag import option_picker as op
 from bcorag.bcorag import BcoRag
