@@ -21,7 +21,6 @@ from llama_index.readers.github import GithubRepositoryReader, GithubClient  # t
 from dotenv import load_dotenv
 import tiktoken
 import time
-import sys
 from pathlib import Path
 from hashlib import md5
 import os
@@ -293,7 +292,7 @@ class BcoRag:
             print(
                 f"Error parsing response object, expected type Response, got type `{type(response_object)}`."
             )
-            sys.exit(1)
+            misc_fns.graceful_exit(1)
         query_response = str(response_object.response)
 
         source_str = ""
