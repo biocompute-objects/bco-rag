@@ -1,10 +1,20 @@
 from . import __version__
 from typing import TypedDict, Optional, Literal
 
-### General literal for domains
+### General literals
 
 DomainKey = Literal[
     "usability", "io", "description", "execution", "parametric", "error"
+]
+
+OptionKey = Literal[
+    "loader",
+    "chunking_config",
+    "embedding_model",
+    "vector_store",
+    "similarity_top_k",
+    "llm",
+    "mode",
 ]
 
 ### User parameter selection schemas
@@ -16,6 +26,12 @@ class GitData(TypedDict):
     user: str
     repo: str
     branch: str
+
+
+def create_git_data(user: str, repo: str, branch: str) -> GitData:
+    """Constructor for the GitData TypedDict."""
+    return_data: GitData = {"user": user, "repo": repo, "branch": branch}
+    return return_data
 
 
 class UserSelections(TypedDict):
@@ -31,6 +47,34 @@ class UserSelections(TypedDict):
     similarity_top_k: int
     chunking_config: str
     git_data: Optional[GitData]
+
+
+def create_user_selections(
+    llm: str,
+    embedding_model: str,
+    filename: str,
+    filepath: str,
+    vector_store: str,
+    loader: str,
+    mode: str,
+    similarity_top_k: int,
+    chunking_config: str,
+    git_data: Optional[GitData],
+) -> UserSelections:
+    """Constructor for the UserSelections TypedDict."""
+    return_data: UserSelections = {
+        "llm": llm,
+        "embedding_model": embedding_model,
+        "filename": filename,
+        "filepath": filepath,
+        "vector_store": vector_store,
+        "loader": loader,
+        "mode": mode,
+        "similarity_top_k": similarity_top_k,
+        "chunking_config": chunking_config,
+        "git_data": git_data,
+    }
+    return return_data
 
 
 ### Output map file schemas
@@ -208,3 +252,33 @@ class DomainMap(TypedDict):
     execution: IndividualDomainMapEntry
     parametric: IndividualDomainMapEntry
     error: IndividualDomainMapEntry
+
+
+### conf.json schema
+
+
+class OptionSchema(TypedDict):
+    """Schema for a config object option entry."""
+
+    list: list[str]
+    default: str
+    documentation: str
+
+
+class ConfigObjectOptions(TypedDict):
+    """Schema for the options in the config JSON."""
+
+    loader: OptionSchema
+    chunking_config: OptionSchema
+    embedding_model: OptionSchema
+    vector_store: OptionSchema
+    similarity_top_k: OptionSchema
+    llm: OptionSchema
+    mode: OptionSchema
+
+
+class ConfigObject(TypedDict):
+    """Config JSON schema."""
+
+    paper_directory: str
+    options: ConfigObjectOptions
