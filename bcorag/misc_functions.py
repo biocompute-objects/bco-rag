@@ -2,6 +2,8 @@
 """
 
 import sys
+import re
+import glob
 import json
 import csv
 import logging
@@ -10,17 +12,27 @@ import datetime
 import pytz
 from typing import Optional, NoReturn, cast, get_args
 from . import TIMEZONE, TIMESTAMP_FORMAT
-from .custom_types import OutputTrackerFile, DomainKey
+from .custom_types import OutputTrackerFile, DomainKey, ConfigObject
 
 
-def graceful_exit() -> NoReturn:
-    """Gracefully exits the program with a 0 exit code."""
+def graceful_exit(exit_code: int = 0, error_msg: Optional[str] = None) -> NoReturn:
+    """Gracefully exits the program with an exit code.
+
+    Parameters
+    ----------
+    exit_code : int (default: 0)
+    error_msg : str or None (default: None)
+    """
+    if exit_code != 0:
+        if error_msg is not None:
+            print(f"{error_msg}")
+        print(f"exit code: {exit_code}")
     print("Exiting...")
-    logging.info("Exiting with status code 0.")
+    logging.info(f"Exiting with status code {exit_code}.")
     logging.info(
         "---------------------------------- RUN END ----------------------------------"
     )
-    sys.exit(0)
+    sys.exit(exit_code)
 
 
 def load_json(filepath: str) -> Optional[dict]:
@@ -42,6 +54,28 @@ def load_json(filepath: str) -> Optional[dict]:
     with open(filepath, "r") as f:
         data = json.load(f)
         return data
+
+
+def load_config_data(filepath: str = "./conf.json") -> Optional[ConfigObject]:
+    """Loads the config JSON object file.
+
+    Parameters
+    ----------
+    filepath : str (default: "./conf.json")
+        File path to the config JSON file.
+
+    Returns
+    -------
+    ConfigObject or None
+        Casted ConfigObject or None on some type of error.
+    """
+    naive_load_data = load_json(filepath)
+    if naive_load_data is None:
+        return None
+    if isinstance(naive_load_data, dict):
+        config_object = cast(ConfigObject, naive_load_data)
+        return config_object
+    return None
 
 
 def load_output_tracker(filepath: str) -> Optional[OutputTrackerFile]:
@@ -240,3 +274,45 @@ def create_timestamp() -> str:
         TIMESTAMP_FORMAT
     )
     return timestamp
+
+
+def extract_repo_data(url: str) -> Optional[tuple[str, str]]:
+    """Extracts the repository information from the repo URL.
+
+    Parameters
+    ----------
+    url : str
+        The Github repository URL.
+
+    Returns
+    -------
+    tuple (str, str) or None
+        Returns the tuple containing the extracted github user
+        and repo or None on failure to parse the URL.
+    """
+    url = url.strip().lower()
+    pattern = r"https://github\.com/([^/]+)/([^/]+)"
+    match = re.match(pattern, url)
+    if match is None:
+        return None
+    user = str(match.groups()[0])
+    repo = str(match.groups()[1])
+    return user, repo
+
+def get_file_list(path: str, filetype: str = "pdf") -> list[str]:
+    """Gets the files from a glob pattern.
+
+    Parameters
+    ----------
+    path : str
+        The file path to the target directory.
+    filetype : str (default: pdf)
+        The file type to capture.
+
+    Returns
+    -------
+    list[str]
+        List of the file paths found from the glob pattern.
+    """
+    target_files = glob.glob(os.path.join(path, f"*.{filetype}"))
+    return target_files
