@@ -4,11 +4,10 @@ Will automatically grab any PDF file in the ../../papers/ directory.
 
 import glob
 import os
-import re
 from pick import pick
 from bcorag import misc_functions as misc_fns
-from typing import Literal, Tuple, Optional
-from .custom_types import UserSelections, GitData
+from typing import Literal, Tuple, Optional, get_args
+from .custom_types import UserSelections, GitData, OptionKey
 
 EXIT_OPTION = "Exit"
 
@@ -29,7 +28,7 @@ def initialize_picker(filetype: str = "pdf") -> Optional[UserSelections]:
         The user selections or None indicating user chose to exit or error.
     """
 
-    presets = misc_fns.load_json("./bcorag/conf.json")
+    presets = misc_fns.load_config_data("./bcorag/conf.json")
     if presets is None or isinstance(presets, list):
         print(f"Error reading config file. Got type `{type(presets)}` for `presets`.")
         misc_fns.graceful_exit()
@@ -45,7 +44,8 @@ def initialize_picker(filetype: str = "pdf") -> Optional[UserSelections]:
     return_data["filename"] = target_file_information[0]
     return_data["filepath"] = target_file_information[1]
 
-    for option in presets["options"].keys():
+    option: OptionKey
+    for option in get_args(OptionKey):
         target_option = _create_picker(
             option,
             presets["options"][option]["documentation"],
@@ -83,7 +83,7 @@ def _file_picker(path: str, filetype: str = "pdf") -> Optional[Tuple[str, str]]:
     (str, str) or None
         Returns the name and path of the selected file or None if the user selects exit.
     """
-    target_files = glob.glob(f"{path}*.{filetype}")
+    target_files = misc_fns.get_file_list(path, filetype)
     pick_options = [os.path.basename(filename) for filename in target_files]
     pick_options.append(EXIT_OPTION)
     pick_title = "Please choose the PDF file to index:"
@@ -103,24 +103,22 @@ def _repo_picker() -> Optional[GitData] | Literal[0]:
         Returns parsed repo information from the link, None if the user skips this step,
         or 0 (exit status) if the user chooses to exit.
     """
-    pattern = r"https://github\.com/([^/]+)/([^/]+)"
     while True:
         url = input(
             'If you would like to include a Github repository enter the URL below. Enter "x" to exit or leave blank to skip.\n'
         )
-        url = url.strip()
         if not url or url is None:
             print("Skipping Github repo...")
             return None
         elif url == "x":
             return 0
-        match = re.match(pattern, url.lower().strip())
+        match = misc_fns.extract_repo_data(url)
         if match is None:
             print("Error parsing repository URL.")
             continue
         branch = input("Repo branch to index (case sensitive):\n")
-        user = str(match.groups()[0].strip().lower())
-        repo = str(match.groups()[1].strip().lower())
+        user = match[0]
+        repo = match[1]
         return_data: GitData = {"user": user, "repo": repo, "branch": branch.strip()}
         return return_data
 
