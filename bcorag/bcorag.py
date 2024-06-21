@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 from hashlib import md5
 import os
-from contextlib import contextmanager, redirect_stderr, redirect_stdout
+from contextlib import contextmanager, redirect_stdout
 import json
 from . import EVALUATION_LLM
 from .custom_types import (
@@ -42,10 +42,9 @@ from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
 
 
 @contextmanager
-def supress_stdout_stderr():
+def supress_stdout():
     """Context manager that redirects stdout and stderr to devnull."""
-    with open(os.devnull, "w") as fnull:
-        with redirect_stderr(fnull), redirect_stdout(fnull):
+    with open(os.devnull, "w") as f, redirect_stdout(f):
             yield
 
 
@@ -211,13 +210,13 @@ class BcoRag:
                 loader = SimpleDirectoryReader(input_files=[self._file_path])
                 paper_documents = loader.load_data()
             case "PDFReader":
-                with supress_stdout_stderr():
+                with supress_stdout():
                     pdf_loader = download_loader("PDFReader")
                 paper_documents = pdf_loader().load_data(file=Path(self._file_path))
         documents = paper_documents  # type: ignore
         if self._git_data is not None:
             github_client = GithubClient(github_token)
-            with supress_stdout_stderr():
+            with supress_stdout():
                 download_loader("GithubRepositoryReader")
             git_loader = GithubRepositoryReader(
                 github_client=github_client,
