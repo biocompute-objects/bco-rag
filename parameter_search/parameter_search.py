@@ -1,34 +1,43 @@
 """Parameter search base class.
 """
 
-from bcorag.bcorag import BcoRag, supress_stdout_stderr
-import tqdm
+from bcorag.bcorag import BcoRag, supress_stdout
 from bcorag.custom_types import UserSelections, create_user_selections, GitData, DomainKey
-from .custom_types import SearchSpace
+from .custom_types import GitDataFileConfig, SearchSpace
 from typing import Optional, get_args
 
 
-class _BcoParameterSearch:
+class BcoParameterSearch:
     """Parent class that lays the foundation for the specific parameter
     search classes. This class shouldn't be instantiated directly.
     """
 
-    def __init__(self, search_space: SearchSpace):
+    def __init__(self, search_space: SearchSpace, verbose: bool = True):
+        """Constructor.
 
-        self._files = search_space["filenames"]
-        self._loaders = search_space["loader"]
-        self._chunking_configs = search_space["chunking_config"]
-        self._embedding_models = search_space["embedding_model"]
-        self._vector_stores = search_space["vector_store"]
-        self._similarity_top_k = search_space["similarity_top_k"]
-        self._llms = search_space["llm"]
-        self._git_data = search_space["git_data"]
+        Parameters
+        ----------
+        search_space : SearchSpace
+            The parameter search space.
+        verbose : bool (default: True)
+            The verbosity level. False for no output, True for running output.
+        """
 
-    def generate_domains(self, bcorag: BcoRag):
+        self._files: list[str] = search_space["filenames"]
+        self._loaders: list[str] = search_space["loader"]
+        self._chunking_configs: list[str] = search_space["chunking_config"]
+        self._embedding_models: list[str] = search_space["embedding_model"]
+        self._vector_stores: list[str] = search_space["vector_store"]
+        self._similarity_top_k: list[int] = search_space["similarity_top_k"]
+        self._llms: list[str] = search_space["llm"]
+        self._git_data: Optional[list[GitDataFileConfig]] = search_space["git_data"]
+        self._verbose: bool = verbose
+
+    def _generate_domains(self, bcorag: BcoRag):
         
         domain: DomainKey
         for domain in get_args(DomainKey):
-            with supress_stdout_stderr():
+            with supress_stdout():
                 bcorag.perform_query(domain)
 
     def _create_bcorag(
