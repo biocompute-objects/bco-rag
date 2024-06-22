@@ -32,11 +32,17 @@ _avail_options: _AvailFilters = {
 }
 
 
-class GitDataFileConfig:
+class GitDataFileConfig(TypedDict):
     """Git data instance for a file."""
 
     filename: str
     git_info: GitData
+
+
+def create_git_data_file_config(filename: str, git_info: GitData) -> GitDataFileConfig:
+    """Constructor for the GitDataFileConfig TypedDict."""
+    return_data: GitDataFileConfig = {"filename": filename, "git_info": git_info}
+    return return_data
 
 
 class SearchSpace(TypedDict):
