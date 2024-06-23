@@ -23,14 +23,14 @@ def main():
     options = parser.parse_args()
     run_mode = options.run_mode.lower().strip()
 
-    logger = misc_fns.setup_root_logger("./logs/bcorag.log")
-    logger.info(
-        "################################## RUN START ##################################"
-    )
-
     match run_mode:
 
         case "one-shot":
+
+            logger = misc_fns.setup_root_logger("./logs/bcorag.log")
+            logger.info(
+                "################################## RUN START ##################################"
+            )
 
             user_choices = op.initialize_picker()
             if user_choices is None:
@@ -45,6 +45,11 @@ def main():
                 print(f"Successfully generated the {domain} domain.\n")
 
         case "grid-search":
+
+            logger = misc_fns.setup_root_logger("./logs/grid-search.log")
+            logger.info(
+                "################################## RUN START ##################################"
+            )
 
             filenames = ["./bcorag/test_papers/High resolution measurement.pdf"]
             loaders = "SimpleDirectoryReader"
@@ -79,6 +84,8 @@ def main():
 
             grid_search = BcoGridSearch(search_space)
             grid_search.train()
+
+            misc_fns.graceful_exit()
 
         case "random-search":
             # TODO : implement
