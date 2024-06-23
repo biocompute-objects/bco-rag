@@ -23,20 +23,6 @@ class BcoGridSearch(BcoParameterSearch):
         """
         super().__init__(search_space)
 
-    def train(self):
-        """Starts the generation work flow."""
-        param_sets = self._create_param_sets()
-
-        for idx, file in enumerate(self._files):
-
-            if self._verbose:
-                print(f"On file {idx + 1}: {file}")
-
-            for param_set in param_sets:
-
-                # TODO : implement
-                print(param_set)
-
     def _create_param_sets(self) -> list[UserSelections]:
         """Creates a cartesian product of the parameter space."""
         param_sets: list[UserSelections] = []
