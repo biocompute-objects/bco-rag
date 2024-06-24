@@ -67,6 +67,7 @@ class BcoGridSearch(BcoParameterSearch):
                             user=git_data["git_info"]["user"],
                             repo=git_data["git_info"]["repo"],
                             branch=git_data["git_info"]["branch"],
+                            filters=git_data["git_info"]["filters"],
                         )
             user_selections = create_user_selections(
                 base_selections["llm"],
