@@ -97,7 +97,7 @@ class BcoParameterSearch(ABC):
             t0 = time.time()
             with supress_stdout():
                 bcorag.perform_query(domain)
-            self._log_output(f"\t{domain} generated, elapsed time: {time.time() - t0}")
+            self._log_output(f"\t{domain.upper()} domain generated, elapsed time: {time.time() - t0}")
 
     def _create_bcorag(
         self, user_selections: UserSelections, evaluation_mode: bool = False
