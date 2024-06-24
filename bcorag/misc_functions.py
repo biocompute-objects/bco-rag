@@ -156,6 +156,8 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                 "git_user",
                 "git_repo",
                 "git_branch",
+                "directory_filter",
+                "file_ext_filter",
                 "elapsed_time",
                 "version",
             ]
@@ -182,6 +184,8 @@ def dump_output_file_map_tsv(output_path: str, data: OutputTrackerFile):
                         entry_set["entries"]["params"]["git_user"],
                         entry_set["entries"]["params"]["git_repo"],
                         entry_set["entries"]["params"]["git_branch"],
+                        entry_set["entries"]["params"]["directory_git_filter"],
+                        entry_set["entries"]["params"]["file_ext_git_filter"],
                         entry["elapsed_time"],
                         entry["version"],
                     ]
@@ -298,6 +302,7 @@ def extract_repo_data(url: str) -> Optional[tuple[str, str]]:
     user = str(match.groups()[0])
     repo = str(match.groups()[1])
     return user, repo
+
 
 def get_file_list(path: str, filetype: str = "pdf") -> list[str]:
     """Gets the files from a glob pattern.
