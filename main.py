@@ -1,16 +1,22 @@
 """Entry point for a singular, manual run."""
 
+from llama_index.readers.github import GithubRepositoryReader  # type: ignore
 from bcorag import misc_functions as misc_fns
 from bcorag import option_picker as op
 from bcorag.bcorag import BcoRag
 from parameter_search.grid_search import BcoGridSearch
-from bcorag.custom_types import create_git_data
+from bcorag.custom_types import (
+    GitFilter,
+    GitFilters,
+    create_git_data,
+    create_git_filters,
+)
 from parameter_search.custom_types import create_git_data_file_config, init_search_space
 import argparse
 import os
 
 
-def main():
+def main() -> None:
 
     parser = argparse.ArgumentParser(prog="main.py")
     parser.add_argument(
@@ -66,7 +72,24 @@ def main():
             git_info = misc_fns.extract_repo_data(github_url)
             if git_info is None:
                 misc_fns.graceful_exit(1, "Error parsing github URL.")
-            git_data = create_git_data(git_info[0], git_info[1], "master")
+
+            git_filters: list[GitFilters] = []
+            directory_filter = create_git_filters(
+                filter_type=GithubRepositoryReader.FilterType.EXCLUDE,
+                filter=GitFilter.DIRECTORY,
+                value=["logs", "fastq", "data"],
+            )
+            git_filters.append(directory_filter)
+
+            file_ext_filter = create_git_filters(
+                filter_type=GithubRepositoryReader.FilterType.EXCLUDE,
+                filter=GitFilter.FILE_EXTENSION,
+                value=["txt", "gz", "bed"],
+            )
+            git_filters.append(file_ext_filter)
+
+            git_data = create_git_data(user=git_info[0], repo=git_info[1], branch="master", filters=git_filters)
+
             git_file_data = create_git_data_file_config(
                 os.path.basename(filenames[0]), git_data
             )
