@@ -2,6 +2,7 @@
 """
 
 import random
+import pprint
 import time
 from logging import Logger
 from abc import ABC, abstractmethod
@@ -58,16 +59,30 @@ class BcoParameterSearch(ABC):
         param_sets = self._create_param_sets()
         for idx, param_set in enumerate(param_sets):
 
-            self._log_output(f"On param set {idx + 1} of {len(param_sets)}")
+            self._log_output(
+                f"------------ Param Set {idx + 1}/{len(param_sets)} ------------"
+            )
+            self._log_output(param_set)
+            t0 = time.time()
 
+            t1 = time.time()
             bco_rag = self._create_bcorag(param_set)
-            self._generate_domains(bco_rag)
+            self._log_output(f"RAG created, elapsed time: {time.time() - t1}")
 
+            t2 = time.time()
+            self._generate_domains(bco_rag)
+            self._log_output(
+                f"Domains generated, total elapsed time: {time.time() - t2}"
+            )
+
+            self._log_output(f"Sleeping for {self.backoff_time}...")
             time.sleep(self.backoff_time)
             if idx % 3 == 0:
                 self.backoff_time = STANDARD_BACKOFF
             else:
                 self.backoff_time *= 2 + random.uniform(0, 1)
+
+            self._log_output(f"Param set elapsed time: {time.time() - t0}")
 
     @abstractmethod
     def _create_param_sets(self) -> list[UserSelections]:
@@ -78,8 +93,11 @@ class BcoParameterSearch(ABC):
 
         domain: DomainKey
         for domain in get_args(DomainKey):
+
+            t0 = time.time()
             with supress_stdout():
                 bcorag.perform_query(domain)
+            self._log_output(f"\t{domain} generated, elapsed time: {time.time() - t0}")
 
     def _create_bcorag(
         self, user_selections: UserSelections, evaluation_mode: bool = False
@@ -88,16 +106,19 @@ class BcoParameterSearch(ABC):
         bcorag = BcoRag(user_selections, evaluation_metrics=evaluation_mode)
         return bcorag
 
-    def _log_output(self, message: str):
+    def _log_output(self, message: str | UserSelections):
         """Handles output. If the logger was passed in handles logging, if
         verbose is True handles printing (only info level logging).
 
         Parameters
         ----------
-        message : str
-            The message to log and/or print.
+        message : str or UserSelections
+            The message or param set to log and/or print.
         """
         if self._verbose:
-            print(message)
+            if isinstance(message, str):
+                print(message)
+            elif isinstance(message, dict):
+                pprint.pprint(message)
         if self._logger is not None:
             self._logger.info(message)
