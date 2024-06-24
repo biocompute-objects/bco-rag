@@ -6,7 +6,6 @@ from llama_index.core import (
     VectorStoreIndex,
     SimpleDirectoryReader,
     Settings,
-    download_loader,
     get_response_synthesizer,
     Response,
 )
@@ -18,6 +17,7 @@ from llama_index.llms.openai import OpenAI  # type: ignore
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.readers.github import GithubRepositoryReader, GithubClient  # type: ignore
+from llama_index.readers.file import PDFReader  # type: ignore
 from dotenv import load_dotenv
 import tiktoken
 import time
@@ -45,7 +45,7 @@ from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
 def supress_stdout():
     """Context manager that redirects stdout and stderr to devnull."""
     with open(os.devnull, "w") as f, redirect_stdout(f):
-            yield
+        yield
 
 
 class BcoRag:
@@ -210,14 +210,17 @@ class BcoRag:
                 loader = SimpleDirectoryReader(input_files=[self._file_path])
                 paper_documents = loader.load_data()
             case "PDFReader":
-                with supress_stdout():
-                    pdf_loader = download_loader("PDFReader")
-                paper_documents = pdf_loader().load_data(file=Path(self._file_path))
+                # Note: download_loader is deprecated in llama_index now
+                # with supress_stdout():
+                #     pdf_loader = download_loader("PDFReader")
+                pdf_loader = PDFReader()
+                paper_documents = pdf_loader.load_data(file=Path(self._file_path))
         documents = paper_documents  # type: ignore
         if self._git_data is not None:
             github_client = GithubClient(github_token)
-            with supress_stdout():
-                download_loader("GithubRepositoryReader")
+            # Note: download_loader is deprecated in llama_index now
+            # with supress_stdout():
+            #     download_loader("GithubRepositoryReader")
             git_loader = GithubRepositoryReader(
                 github_client=github_client,
                 owner=self._git_data["user"],
