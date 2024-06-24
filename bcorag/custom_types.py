@@ -41,10 +41,11 @@ def create_git_filters(
     filter_type: GithubRepositoryReader.FilterType, filter: GitFilter, value: list[str]
 ) -> GitFilters:
     """Constructor for the GitFilters TypedDict."""
+    sorted_values = sorted(value)
     return_data: GitFilters = {
         "filter_type": filter_type,
         "filter": filter,
-        "value": value,
+        "value": sorted_values,
     }
     return return_data
 
@@ -55,6 +56,7 @@ class GitData(TypedDict):
     user: str
     repo: str
     branch: str
+    # TODO : can we refactor this for a tuple?
     filters: list[GitFilters]
 
 
@@ -122,6 +124,20 @@ def create_user_selections(
 # a subclass of dict)."
 
 
+class OutputTrackerGitFilter(TypedDict):
+    """Git filter TypedDict."""
+
+    filter: tuple[str, list[str]]
+
+
+def create_output_tracker_git_filter(
+    filter: tuple[str, list[str]]
+) -> OutputTrackerGitFilter:
+    """Constructor for the OutputTrackerGitFilter TypedDict."""
+    return_data: OutputTrackerGitFilter = {"filter": filter}
+    return return_data
+
+
 class OutputTrackerParamSet(TypedDict):
     """Parameter set for a run."""
 
@@ -134,6 +150,8 @@ class OutputTrackerParamSet(TypedDict):
     git_user: Optional[str]
     git_repo: Optional[str]
     git_branch: Optional[str]
+    directory_git_filter: Optional[OutputTrackerGitFilter]
+    file_ext_git_filter: Optional[OutputTrackerGitFilter]
 
 
 def create_output_tracker_param_set(
@@ -146,6 +164,8 @@ def create_output_tracker_param_set(
     git_user: Optional[str],
     git_repo: Optional[str],
     git_branch: Optional[str],
+    directory_git_filter: Optional[OutputTrackerGitFilter] = None,
+    file_ext_git_filter: Optional[OutputTrackerGitFilter] = None,
 ) -> OutputTrackerParamSet:
     """Constructor for the OutputTrackerParamSet TypedDict."""
     return_data: OutputTrackerParamSet = {
@@ -158,6 +178,8 @@ def create_output_tracker_param_set(
         "git_user": git_user,
         "git_repo": git_repo,
         "git_branch": git_branch,
+        "directory_git_filter": directory_git_filter,
+        "file_ext_git_filter": file_ext_git_filter,
     }
     return return_data
 
