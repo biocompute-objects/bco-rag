@@ -1,5 +1,7 @@
 from . import __version__
 from typing import TypedDict, Optional, Literal
+from enum import Enum
+from llama_index.readers.github import GithubRepositoryReader  # type: ignore
 
 ### General literals
 
@@ -20,17 +22,52 @@ OptionKey = Literal[
 ### User parameter selection schemas
 
 
+class GitFilter(Enum):
+    """Enum for the filter type."""
+
+    DIRECTORY = 1
+    FILE_EXTENSION = 2
+
+
+class GitFilters(TypedDict):
+    """Typed dict for github loader filters."""
+
+    filter_type: GithubRepositoryReader.FilterType
+    filter: GitFilter
+    value: list[str]
+
+
+def create_git_filters(
+    filter_type: GithubRepositoryReader.FilterType, filter: GitFilter, value: list[str]
+) -> GitFilters:
+    """Constructor for the GitFilters TypedDict."""
+    return_data: GitFilters = {
+        "filter_type": filter_type,
+        "filter": filter,
+        "value": value,
+    }
+    return return_data
+
+
 class GitData(TypedDict):
     """Typed dict for the optional git repo information."""
 
     user: str
     repo: str
     branch: str
+    filters: list[GitFilters]
 
 
-def create_git_data(user: str, repo: str, branch: str) -> GitData:
+def create_git_data(
+    user: str, repo: str, branch: str, filters: list[GitFilters] = []
+) -> GitData:
     """Constructor for the GitData TypedDict."""
-    return_data: GitData = {"user": user, "repo": repo, "branch": branch}
+    return_data: GitData = {
+        "user": user,
+        "repo": repo,
+        "branch": branch,
+        "filters": filters,
+    }
     return return_data
 
 
