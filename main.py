@@ -57,7 +57,7 @@ def main() -> None:
     file_ext_filter = create_git_filters(
         filter_type=GithubRepositoryReader.FilterType.EXCLUDE,
         filter=GitFilter.FILE_EXTENSION,
-        value=["txt", "gz", "bed"],
+        value=[".txt", ".gz", ".bed"],
     )
     git_filters.append(file_ext_filter)
 
