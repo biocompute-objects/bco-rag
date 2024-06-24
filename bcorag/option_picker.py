@@ -2,12 +2,20 @@
 Will automatically grab any PDF file in the ../../papers/ directory. 
 """
 
-import glob
 import os
 from pick import pick
 from bcorag import misc_functions as misc_fns
 from typing import Literal, Tuple, Optional, get_args
-from .custom_types import UserSelections, GitData, OptionKey
+from .custom_types import (
+    UserSelections,
+    GitData,
+    GitFilter,
+    GitFilters,
+    create_git_data,
+    create_git_filters,
+    OptionKey,
+)
+from llama_index.readers.github import GithubRepositoryReader  # type: ignore
 
 EXIT_OPTION = "Exit"
 
@@ -103,23 +111,71 @@ def _repo_picker() -> Optional[GitData] | Literal[0]:
         Returns parsed repo information from the link, None if the user skips this step,
         or 0 (exit status) if the user chooses to exit.
     """
+
     while True:
-        url = input(
-            'If you would like to include a Github repository enter the URL below. Enter "x" to exit or leave blank to skip.\n'
-        )
+
+        url_prompt = 'If you would like to include a Github repository enter the URL below. Enter "x" to exit or leave blank to skip.\n> '
+        url = input(url_prompt)
         if not url or url is None:
             print("Skipping Github repo...")
             return None
         elif url == "x":
             return 0
+
         match = misc_fns.extract_repo_data(url)
         if match is None:
             print("Error parsing repository URL.")
             continue
-        branch = input("Repo branch to index (case sensitive):\n")
         user = match[0]
         repo = match[1]
-        return_data: GitData = {"user": user, "repo": repo, "branch": branch.strip()}
+
+        branch = input("Repo branch to index (case sensitive):\n> ")
+        if not branch:
+            branch = "main"
+
+        git_filters: list[GitFilters] = []
+
+        directory_filter_prompt = "Would you like to include a directory filter?"
+        directory_filter_prompt += "\nEnter a list of comma-delimited directories to either conditionally exclude or inclusively include. "
+        directory_filter_prompt += "Or leave blank to skip.\n> "
+        directory_filter_val = input(directory_filter_prompt)
+        if directory_filter_val and directory_filter_val is not None:
+            directories = [
+                dir.strip() for dir in directory_filter_val.split(",") if dir.strip()
+            ]
+            directory_filter_condition_prompt = (
+                'Enter "include" or "exclude" for the directory filter.\n> '
+            )
+            directory_filter_condition_val = input(directory_filter_condition_prompt)
+            directory_filter_type = (
+                GithubRepositoryReader.FilterType.INCLUDE
+                if directory_filter_condition_val.lower().strip() == "include"
+                else GithubRepositoryReader.FilterType.EXCLUDE
+            )
+            directory_filter = create_git_filters(directory_filter_type, GitFilter.DIRECTORY, value=directories)
+            git_filters.append(directory_filter)
+
+        file_ext_filter_prompt = "Would you like to include a file extension filter?"
+        file_ext_filter_prompt += "\nEnter a list of comma-delimited file extensions to either conditionally exclude or inclusively include. "
+        file_ext_filter_prompt += "Or leave blank to skip.\n> "
+        file_ext_filter_val = input(file_ext_filter_prompt)
+        if file_ext_filter_val and file_ext_filter_val is not None:
+            file_exts = [
+                ext.strip() for ext in file_ext_filter_val.split(",") if ext.strip()
+            ]
+            file_ext_filter_condition_prompt = (
+                'Enter "include" or "exclude" for the file extension filter.\n> '
+            )
+            file_ext_filter_condition_val = input(file_ext_filter_condition_prompt)
+            file_ext_filter_type = (
+                GithubRepositoryReader.FilterType.INCLUDE
+                if file_ext_filter_condition_val.lower().strip() == "include"
+                else GithubRepositoryReader.FilterType.EXCLUDE
+            )
+            file_ext_filter = create_git_filters(file_ext_filter_type, GitFilter.FILE_EXTENSION, value=file_exts)
+            git_filters.append(file_ext_filter)
+
+        return_data = create_git_data(user, repo, branch, git_filters)
         return return_data
 
 
