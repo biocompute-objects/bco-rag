@@ -29,6 +29,8 @@ import json
 from . import EVALUATION_LLM
 from .custom_types import (
     GitData,
+    GitFilter,
+    GitFilters,
     create_output_tracker_param_set,
     create_output_tracker_runs_entry,
     create_output_tracker_entry,
@@ -215,17 +217,39 @@ class BcoRag:
                 #     pdf_loader = download_loader("PDFReader")
                 pdf_loader = PDFReader()
                 paper_documents = pdf_loader.load_data(file=Path(self._file_path))
+
         documents = paper_documents  # type: ignore
         if self._git_data is not None:
+
             github_client = GithubClient(github_token)
             # Note: download_loader is deprecated in llama_index now
             # with supress_stdout():
             #     download_loader("GithubRepositoryReader")
+
+            directory_filter: GitFilters | None = None
+            file_ext_filter: GitFilters | None = None
+            for filter in self._git_data["filters"]:
+                if filter["filter"] == GitFilter.DIRECTORY:
+                    directory_filter = filter
+                elif filter["filter"] == GitFilter.FILE_EXTENSION:
+                    file_ext_filter = filter
+
             git_loader = GithubRepositoryReader(
                 github_client=github_client,
                 owner=self._git_data["user"],
                 repo=self._git_data["repo"],
+                filter_directories=(
+                    (directory_filter["value"], directory_filter["filter_type"])
+                    if directory_filter is not None
+                    else None
+                ),
+                filter_file_extensions=(
+                    (file_ext_filter["value"], file_ext_filter["filter_type"])
+                    if file_ext_filter is not None
+                    else None
+                ),
             )
+
             github_documents = git_loader.load_data(branch=self._git_data["branch"])
             documents += github_documents
             self._logger.info(
@@ -386,7 +410,7 @@ class BcoRag:
 
         while True:
 
-            domain_selection = input().strip().lower()
+            domain_selection = input("> ").strip().lower()
 
             domain: DomainKey
             for domain in get_args(DomainKey):
