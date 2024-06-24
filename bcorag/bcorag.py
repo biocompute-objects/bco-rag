@@ -31,7 +31,9 @@ from .custom_types import (
     GitData,
     GitFilter,
     GitFilters,
+    OutputTrackerGitFilter,
     create_output_tracker_param_set,
+    create_output_tracker_git_filter,
     create_output_tracker_runs_entry,
     create_output_tracker_entry,
     create_output_tracker_domain_entry,
@@ -457,7 +459,10 @@ class BcoRag:
         Also dumps the raw text regardless if JSON serialization was successful. The
         file dumps are dumped to the `output` directory located in the root of this
         repo. Keeps a TSV file to track all of the domain outputs and what parameter
-        set generated the results. Does not overwrite existing domains outputs,
+        set generated the results.
+
+        Note: This function is getting long with some redundancy, it should be re-written
+        at some point. It works, but is ugly.
 
         Parameters
         ----------
@@ -529,16 +534,39 @@ class BcoRag:
                 elapsed_time,
             )
 
+            directory_filter: OutputTrackerGitFilter | None = None
+            file_ext_filter: OutputTrackerGitFilter | None = None
+            if self._git_data is not None:
+                for filter in self._git_data["filters"]:
+                    if filter["filter"] == GitFilter.FILE_EXTENSION:
+                        file_ext_filter = create_output_tracker_git_filter(
+                            ("include", filter["value"])
+                            if filter["filter_type"]
+                            == GithubRepositoryReader.FilterType.INCLUDE
+                            else ("exclude", filter["value"])
+                        )
+                    elif filter["filter"] == GitFilter.DIRECTORY:
+                        directory_filter = create_output_tracker_git_filter(
+                            ("include", filter["value"])
+                            if filter["filter_type"]
+                            == GithubRepositoryReader.FilterType.INCLUDE
+                            else ("exclude", filter["value"])
+                        )
+
             param_set = create_output_tracker_param_set(
-                self._loader,
-                self._vector_store,
-                self._llm_model_name,
-                self._embed_model_name,
-                self._similarity_top_k,
-                self._chunking_config,
-                self._git_data["user"] if self._git_data is not None else None,
-                self._git_data["repo"] if self._git_data is not None else None,
-                self._git_data["branch"] if self._git_data is not None else None,
+                loader=self._loader,
+                vector_store=self._vector_store,
+                llm=self._llm_model_name,
+                embedding_model=self._embed_model_name,
+                similarity_top_k=self._similarity_top_k,
+                chunking_config=self._chunking_config,
+                git_user=self._git_data["user"] if self._git_data is not None else None,
+                git_repo=self._git_data["repo"] if self._git_data is not None else None,
+                git_branch=(
+                    self._git_data["branch"] if self._git_data is not None else None
+                ),
+                directory_git_filter=directory_filter,
+                file_ext_git_filter=file_ext_filter,
             )
 
             instance_entry = create_output_tracker_entry(1, param_set, [run_entry])
@@ -602,6 +630,25 @@ class BcoRag:
                     elapsed_time,
                 )
 
+                directory_filter = None
+                file_ext_filter = None
+                if self._git_data is not None:
+                    for filter in self._git_data["filters"]:
+                        if filter["filter"] == GitFilter.FILE_EXTENSION:
+                            file_ext_filter = create_output_tracker_git_filter(
+                                ("include", filter["value"])
+                                if filter["filter_type"]
+                                == GithubRepositoryReader.FilterType.INCLUDE
+                                else ("exclude", filter["value"])
+                            )
+                        elif filter["filter"] == GitFilter.DIRECTORY:
+                            directory_filter = create_output_tracker_git_filter(
+                                ("include", filter["value"])
+                                if filter["filter_type"]
+                                == GithubRepositoryReader.FilterType.INCLUDE
+                                else ("exclude", filter["value"])
+                            )
+
                 param_set = create_output_tracker_param_set(
                     self._loader,
                     self._vector_store,
@@ -612,6 +659,8 @@ class BcoRag:
                     self._git_data["user"] if self._git_data is not None else None,
                     self._git_data["repo"] if self._git_data is not None else None,
                     self._git_data["branch"] if self._git_data is not None else None,
+                    directory_git_filter=directory_filter,
+                    file_ext_git_filter=file_ext_filter,
                 )
 
                 instance_entry = create_output_tracker_entry(1, param_set, [run_entry])
@@ -669,17 +718,32 @@ class BcoRag:
         str
             The hexidecimal MD5 hash.
         """
-        hash_str = ""
-        hash_str += params["llm"]
-        hash_str += params["embedding_model"]
-        hash_str += params["vector_store"]
-        hash_str += params["loader"]
-        hash_str += str(params["similarity_top_k"])
-        hash_str += params["chunking_config"]
+        hash_list = []
+        hash_list.append(params["llm"])
+        hash_list.append(params["embedding_model"])
+        hash_list.append(params["vector_store"])
+        hash_list.append(params["loader"])
+        hash_list.append(str(params["similarity_top_k"]))
+        hash_list.append(params["chunking_config"])
+
         if params["git_data"] is not None:
-            user = params["git_data"]["user"]
-            repo = params["git_data"]["repo"]
-            hash_str += user if user is not None else ""
-            hash_str += repo if repo is not None else ""
+
+            hash_list.append(params["git_data"]["user"])
+            hash_list.append(params["git_data"]["repo"])
+            hash_list.append(params["git_data"]["branch"])
+
+            for filter in params["git_data"]["filters"]:
+
+                filter_type = (
+                    "include"
+                    if filter["filter_type"]
+                    == GithubRepositoryReader.FilterType.INCLUDE
+                    else "exclude"
+                )
+                filter_str = f"{filter_type}-{filter['value']}"
+                hash_list.append(filter_str)
+
+        sorted(hash_list)
+        hash_str = "_".join(hash_list)
         hash_hex = md5(hash_str.encode("utf-8")).hexdigest()
         return hash_hex
