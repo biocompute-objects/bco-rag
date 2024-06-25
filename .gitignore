@@ -2,3 +2,4 @@ logs/
 env/
 .env
 __pycache__/
+evaluation_results/
