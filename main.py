@@ -13,6 +13,7 @@ from bcorag.custom_types import (
     create_git_filters,
 )
 from parameter_search.custom_types import create_git_data_file_config, init_search_space
+from frontend.app import App
 import argparse
 import os
 
@@ -24,8 +25,8 @@ def main() -> None:
         "run_mode",
         default="one-shot",
         nargs="?",
-        choices=["one-shot", "grid-search", "random-search"],
-        help="one-shot/grid-search/random-search",
+        choices=["one-shot", "grid-search", "random-search", "evaluate"],
+        help="one-shot/grid-search/random-search/evaluate",
     )
     options = parser.parse_args()
     run_mode = options.run_mode.lower().strip()
@@ -124,6 +125,16 @@ def main() -> None:
             random_search.train()
 
             misc_fns.graceful_exit()
+
+        case "evaluate":
+
+            logger = misc_fns.setup_root_logger("./logs/frontend.log")
+            logger.info(
+                "################################## RUN START ##################################"
+            )
+
+            app = App(logger=logger)
+            app.mainloop()
 
         case _:
 
