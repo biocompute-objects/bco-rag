@@ -1,0 +1,14 @@
+{
+    "input_subdomain": [],
+    "output_subdomain": [
+        {
+            "mediatype": "text/csv",
+            "uri": {
+                "filename": "test_read_depth.bed",
+                "uri": "https://github.com/dpastling/plethora/blob/master/results/test_read_depth.bed",
+                "access_time": "2022-01-01T12:00:00Z",
+                "sha1_checksum": "ABC123"
+            }
+        }
+    ]
+}

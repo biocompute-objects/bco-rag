@@ -1,0 +1,398 @@
+{
+    "usability": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:14:21 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/usability-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/usability-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/usability-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 2.35,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        },
+        {
+            "hash_str": "d7648e9bd78e0402608420001c8c2996",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:20:24 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/usability-1-d7648e9bd78e0402608420001c8c2996.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/usability-1-d7648e9bd78e0402608420001c8c2996.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/usability-1-d7648e9bd78e0402608420001c8c2996.txt",
+                        "elapsed_time": 2.47,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ],
+    "io": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:14:31 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/io-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/io-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/io-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 9.87,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        },
+        {
+            "hash_str": "d7648e9bd78e0402608420001c8c2996",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:20:30 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/io-1-d7648e9bd78e0402608420001c8c2996.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/io-1-d7648e9bd78e0402608420001c8c2996.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/io-1-d7648e9bd78e0402608420001c8c2996.txt",
+                        "elapsed_time": 5.66,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ],
+    "description": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:19:05 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/description-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/description-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/description-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 273.98,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ],
+    "execution": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:20:10 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/execution-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/execution-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/execution-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 64.67,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ],
+    "parametric": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:20:11 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/parametric-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/parametric-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/parametric-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 1.63,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ],
+    "error": [
+        {
+            "hash_str": "feb2c9d21ae717c64b10a59e63e16ee5",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "SimpleDirectoryReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-3.5-turbo",
+                    "embedding_model": "text-embedding-3-large",
+                    "similarity_top_k": 2,
+                    "chunking_config": "2048 chunk size/50 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    }
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-06-25 13:20:15 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/error-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/error-1-feb2c9d21ae717c64b10a59e63e16ee5.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/error-1-feb2c9d21ae717c64b10a59e63e16ee5.txt",
+                        "elapsed_time": 3.8,
+                        "version": "0.2"
+                    }
+                ]
+            }
+        }
+    ]
+}

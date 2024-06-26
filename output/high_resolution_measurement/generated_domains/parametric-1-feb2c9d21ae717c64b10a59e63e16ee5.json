@@ -1,0 +1,5 @@
+{
+    "param": "alignment_dir",
+    "value": "path to where the Bowtie2 alignments will go",
+    "step": "0"
+}

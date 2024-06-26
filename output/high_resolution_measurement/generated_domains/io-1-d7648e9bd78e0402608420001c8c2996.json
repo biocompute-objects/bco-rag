@@ -1,0 +1,31 @@
+{
+    "input_subdomain": [
+        {
+            "uri": {
+                "filename": "HG00250_read.depth.bed",
+                "uri": "https://example.com/data/HG00250_read.depth.bed",
+                "access_time": "2022-01-15T10:30:00Z",
+                "sha1_checksum": "A1B2C3D4E5F6"
+            }
+        },
+        {
+            "uri": {
+                "filename": "hg38_duf_full_domains_v2.3_GC.txt",
+                "uri": "https://example.com/data/hg38_duf_full_domains_v2.3_GC.txt",
+                "access_time": "2022-01-15T10:35:00Z",
+                "sha1_checksum": "1A2B3C4D5E6F"
+            }
+        }
+    ],
+    "output_subdomain": [
+        {
+            "mediatype": "text/csv",
+            "uri": {
+                "filename": "corrected_coverage_results.csv",
+                "uri": "https://example.com/results/corrected_coverage_results.csv",
+                "access_time": "2022-01-15T11:00:00Z",
+                "sha1_checksum": "6F5E4D3C2B1A"
+            }
+        }
+    ]
+}
