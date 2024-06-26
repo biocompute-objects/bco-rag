@@ -115,10 +115,14 @@ class App(ctk.CTk):
         self.current_directory_index = 0
         self.current_run_index = 0
         self.total_runs = self._get_total_runs()
-        self._load_run(self.current_run_index, user_data_entry, beginning)
+        self._load_run(self.current_run_index, user_data_entry, beginning, 1)
 
     def _load_run(
-        self, run_index: int, user_data_entry: dict[str, dict], beginning: bool
+        self,
+        run_index: int,
+        user_data_entry: dict[str, dict],
+        beginning: bool,
+        direction: int,
     ) -> None:
         """Loads the current run info.
 
@@ -130,6 +134,8 @@ class App(ctk.CTk):
              The user's current data entry containing information on the user's evaluations.
         beginning : bool
             Whether to skip over already evaluated generated domains.
+        direction : int
+            The direction the user is evaluating (1 for next, -1 for previous)
         """
         current_run = 0
 
@@ -159,15 +165,18 @@ class App(ctk.CTk):
                                 )
                                 sys.exit(1)
 
+                            param_set_str = json.dumps(domain_param_set["entries"]["params"], indent=4)
+
                             self._show_view_page(
                                 user_data_entry=user_data_entry,
                                 beginning=beginning,
                                 generated_path=domain_run["json_file"],
                                 human_curated_path=human_curated_path,
                                 source_node_path=domain_run["source_node_file"],
-                                param_set="",
+                                param_set=param_set_str,
                                 run_index=run_index,
                                 total_runs=self.total_runs,
+                                direction=direction
                             )
 
                             return
@@ -184,6 +193,7 @@ class App(ctk.CTk):
         param_set: str,
         run_index: int,
         total_runs: int,
+        direction: int
     ) -> None:
         """"""
         self.view_page = ViewPage(
@@ -198,14 +208,21 @@ class App(ctk.CTk):
             navigate_callback=self._navigate_to_path,
             run_index=run_index,
             total_runs=total_runs,
+            direction=direction
         )
 
     def _navigate_to_path(
-        self, run_index: int, user_data_entry: dict[str, dict], beginning: bool
+        self,
+        run_index: int,
+        user_data_entry: dict[str, dict],
+        beginning: bool,
+        already_evaluated: bool,
+        direction: int,
     ) -> None:
         """"""
-        self.view_page.grid_forget()
-        self._load_run(run_index, user_data_entry, beginning)
+        if not already_evaluated:
+            self.view_page.grid_forget()
+        self._load_run(run_index, user_data_entry, beginning, direction)
 
     def _get_total_runs(self) -> int:
         """Gets the total number of runs in the output directory. Used
@@ -227,7 +244,7 @@ class App(ctk.CTk):
         return total_runs
 
     def _create_paper_keys(self) -> None:
-        """"""
+        """Creates an entry for each paper in the evaluations file."""
         base_directories = {os.path.basename(x) for x in self.directories}
         for paper in base_directories:
 
@@ -235,4 +252,8 @@ class App(ctk.CTk):
 
                 self.results_data[paper] = {}
 
-        json.dump(self.results_data, open(self.results_path, "w"), indent=4)
+        json.dump(
+            self.results_data,
+            open(os.path.join(self.results_path, "evaluations.json"), "w"),
+            indent=4,
+        )

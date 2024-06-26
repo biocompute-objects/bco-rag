@@ -18,9 +18,10 @@ class ViewPage(ctk.CTkFrame):
         human_curated_path: str,
         source_node_path: str,
         param_set: str,
-        navigate_callback: Callable[[int, dict[str, dict], bool], None],
+        navigate_callback: Callable[[int, dict[str, dict], bool, bool, int], None],
         run_index: int,
         total_runs: int,
+        direction: int,
         user_data_path: str = os.path.join("./evaluations_results", "user_data.json"),
         standard_padding: int = 20,
         standard_font: str = "Helvetica",
@@ -32,12 +33,38 @@ class ViewPage(ctk.CTkFrame):
         self.logger = logger
         self.user_data_entry = user_data_entry
         self.beginning = beginning
-
         self.domain = os.path.basename(generated_path.split("-")[0])
         self.navigate_callback = navigate_callback
         self.run_index = run_index
         self.total_runs = total_runs
         self.param_set = param_set
+        self._user_data_path = user_data_path
+        self._padding = standard_padding
+        self._font = standard_font
+
+        self._create_sidebar()
+
+        self.already_evaluated = False
+        overwrite_flag = False
+        # this is pretty messy
+        if (
+            os.path.basename(generated_path)
+            in user_data_entry[list(user_data_entry.keys())[0]]
+        ):
+            self.already_evaluated = True
+        # if continuing session, skip generated domains already seen
+        if not self.beginning and self.already_evaluated:
+            if self.run_index >= self.total_runs - 1:
+                self._create_view_all_page()
+            else:
+                if direction == 1:
+                    self._on_next()
+                elif direction == -1:
+                    if self.run_index - 1 < 0:
+                        return
+                    self._on_prev()
+        elif self.beginning and self.already_evaluated:
+            overwrite_flag = True
 
         self.human_curated_domain = json.dumps(
             {
@@ -59,16 +86,11 @@ class ViewPage(ctk.CTkFrame):
                 f"Failed JSON deserialization. Raw text output:\n\n{raw_txt}"
             )
 
-        self._user_data_path = user_data_path
-        self._padding = standard_padding
-        self._font = standard_font
-
         self.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self._create_sidebar()
-        self._create_tab_view()
+        self._create_tab_view(overwrite_flag)
 
     def _create_sidebar(self):
         """"""
@@ -154,6 +176,17 @@ class ViewPage(ctk.CTkFrame):
             pady=y_half_padding,
         )
 
+    def _create_view_all_page(self) -> None:
+        """"""
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.info_label = ctk.CTkLabel(
+            master=self,
+            text="You've evaluated all generated domains!",
+            font=(self._font, 32, "bold"),
+        )
+        self.info_label.grid(row=0, column=0, padx=self._padding, pady=self._padding)
+
     def _change_appearance_mode(self, new_appearance_mode: str) -> None:
         """"""
         ctk.set_appearance_mode(new_appearance_mode)
@@ -163,7 +196,7 @@ class ViewPage(ctk.CTkFrame):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         ctk.set_widget_scaling(new_scaling_float)
 
-    def _create_tab_view(self) -> None:
+    def _create_tab_view(self, overwrite_flag: bool) -> None:
         """"""
         self.tab_view = TabView(
             master=self,
@@ -171,6 +204,7 @@ class ViewPage(ctk.CTkFrame):
             bottom_json=self.generated_domain,
             source_nodes=self.source_nodes_txt,
             param_set=self.param_set,
+            overwrite_flag=overwrite_flag,
             standard_padding=self._padding,
             standard_font=self._font,
         )
@@ -182,12 +216,20 @@ class ViewPage(ctk.CTkFrame):
         """"""
         if self.run_index > 0:
             self.navigate_callback(
-                self.run_index - 1, self.user_data_entry, self.beginning
+                self.run_index - 1,
+                self.user_data_entry,
+                self.beginning,
+                self.already_evaluated,
+                -1,
             )
 
     def _on_next(self):
         """"""
         if self.run_index < self.total_runs - 1:
             self.navigate_callback(
-                self.run_index + 1, self.user_data_entry, self.beginning
+                self.run_index + 1,
+                self.user_data_entry,
+                self.beginning,
+                self.already_evaluated,
+                1,
             )

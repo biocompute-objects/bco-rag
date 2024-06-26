@@ -10,6 +10,7 @@ class TabView(ctk.CTkTabview):
         bottom_json: str,
         source_nodes: str,
         param_set: str,
+        overwrite_flag: bool,
         standard_padding: int = 20,
         standard_font: str = "Helvetica",
         **kwargs
@@ -30,11 +31,13 @@ class TabView(ctk.CTkTabview):
         self.add("Source Nodes")
         self.add("Parameter Set")
 
-        self._create_compare_json(top_json, bottom_json)
+        self._create_compare_json(top_json, bottom_json, overwrite_flag)
         self._create_text_file_tab(source_nodes)
         self._create_param_set_tab(param_set)
 
-    def _create_compare_json(self, top_json: str, bottom_json: str):
+    def _create_compare_json(
+        self, top_json: str, bottom_json: str, overwrite_flag: bool
+    ):
         """"""
         compare_frame = self.tab("Compare JSON")
         compare_frame.grid_columnconfigure(0, weight=1)
@@ -42,6 +45,7 @@ class TabView(ctk.CTkTabview):
         compare_frame.grid_rowconfigure(1, weight=1)
         compare_frame.grid_rowconfigure(2, weight=0)
         compare_frame.grid_rowconfigure(3, weight=1)
+        compare_frame.grid_rowconfigure(4, weight=0)
 
         top_label = ctk.CTkLabel(
             master=compare_frame,
@@ -93,6 +97,17 @@ class TabView(ctk.CTkTabview):
         self.bottom_json_text.insert("0.0", bottom_json)
         self.bottom_json_text.configure(state="disabled")
 
+        if overwrite_flag:
+            bottom_note_label = ctk.CTkLabel(
+                master=compare_frame,
+                text="Note: Overwriting existing evaluation.",
+                font=(self._font, 14, "bold"),
+                text_color="red",
+            )
+            bottom_note_label.grid(
+                row=4, column=0, padx=0, pady=0, sticky="w"
+            )
+
     def _create_text_file_tab(self, text_content: str):
         """"""
         text_frame = self.tab("Source Nodes")
@@ -100,7 +115,7 @@ class TabView(ctk.CTkTabview):
         text_frame.grid_rowconfigure(0, weight=1)
 
         self.text_file_textbox = ctk.CTkTextbox(
-            master=text_frame, wrap="word", font=(self._font, 18)
+            master=text_frame, wrap="none", font=(self._font, 18)
         )
         self.text_file_textbox.grid(
             row=0, column=0, padx=self._padding, pady=self._padding, sticky="nsew"
@@ -110,3 +125,11 @@ class TabView(ctk.CTkTabview):
 
     def _create_param_set_tab(self, param_set: str):
         """"""
+        param_set_frame = self.tab("Parameter Set")
+        param_set_frame.grid_columnconfigure(0, weight=1)
+        param_set_frame.grid_rowconfigure(0, weight=1)
+
+        self.param_set_textbox = ctk.CTkTextbox(master=param_set_frame, wrap="none", font=(self._font, 19))
+        self.param_set_textbox.grid(row=0, column=0, padx=self._padding, pady=self._padding, sticky="nsew")
+        self.param_set_textbox.insert("0.0", param_set)
+        self.param_set_textbox.configure(state="disabled")
