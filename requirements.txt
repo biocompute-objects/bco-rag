@@ -1,7 +1,8 @@
 llama-index==0.10.23
 llama-hub==0.0.79
 llama-index-readers-github==0.1.8
-llama-index-readers-file==0.1.19
+llama-index-readers-file==0.1.25
 python-dotenv==1.0.1
 tiktoken==0.6.0
 pick==2.2.0
+customtkinter==5.2.2
