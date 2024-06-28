@@ -30,10 +30,16 @@ class TabView(ctk.CTkTabview):
         self.add("Compare JSON")
         self.add("Source Nodes")
         self.add("Parameter Set")
+        self.add("Evaluate")
 
         self._create_compare_json(top_json, bottom_json, overwrite_flag)
         self._create_text_file_tab(source_nodes)
         self._create_param_set_tab(param_set)
+        self._create_evaluate_tab()
+
+    def _create_evaluate_tab(self) -> None:
+        """"""
+        evaluate_tab = self.tab("Evaluate")
 
     def _create_compare_json(
         self, top_json: str, bottom_json: str, overwrite_flag: bool
