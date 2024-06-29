@@ -12,24 +12,18 @@ from bcorag.custom_types import (
     create_git_data,
     create_git_filters,
 )
-from parameter_search.custom_types import create_git_data_file_config, init_search_space
+from parameter_search.custom_types import (
+    SearchSpace,
+    create_git_data_file_config,
+    init_search_space,
+)
+from evaluator.frontend.app import App
 import argparse
 import os
 
 
-def main() -> None:
-
-    parser = argparse.ArgumentParser(prog="main.py")
-    parser.add_argument(
-        "run_mode",
-        default="one-shot",
-        nargs="?",
-        choices=["one-shot", "grid-search", "random-search"],
-        help="one-shot/grid-search/random-search",
-    )
-    options = parser.parse_args()
-    run_mode = options.run_mode.lower().strip()
-
+def _create_search_space() -> SearchSpace:
+    """Creates a search space for parameter testing."""
     filenames = ["./bcorag/test_papers/High resolution measurement.pdf"]
     loaders = "SimpleDirectoryReader"
     chunking_config = [
@@ -79,6 +73,21 @@ def main() -> None:
         llm=llms,
         git_data=[git_file_data],
     )
+    return search_space
+
+
+def main() -> None:
+
+    parser = argparse.ArgumentParser(prog="main.py")
+    parser.add_argument(
+        "run_mode",
+        default="one-shot",
+        nargs="?",
+        choices=["one-shot", "grid-search", "random-search", "evaluate"],
+        help="one-shot/grid-search/random-search/evaluate",
+    )
+    options = parser.parse_args()
+    run_mode = options.run_mode.lower().strip()
 
     match run_mode:
 
@@ -108,7 +117,7 @@ def main() -> None:
                 "################################## RUN START ##################################"
             )
 
-            grid_search = BcoGridSearch(search_space)
+            grid_search = BcoGridSearch(_create_search_space())
             grid_search.train()
 
             misc_fns.graceful_exit()
@@ -120,10 +129,15 @@ def main() -> None:
                 "################################## RUN START ##################################"
             )
 
-            random_search = BcoRandomSearch(search_space, subset_size=5)
+            random_search = BcoRandomSearch(_create_search_space(), subset_size=5)
             random_search.train()
 
             misc_fns.graceful_exit()
+
+        case "evaluate":
+
+            app = App()
+            app.start()
 
         case _:
 
