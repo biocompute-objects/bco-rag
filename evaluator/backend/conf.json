@@ -1,0 +1,16 @@
+{
+  "logger_path": "./logs/frontend_evaluator.log",
+  "logger_name": "evaluator",
+  "generated_output_dir_path": "./output",
+  "glob_pattern": "**",
+  "results_dir_path": "./evaluation_results",
+  "ignore_files": [
+    "README",
+    "human_curated"
+  ],
+  "bco_results_file_name": "evaluations.json",
+  "user_results_file_name": "user_data.json",
+  "users_file_name": "users.json",
+  "padding": 20,
+  "font": "Helvetica"
+}
