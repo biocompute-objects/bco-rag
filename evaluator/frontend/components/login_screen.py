@@ -11,7 +11,7 @@ class LoginScreen(ctk.CTkFrame):
         master: ctk.CTk,
         on_login: Callable[[str, str, AppAttributes], tuple[str, Optional[AppState]]],
         on_login_success: Callable[[AppState], None],
-        on_exit: Callable[[AppAttributes | AppState], NoReturn],
+        on_exit: Callable[[], NoReturn],
         attributes: AppAttributes,
         **kwargs
     ):
@@ -104,5 +104,5 @@ class LoginScreen(ctk.CTkFrame):
         self.on_login_success(state)
 
     def _exit_app(self) -> NoReturn:
-        """Intermediate callabck for the exit button."""
-        self.on_exit(self.attributes)
+        """Intermediate callback for the exit button."""
+        self.on_exit()
