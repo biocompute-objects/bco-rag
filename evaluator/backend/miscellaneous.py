@@ -2,20 +2,11 @@ from bcorag import misc_functions
 from .custom_types import AppAttributes, AppState, AppStateKey, RunState, RunStateKey
 import customtkinter as ctk  # type: ignore
 from typing import NoReturn, get_args, Literal, cast
-import logging
+from .state import save_state
 
 
-def exit_app(app_state: AppState | AppAttributes) -> NoReturn:
-    """Gracefully exits the app.
-
-    Parameters
-    ----------
-    app_state : AppState or AppAttributes
-        The app state or attributes (if state hasn't been initialized
-        yet) containing output data to write to disk before exiting
-        (prevents lost save data).
-    """
-    # TODO : implement attributes writes
+def exit_app() -> NoReturn:
+    """Gracefully exits the app."""
     misc_functions.graceful_exit(0)
 
 
