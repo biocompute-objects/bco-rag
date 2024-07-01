@@ -52,6 +52,35 @@ def set_resume_session(app_state: AppState, resume_session: bool) -> AppState:
     return app_state
 
 
+def save_state(app_state: AppState) -> None:
+    """Saves the state.
+
+    Parameters
+    ----------
+    app_state : AppState
+        The app state to save.
+    """
+    app_state["logger"].info("Writing data...")
+    misc_fns.write_json(
+        output_path=os.path.join(
+            app_state["results_dir_path"], app_state["bco_results_file_name"]
+        ),
+        data=app_state["bco_results_data"],
+    )
+    misc_fns.write_json(
+        output_path=os.path.join(
+            app_state["results_dir_path"], app_state["user_results_file_name"]
+        ),
+        data=app_state["user_results_data"],
+    )
+    misc_fns.write_json(
+        output_path=os.path.join(
+            app_state["results_dir_path"], app_state["users_file_name"]
+        ),
+        data=app_state["users_data"],
+    )
+
+
 def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunState:
     """Create run state.
 
@@ -99,9 +128,7 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                                 generated_domain_dict, indent=4
                             )
                         else:
-                            generated_domain_path = generated_domain_path.replace(
-                                ".json", ".txt"
-                            )
+                            generated_domain_path = domain_run["txt_file"]
                             raw_txt = open(generated_domain_path, "r").read()
                             generated_domain = f"Failed JSON serialization. Raw text output:\n\n{raw_txt}"
 
@@ -123,7 +150,12 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                                 1,
                                 f"Unable to load human curated JSON at path `{human_curated_path}`.",
                             )
-                        human_curated_domain = human_curated_json[f"{domain}_domain"]
+                        human_curated_domain_formatted_json = {
+                            f"{domain}_domain": human_curated_json[f"{domain}_domain"]
+                        }
+                        human_curated_domain = json.dumps(
+                            human_curated_domain_formatted_json, indent=4
+                        )
 
                         param_set = json.dumps(
                             domain_param_set["entries"]["params"], indent=4
@@ -133,7 +165,13 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                             domain_run["source_node_file"], "r"
                         ).read()
 
-                        # TODO : implement alreaady evaluated logic
+                        already_evaluated = False
+                        if (
+                            os.path.basename(generated_domain_path)
+                            in app_state["user_results_data"][app_state["user_hash"]]
+                        ):
+                            already_evaluated = True
+
                         run_state = create_run_state(
                             domain=domain,
                             generated_domain=generated_domain,
@@ -143,7 +181,7 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                             reference_nodes=reference_nodes,
                             run_index=run_index,
                             total_runs=total_runs,
-                            already_evaluated=False,
+                            already_evaluated=already_evaluated,
                             logger=app_state["logger"],
                         )
 
