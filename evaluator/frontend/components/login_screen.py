@@ -8,7 +8,7 @@ class LoginScreen(ctk.CTkFrame):
 
     def __init__(
         self,
-        master: ctk.CTk | ctk.CTkFrame,
+        master: ctk.CTk,
         on_login: Callable[[str, str, AppAttributes], tuple[str, Optional[AppState]]],
         on_login_success: Callable[[AppState], None],
         on_exit: Callable[[AppAttributes | AppState], NoReturn],
@@ -18,7 +18,6 @@ class LoginScreen(ctk.CTkFrame):
         """Constructor."""
         super().__init__(master, **kwargs)
 
-        self.master = master
         self.on_login = on_login
         self.on_login_success = on_login_success
         self.on_exit = on_exit
@@ -62,7 +61,7 @@ class LoginScreen(ctk.CTkFrame):
         )
         self.last_name_entry.grid(
             row=1,
-            column=2,
+            column=1,
             padx=self.attributes["padding"],
             pady=self.attributes["padding"],
         )
