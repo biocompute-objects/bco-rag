@@ -1,6 +1,6 @@
 import customtkinter as ctk  # type: ignore
-from typing import Callable, Literal
-from evaluator.backend.custom_types import AppState, RunState
+from typing import Callable, Literal, NoReturn
+from evaluator.backend.custom_types import AppAttributes, AppState, RunState
 from .sidebar import SideBar
 from .tab_view import TabView
 
@@ -14,6 +14,8 @@ class ViewPage(ctk.CTkFrame):
         app_state: AppState,
         run_state: RunState,
         navigate: Callable[[Literal[-1, 1], int, AppState], None],
+        on_save: Callable[[AppState], None],
+        on_exit: Callable[[], NoReturn],
         **kwargs
     ):
         """Constructor."""
@@ -33,6 +35,8 @@ class ViewPage(ctk.CTkFrame):
             app_state=self.state,
             run_state=self.run,
             navigate=self.navigate,
+            on_save=on_save,
+            on_exit=on_exit,
         )
 
         self.tab_view = TabView(master=self, app_state=self.state, run_state=self.run)
