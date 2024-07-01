@@ -144,7 +144,7 @@ class RunState(TypedDict):
     domain: str
     generated_domain: str
     generated_file_path: str
-    human_curated_domain: dict
+    human_curated_domain: str
     param_set: str
     reference_nodes: str
     run_index: int
@@ -157,7 +157,7 @@ def create_run_state(
     domain: str,
     generated_domain: str,
     generated_file_path: str,
-    human_curated_domain: dict,
+    human_curated_domain: str,
     param_set: str,
     reference_nodes: str,
     run_index: int,
