@@ -2,7 +2,8 @@
 """
 
 from .custom_types import AppAttributes, AppState, create_app_state
-from . import miscellaneous as utils
+from .miscellaneous import log_state
+from .state import create_new_user
 from hashlib import md5
 from typing import Optional
 
@@ -24,7 +25,7 @@ def login(
     Returns
     -------
     tuple (str, AppState or None)
-        A string containing the user hash on success or an 
+        A string containing the user hash on success or an
         error message on errror and the current app state
         on success or None on error.
     """
@@ -42,17 +43,19 @@ def login(
 
     if _check_user_existence(user_hash, attributes):
         attributes["logger"].info(f"Found existing user for {last_name}, {first_name}")
+        new_user = False
     else:
-        attributes["logger"].info(f"Creating new user for {last_name}, {first_name}")
-        # update users and user data files
-        attributes["users_data"][user_hash] = {
-            "first_name": first_name,
-            "last_name": last_name,
-        }
-        attributes["user_results_data"][user_hash] = {}
-    app_state = create_app_state(attributes, user_hash)
+        new_user = True
 
-    utils.log_state(app_state)
+    app_state = create_app_state(
+        attributes=attributes, user_hash=user_hash, new_user=new_user
+    )
+    if new_user:
+        app_state = create_new_user(
+            app_state=app_state, first_name=first_name, last_name=last_name
+        )
+
+    log_state(app_state, "app")
 
     return user_hash, app_state
 
