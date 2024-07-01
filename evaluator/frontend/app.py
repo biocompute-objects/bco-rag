@@ -76,4 +76,6 @@ class App(ctk.CTk):
             app_state=app_state,
             run_state=init_run_state,
             navigate=self.navigate,
+            on_save=state.save_state,
+            on_exit=misc.exit_app
         )
