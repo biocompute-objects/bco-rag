@@ -2,7 +2,6 @@ from bcorag import misc_functions
 from .custom_types import AppAttributes, AppState, AppStateKey, RunState, RunStateKey
 import customtkinter as ctk  # type: ignore
 from typing import NoReturn, get_args, Literal, cast
-from .state import save_state
 
 
 def exit_app() -> NoReturn:
