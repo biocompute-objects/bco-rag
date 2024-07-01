@@ -1,0 +1,432 @@
+
+--------------- Source Node '1/3' ---------------
+Node ID: 'bc744c98-223e-4a7c-831c-1202e9426ccb'
+Similarity: '0.31542019921942277'
+Metadata String:
+`file_path: README.md
+file_name: README.md
+url: https://github.com/dpastling/plethora/blob/master/README.md`
+Metadata Size: `106`
+Content Size: `7965`
+Retrieved Text:
+# plethora
+
+Plethora is a tool kit for copy number variation (CNV) analysis of highly
+duplicated regions.  It was tailored specifically for the DUF1220 domain which
+is found in over 300 copies in the human genome. However it could be applied to
+other high copy domains and segmental duplications. The details are published [here](https://doi.org/10.1186/s12864-017-3976-z):
+
+> Astling, DP, Heft IE, Jones, KL, Sikela, JM. "High resolution measurement of
+> DUF1220 domain copy number from whole genome sequence data" (2017) BMC
+> Genomics. 18:614. https://doi.org/10.1186/s12864-017-3976-z
+
+## Dependencies
+
+Plethora depends on the following software. Note that updates to samtools and
+bedtools may break plethora due to recent parameter changes
+
+- [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.9
+- [Bedtools](http://bedtools.readthedocs.io/en/latest/) version 2.17.0
+- [Samtools](http://samtools.sourceforge.net) version: 0.1.19-44428cd
+- [Cutadapt](https://cutadapt.readthedocs.io) v1.12
+- Perl module: Math::Random
+- Perl module: Math::Complex
+
+You will also need to download the human genome hg38 and build a Bowtie index
+for it. Instructions for doing this can be found on the Bowtie2 website.
+
+A script for installing the dependencies is included `code/install_tools.sh`
+
+
+## Quick Start
+
+The following illustrates the minimal steps necessary to run the pipeline. The
+test data are simulated reads for a single DUF1220 domain, so this should run
+relatively quickly versus a full WGS data set. The following code can also be used to
+test that your environment has been set up correctly and that the installed
+software is working.
+
+1. Create directories for the resulting files (if they don't exist already)
+
+```bash
+mkdir alignments
+mkdir results
+```
+
+2. Trim low quality bases from the 3' ends of the reads and remove any that are
+shorter than 80 bp. Since we are working with simulated data, we don't expect
+many reads to be effected by this.
+
+```bash
+cutadapt \
+ -a XXX -A XXX -q 10 --minimum-length 80 --trim-n \
+ -o fastq/test_1_filtered.fastq.gz \
+ -p fastq/test_2_filtered.fastq.gz \
+ fastq/test_1.fastq.gz \
+ fastq/test_2.fastq.gz
+```
+
+3. Align reads to the genome with Bowtie2. Note you may have to change the path to point to your Bowtie2 reference
+
+
+```bash
+code/bowtie2.sh \
+ -g $HOME/genomes/bowtie2.2.9_indicies/hg38/hg38 \
+ -b alignments/test.bam \
+ fastq/test_1_filtered.fastq.gz \
+ fastq/test_2_filtered.fastq.gz
+```
+
+4. Calculate coverage for each DUF1220 domain
+
+
+```bash
+code/make_bed.sh \
+ -r data/hg38_duf_full_domains_v2.3.bed \
+ -p "paired" \
+ -b alignments/test.bam \
+ -o results/test
+```
+
+The resulting file `test_read_depth.bed` has the coverage for each domain. The reads were
+simulated from NBPF1\_CON1\_1 at 30x coverage. Based on prior work, we expect to
+find that most reads align to NBPF1\_CON1\_1, but some reads will map to one of
+the other CON1 domains of NBPF1 or to NBPF1L.
+
+The results should look something like this
+
+```bash
+awk '$2 > 0' results/test_read_depth.bed
+```
+
+    NBPF1_CON1_1   28.2794
+    NBPF1L_CON1_1  2.55338
+    NBPF1_CON1_2   0.66548
+
+
+## Processing sequence data from the 1000 Genomes Project
+
+The following describes how to apply plethora to the 1000 Genomes data and
+describes the main steps in a little more detail. The scripts for processing the
+1000 Genomes data can be found in the folder `code/1000genomes`. These scripts
+are for submitting jobs to the LSF job queuing system for processing multiple
+samples in parallel. These scripts can be modified for use with 
+other job queuing systems (such as PBS or Slurm). Alternatively, the scripts in the main `code` folder
+can be run individually without using a job scheduler (as shown in the quick
+start guide).
+
+If everything has been configured correctly, you should be able to process the
+entire dataset with the following command:
+
+    bsub < code/1000genomes/run.sh
+
+However, it is likely that some jobs will fail at various stages of the pipeline due to
+networking issues or from heavy usage from other users of the computational cluster. 
+So you may have to submit some of these steps to the queue separately.
+
+
+#### 0. Edit the `config.sh` file to adapt the paths and sample list for your environment
+
+The config file is where all the project specific parameters and sample names
+should go. The other scripts in the pipeline should be kept as abstract as possible for reuse. 
+
+Here are few important variables required by the pipeline:
+
+- **sample_index** path to the file with the 1000 Genomes information
+- **genome** path to the Bowtie indices for genome
+- **master_ref** path to the bedfile with the DUF1220 coordinates, or other
+  regions of interest
+- **alignment_dir** path to where the Bowtie2 alignments will go
+- **result_folder** path to where the resulting coverage files will be stored
+- **bowtie_params** additional parameters to be passed to Bowtie2 that are
+  specific to the project
+
+The config file will also create directories where all the results will go.
+
+
+#### 1. Download the fastq files from the 1000 Genomes Project
+
+```bash
+bsub < code/1000genomes/1_download.sh
+```
+
+This script downloads the fastq files for each sample from the 1000
+Genomes site as specified in a sample\_index file. The script fetches all associated files with a given sample name and uses `wget` to download the files to the `fastq` folder. The script checks the md5sum hashes for each file against the
+downloaded file. The script exits with an error if they do not match.
+
+Alternatively, if you are not using the LSF queuing system, the script can be run manually like so:
+
+```bash
+code/download_fastq.pl HG00250 data/1000Genomes_samples.txt 
+```
+
+
+#### 2.  Trim and filter the reads
+
+```bash
+bsub < code/1000genomes/2_trim.sh
+```
+
+This script automates the read trimming by Cutadapt. Alternatively, Cutadapt
+could be run directly as described in the quick start guide above.
+
+
+#### 3. Align reads to the genome
+
+```bash
+bsub < code/1000genomes/3_batch_bowtie.sh
+```
+
+This script automates the Bowtie2 alignments for the filtered reads generated above.
+
+Alternatively, Bowtie2 can be run separately using the shell script `code/bowtie.sh` 
+
+
+#### 4. (Optional) Remove temporary files
+
+```bash
+bsub < code/1000genomes/4_batch_clean.sh
+```
+
+This script removes intermediate files from earlier stages of the pipeline. This is useful because WGS files can take up a lot of disk space. This script first confirms that files from previous steps have been run correctly before removing them. 
+
+By default it assumes that the number of reads in the fastq file are
+correct (verified via checksum or read counting). Optionally you can provide a
+file with the expected number of reads. The script deletes the file from a
+prior step if the file in the next step has the correct number of reads (e.g.
+delete the original bam file if the sorted bam has the correct number of
+reads and delete the sorted bam if the resulting bed file has the correct number
+of reads).
+
+If the data have been downloaded from a public repository like the 1000 Genomes, this script can remove the fastq files by passing an optional flag.
+
+The script assumes the `.bam` file contains unaligned reads (e.g. the number of reads in the fastq file should match the number of reads in the .bam file).
+
+Behind the scenes the clean script runs `code/clean_files.pl`. For more information on how to run this directly:
+
+```bash
+code/clean_files.pl -h
+```
+
+
+#### 5. Calculate coverage for each region of interest
+
+```bash
+bsub < code/1000genomes/5_make_bed.sh
+```
+
+This script: 
+
+  - Coverts the .bam alignment file into bed format
+  - Parses the reads
+  - Calls the `merge_pairs.pl` script (described below) to combined proper pairs into a single
+fragment
+  - Finds overlaps with the reference bed file containing the regions of interest
+(e.g. DUF1220)
+  - Calculates the average coverage for each region: (number of bases that
+overlap) / (domain length)
+
+
+--------------- Source Node '2/3' ---------------
+Node ID: '389b9156-3472-4e08-ab84-3d6427ef51f5'
+Similarity: '0.31206375120840335'
+Metadata String:
+`page_label: 1
+file_name: High resolution measurement.pdf
+file_path: bcorag/test_papers/High resolution measurement.pdf
+file_type: application/pdf
+file_size: 1391462
+creation_date: 2024-06-23
+last_modified_date: 2024-06-23`
+Metadata Size: `221`
+Content Size: `4255`
+Retrieved Text:
+METHODOLOGY ARTICLE Open Access
+High resolution measurement of DUF1220
+domain copy number from whole genome
+sequence data
+David P. Astling1, Ilea E. Heft1, Kenneth L. Jones2and James M. Sikela1*
+Abstract
+Background: DUF1220 protein domains found primarily in Neuroblastoma BreakPoint Family ( NBPF ) genes show
+the greatest human lineage-specific increase in copy number of any coding region in the genome. There are 302
+haploid copies of DUF1220 in hg38 (~160 of which are human-specific) and the majority of these can be divided
+into 6 different subtypes (referred to as clades). Copy number changes of specific DUF1220 clades have been
+associated in a dose-dependent manner with brain size variation (both evolutionarily and within the human
+population), cognitive aptitude, autism severity, and schizophrenia severity. However, no published methods can
+directly measure copies of DUF1220 with high accuracy and no method can distinguish between domains within
+a clade.
+Results: Here we describe a novel method for measuring copies of DUF1220 domains and the NBPF genes in
+which they are found from whole genome sequence data. We have characterized the effect that various
+sequencing and alignment parameters and strategies have on the accuracy and precision of the method and
+defined the parameters that lead to optimal DUF1220 copy number measurement and resolution. We show that
+copy number estimates obtained using our read depth approach are highly correlated with those generated by
+ddPCR for three representative DUF1220 clades. By simulation, we demonstrate that our method provides sufficient
+resolution to analyze DUF1220 copy number variation at three levels: (1) DUF1220 clade copy number within
+individual genes and groups of genes (gene-specific clade groups) (2) genome wide DUF1220 clade copies and
+(3) gene copy number for DUF1220-encoding genes.
+Conclusions: To our knowledge, this is the first method to accurately measure copies of all six DUF1220 clades
+and the first method to provide gene specific resolution of these clades. This allows one to discriminate among
+the ~300 haploid human DUF1220 copies to an extent not possible with any other method. The result is a greatly
+enhanced capability to analyze the role that these sequences play in human variation and disease.
+Keywords: Copy number variation, CNV, DUF1220, Genome informatics, Next-generation sequencing,
+Bioinformatics
+Background
+Highly duplicated sequences, including genes, are preva-
+lent throughout the human genome [1]. While they have
+been linked to important evolutionary [2, 3] and medical
+phenotypes [4], they often go unexamined in studies of
+genetic disease due to their complexity. Thus, there is a
+growing need to develop improved strategies for accuratecopy number determination of highly duplicated se-
+quences. While a number of methods exist for scoring
+copy number variations (CNVs) (e.g. array comparative
+genomic hybridization (arrayCGH), SNP arrays, qPCR,
+ddPCR and read depth from exome sequencing) these
+methods are not ideal for high-resolution measurement of
+DUF1220 domains due to limitations in throughput, ac-
+curacy and/or coverage. The primary challenge for both
+array based methods and exome sequencing lies in the
+hybridization efficiency of each probe with its respective
+target and thus causing variance and resulting uneven* Correspondence: james.sikela@ucdenver.edu
+1Department of Biochemistry and Molecular Genetics, University of Colorado
+School of Medicine, Aurora, CO, USA
+Full list of author information is available at the end of the article
+© The Author(s). 2017 Open Access This article is distributed under the terms of the Creative Commons Attribution 4.0
+International License (http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and
+reproduction in any medium, provided you give appropriate credit to the original author(s) and the source, provide a link to
+the Creative Commons license, and indicate if changes were made. The Creative Commons Public Domain Dedication waiver
+(http://creativecommons.org/publicdomain/zero/1.0/) applies to the data made available in this article, unless otherwise stated.Astling et al. BMC Genomics  (2017) 18:614 
+DOI 10.1186/s12864-017-3976-z
+
+
+--------------- Source Node '3/3' ---------------
+Node ID: '68485cf0-a245-4746-aece-114ed181c448'
+Similarity: '0.304563184939738'
+Metadata String:
+`page_label: 6
+file_name: High resolution measurement.pdf
+file_path: bcorag/test_papers/High resolution measurement.pdf
+file_type: application/pdf
+file_size: 1391462
+creation_date: 2024-06-23
+last_modified_date: 2024-06-23`
+Metadata Size: `221`
+Content Size: `2444`
+Retrieved Text:
+for each read, in the case of multiple valid alignments, one
+of the alignments is chosen at random), 2) ‘Align All ’
+method, (i.e. shorten longer reads to 36 bases, find all pos-
+sible alignments within 2 misma tches, and normalize cover-
+age at each location by dividing by the total number of
+domains measured); 3) ‘total counts ’strategy (as for 2) butusing the Bowtie1 aligner; 4) multi-read correction method,
+(i.e. the contribution of each read is divided by the number
+of loci it aligned to. In this strategy, we first attempted to
+find the best possible alignment for each read using Bow-
+tie1, but in the case of multiple valid alignments, all ties are
+kept rather than choosing one at random).CON1 CON2 CON3 HLS1 HLS2 HLS3gene group clade
+100 200 300 100 200 300 100 200 300 100 200 300 100 200 300 100 200 3000246
+0246
+0246
+0246
+Read Len gth (in bp)RMSEpairing
+paired
+single
+Fig. 3 Effect of sequencing parameters on the accuracy and precision of the measurement. Simulated reads were generated for each domain
+and aligned back to the genome. RMSE was calculated at the domain level (do reads align to the exact genomic location from where they
+originated?), at the gene-specific clade level (do reads align to the correct clade within the originating NBPF gene?), at the group-specific clade
+level (to the correct clade within gene groupings described above), and at the clade-specific level (do reads align to the correct clade?)
+domain gene group cladeCON1 CON2 CON3 HLS1 HLS2 HLS3NBPF1
+NBPF1L
+NBPF4
+NBPF5P
+NBPF6
+NBPF10
+NBPF14
+NBPF19
+NBPF20
+NBPF15
+NBPF8
+NBPF26
+NBPF12
+NBPF11
+NBPF2P
+NBPF3
+NBPF7
+NBPF9
+NBPF13P
+NBPF17P
+NBPF21P
+NBPF25P
+NBPF1
+NBPF1L
+NBPF4
+NBPF5P
+NBPF6
+NBPF10
+NBPF14
+NBPF19
+NBPF20
+NBPF15
+NBPF8
+NBPF26
+NBPF12
+NBPF11
+NBPF2P
+NBPF3
+NBPF7
+NBPF9
+NBPF13P
+NBPF17P
+NBPF21P
+NBPF25P
+NBPF1
+NBPF1L
+NBPF4
+NBPF5P
+NBPF6
+NBPF10
+NBPF14
+NBPF19
+NBPF20
+NBPF15
+NBPF8
+NBPF26
+NBPF12
+NBPF11
+NBPF2P
+NBPF3
+NBPF7
+NBPF9
+NBPF13P
+NBPF17P
+NBPF21P
+NBPF25P
+NBPF1
+NBPF1L
+NBPF4
+NBPF5P
+NBPF6
+NBPF10
+NBPF14
+NBPF19
+NBPF20
+NBPF15
+NBPF8
+NBPF26
+NBPF12
+NBPF11
+NBPF2P
+NBPF3
+NBPF7
+NBPF9
+NBPF13P
+NBPF17P
+NBPF21P
+NBPF25P024
+024
+024
+024
+024
+024RMSE
+Fig. 4 Variation in Root Mean Squared Error (RMSE) of the copy number estimate by gene and clade. Simulated data were generated for 100 bp
+paired end reads and the RMSE for each gene was calculated for each of four levels of resolution as described in the methodsAstling et al. BMC Genomics  (2017) 18:614 Page 6 of 16
+

@@ -1,0 +1,14 @@
+{
+    "input_subdomain": [],
+    "output_subdomain": [
+        {
+            "mediatype": "application/octet-stream",
+            "uri": {
+                "filename": "High resolution measurement.pdf",
+                "uri": "https://doi.org/10.1186/s12864-017-3976-z",
+                "access_time": "2022-10-31T08:00:00Z",
+                "sha1_checksum": "A1B2C3D4E5F6"
+            }
+        }
+    ]
+}

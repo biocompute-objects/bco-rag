@@ -1,0 +1,11 @@
+{
+    "empirical_error": {
+        "limits_of_detectability": "The paper does not provide specific values for limits of detectability.",
+        "false_positives": "The paper does not provide specific values for false positives.",
+        "false_negatives": "The paper does not provide specific values for false negatives.",
+        "statistical_confidence": "The paper does not provide specific statistical confidence values."
+    },
+    "algorithmic_error": {
+        "description": "The algorithmic error domain is not explicitly discussed in the paper."
+    }
+}
