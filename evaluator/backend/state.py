@@ -3,8 +3,16 @@
 import os
 import json
 from bcorag import misc_functions as misc_fns
-from .custom_types import AppState, RunState, create_run_state
+from .custom_types import (
+    AppState,
+    EvalData,
+    RunState,
+    create_run_state,
+    default_eval,
+    check_default_eval,
+)
 from .miscellaneous import log_state
+from typing import Optional, cast
 
 
 def create_new_user(app_state: AppState, first_name: str, last_name: str) -> AppState:
@@ -29,7 +37,7 @@ def create_new_user(app_state: AppState, first_name: str, last_name: str) -> App
         "first_name": first_name,
         "last_name": last_name,
     }
-    app_state["user_results_data"][app_state["user_hash"]] = {}
+    app_state["user_results_data"][app_state["user_hash"]] = None
     return app_state
 
 
@@ -81,6 +89,53 @@ def save_state(app_state: AppState) -> None:
     )
 
 
+def submit_eval_state(app_state: AppState, run_state: RunState) -> AppState:
+    """Updates the app state with the submitted evaluation data. If the
+    eval state is the default eval state this function will silently not
+    perform the update.
+
+    Parameters
+    ----------
+    app_state : AppState
+        The app state to update.
+    run_state : RunState
+        The run state to update from.
+
+    Returns
+    -------
+    AppState
+        The updated app state.
+    """
+    if not check_default_eval(run_state["eval_data"]):
+
+        user_hash = app_state["user_hash"]
+        file_name = os.path.basename(run_state["generated_file_path"])
+        file_eval = run_state["eval_data"]
+
+        if user_hash not in app_state["user_results_data"]:
+            misc_fns.graceful_exit(
+                1,
+                f"Error: User hash `{user_hash}` not found in user results data on submit eval.",
+            )
+
+        user_data = app_state["user_results_data"][user_hash]
+        if user_data is None:
+            user_data = {}
+
+        user_data = cast(dict[str, Optional[EvalData]], user_data)
+        user_data[file_name] = file_eval
+
+        app_state["user_results_data"][user_hash] = user_data
+
+        app_state["logger"].info("Eval state updated...")
+
+    else:
+
+        app_state["logger"].info("Default eval set detected, not updating.")
+
+    return app_state
+
+
 def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunState:
     """Create run state.
 
@@ -92,6 +147,8 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
         The total number of potential evaluation runs.
     app_state : AppState
         The current app state.
+
+    TODO : This function is messy, should be cleaned up at some point.
 
     Returns
     -------
@@ -117,9 +174,7 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                         generated_domain_path = str(domain_run["json_file"])
                         generated_domain: dict | str | None = None
                         if os.path.isfile(generated_domain_path):
-                            generated_domain = misc_fns.load_json(
-                                generated_domain_path
-                            )
+                            generated_domain = misc_fns.load_json(generated_domain_path)
                             if generated_domain is None:
                                 misc_fns.graceful_exit(
                                     1,
@@ -164,11 +219,24 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                         ).read()
 
                         already_evaluated = False
+                        eval_data = default_eval()
                         if (
-                            os.path.basename(generated_domain_path)
-                            in app_state["user_results_data"][app_state["user_hash"]]
+                            app_state["user_results_data"][app_state["user_hash"]]
+                            is not None
                         ):
-                            already_evaluated = True
+                            user_eval_data = app_state["user_results_data"][
+                                app_state["user_hash"]
+                            ]
+                            if (user_eval_data is not None) and (
+                                os.path.basename(generated_domain_path)
+                                in user_eval_data
+                            ):
+                                user_file_eval = user_eval_data[
+                                    os.path.basename(generated_domain_path)
+                                ]
+                                if user_file_eval is not None:
+                                    already_evaluated = True
+                                    eval_data = user_file_eval
 
                         run_state = create_run_state(
                             domain=domain,
@@ -181,6 +249,7 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                             total_runs=total_runs,
                             already_evaluated=already_evaluated,
                             logger=app_state["logger"],
+                            eval_data=eval_data,
                         )
 
                         log_state(run_state, "run")
