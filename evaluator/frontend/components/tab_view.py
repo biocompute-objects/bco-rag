@@ -1,6 +1,12 @@
 import customtkinter as ctk  # type: ignore
-from evaluator.backend.custom_types import RunState, AppState
-import json
+from evaluator.backend.custom_types import (
+    EvalData,
+    RunState,
+    AppState,
+    create_full_eval,
+)
+from .score_frame import ScoreFrame
+from .error_frame import ErrorFrame
 
 
 class TabView(ctk.CTkTabview):
@@ -25,9 +31,9 @@ class TabView(ctk.CTkTabview):
         self._create_parameter_set_tab()
         self._create_evaluate_tab()
 
-        self.update_state(self.run)
+        self.update_state(app_state=self.state, run_state=self.run)
 
-    def update_state(self, run_state: RunState) -> None:
+    def update_state(self, app_state: AppState, run_state: RunState) -> None:
         """Loads the run data and updates the state.
 
         Parameters
@@ -35,31 +41,60 @@ class TabView(ctk.CTkTabview):
         run_state : RunState
             The run to laod.
         """
+        self.run = run_state
+        self.state = app_state
+
         self.left_json_text.configure(state="normal")
         self.left_json_text.delete(0.0, "end")
-        self.left_json_text.insert(0.0, run_state["human_curated_domain"])
+        self.left_json_text.insert(0.0, self.run["human_curated_domain"])
         self.left_json_text.configure(state="disabled")
 
         self.right_json_text.configure(state="normal")
         self.right_json_text.delete(0.0, "end")
-        self.right_json_text.insert("0.0", run_state["generated_domain"])
+        self.right_json_text.insert("0.0", self.run["generated_domain"])
         self.right_json_text.configure(state="disabled")
 
         self.source_node_text.configure(state="normal")
         self.source_node_text.delete(0.0, "end")
-        self.source_node_text.insert(0.0, run_state["reference_nodes"])
+        self.source_node_text.insert(0.0, self.run["reference_nodes"])
         self.source_node_text.configure(state="disabled")
 
         self.parameter_set_text.configure(state="normal")
         self.parameter_set_text.delete(0.0, "end")
-        self.parameter_set_text.insert("0.0", run_state["param_set"])
+        self.parameter_set_text.insert("0.0", self.run["param_set"])
         self.parameter_set_text.configure(state="disabled")
 
-        self.run = run_state
+        self.score_frame.update_state(app_state=app_state, run_state=self.run)
+
+    def get_results(self) -> EvalData:
+        """Returns the score evaluations."""
+        score_eval = self.score_frame.get_results()
+        eval_data = create_full_eval(score_eval=score_eval)
+        return eval_data
 
     def _create_evaluate_tab(self) -> None:
         """Creates the evaluate tab view."""
         self.evaluate_frame = self.tab("Evaluate")
+        self.evaluate_frame.grid_columnconfigure(0, weight=0)
+        self.evaluate_frame.grid_rowconfigure(0, weight=0)
+        self.evaluate_frame.grid_columnconfigure(1, weight=0)
+        self.evaluate_frame.grid_rowconfigure(1, weight=0)
+        self.evaluate_frame.grid_columnconfigure(2, weight=2)
+        self.evaluate_frame.grid_rowconfigure(2, weight=2)
+
+        self.score_frame = ScoreFrame(
+            master=self.evaluate_frame, app_state=self.state, run_state=self.run
+        )
+        self.score_frame.grid(
+            row=0, column=0, padx=self.state["padding"], pady=self.state["padding"]
+        )
+
+        self.err_frame = ErrorFrame(
+            master=self.evaluate_frame, app_state=self.state, run_state=self.run
+        )
+        self.err_frame.grid(
+            row=0, column=1, padx=self.state["padding"], pady=self.state["padding"]
+        )
 
     def _create_compare_json_tab(self) -> None:
         """Creates the compare JSON tab view."""
