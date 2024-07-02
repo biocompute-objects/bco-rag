@@ -1,6 +1,7 @@
 import customtkinter as ctk  # type: ignore
 from typing import Callable, Literal, NoReturn
-from evaluator.backend.custom_types import AppAttributes, AppState, RunState
+from evaluator.backend.custom_types import AppState, RunState
+from evaluator.backend.state import submit_eval_state
 from .sidebar import SideBar
 from .tab_view import TabView
 
@@ -39,7 +40,7 @@ class ViewPage(ctk.CTkFrame):
             on_exit=on_exit,
         )
 
-        self.tab_view = TabView(master=self, app_state=self.state, run_state=self.run)
+        self.tab_view = TabView(master=self, app_state=self.state, run_state=self.run, on_submit=self.on_submit)
         self.tab_view.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
@@ -48,3 +49,9 @@ class ViewPage(ctk.CTkFrame):
         self.state = app_state
         self.sidebar.update_state(self.run)
         self.tab_view.update_state(app_state=app_state, run_state=self.run)
+
+    def on_submit(self) -> None:
+        """Submits the user evaluation."""
+        self.run["eval_data"] = self.tab_view.get_results()
+        updated_app_state = submit_eval_state(self.state, self.run)
+        self.update_state(app_state=updated_app_state, run_state=self.run)
