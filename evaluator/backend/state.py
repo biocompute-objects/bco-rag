@@ -115,18 +115,16 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                     if current_run == run_index:
 
                         generated_domain_path = str(domain_run["json_file"])
+                        generated_domain: dict | str | None = None
                         if os.path.isfile(generated_domain_path):
-                            generated_domain_dict = misc_fns.load_json(
+                            generated_domain = misc_fns.load_json(
                                 generated_domain_path
                             )
-                            if generated_domain_dict is None:
+                            if generated_domain is None:
                                 misc_fns.graceful_exit(
                                     1,
                                     f"Unable to load generated JSON data at `{generated_domain_path}`.",
                                 )
-                            generated_domain = json.dumps(
-                                generated_domain_dict, indent=4
-                            )
                         else:
                             generated_domain_path = domain_run["txt_file"]
                             raw_txt = open(generated_domain_path, "r").read()
