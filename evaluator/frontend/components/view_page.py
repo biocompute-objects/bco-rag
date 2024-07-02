@@ -42,8 +42,9 @@ class ViewPage(ctk.CTkFrame):
         self.tab_view = TabView(master=self, app_state=self.state, run_state=self.run)
         self.tab_view.grid(row=0, column=0, padx=0, pady=0, sticky="nsew")
 
-    def update_state(self, run_state: RunState) -> None:
-        """Updates the run state."""
+    def update_state(self, app_state: AppState, run_state: RunState) -> None:
+        """Updates the state."""
         self.run = run_state
+        self.state = app_state
         self.sidebar.update_state(self.run)
-        self.tab_view.update_state(self.run)
+        self.tab_view.update_state(app_state=app_state, run_state=self.run)
