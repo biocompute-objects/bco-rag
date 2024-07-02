@@ -1,0 +1,13 @@
+{
+  "score_eval": {
+    "eval": "About right",
+    "eval_code": 0,
+    "notes": ""
+  },
+  "error_eval": {
+    "inferred_knowledge_error": false,
+    "external_knowledge_error": false,
+    "other_error": false,
+    "notes": ""
+  }
+}
