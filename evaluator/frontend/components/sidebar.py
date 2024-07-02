@@ -27,7 +27,7 @@ class SideBar(ctk.CTkFrame):
 
         self.sidebar_frame = ctk.CTkFrame(master=master, width=140, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=1, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(6, weight=1)
+        self.sidebar_frame.grid_rowconfigure(7, weight=1)
 
         padding = self.state["padding"]
         half_padding = padding // 2
@@ -68,15 +68,25 @@ class SideBar(ctk.CTkFrame):
         )
         self.run_counter_label.grid(row=3, column=0, padx=padding, pady=half_padding)
 
+        self.already_evaluated_label = ctk.CTkLabel(
+            master=self.sidebar_frame,
+            text="Already Evaluated" if self.run["already_evaluated"] else "",
+            font=(self.state["font"], 16, "bold"),
+            text_color="red",
+        )
+        self.already_evaluated_label.grid(
+            row=4, column=0, padx=padding, pady=half_padding
+        )
+
         self.save_button = ctk.CTkButton(
             master=self.sidebar_frame, text="Save", command=self._save
         )
-        self.save_button.grid(row=4, column=0, padx=padding, pady=half_padding)
+        self.save_button.grid(row=5, column=0, padx=padding, pady=half_padding)
 
         self.exit_button = ctk.CTkButton(
             master=self.sidebar_frame, text="Exit", command=self._exit
         )
-        self.exit_button.grid(row=5, column=0, padx=padding, pady=half_padding)
+        self.exit_button.grid(row=6, column=0, padx=padding, pady=half_padding)
 
         self.appearance_label = ctk.CTkLabel(
             self.sidebar_frame,
@@ -84,7 +94,7 @@ class SideBar(ctk.CTkFrame):
             font=(self.state["font"], 16, "bold"),
         )
         self.appearance_label.grid(
-            row=7, column=0, padx=padding, pady=(padding, half_padding)
+            row=8, column=0, padx=padding, pady=(padding, half_padding)
         )
 
         self.appearance_option_menu = ctk.CTkOptionMenu(
@@ -93,7 +103,7 @@ class SideBar(ctk.CTkFrame):
             command=self._change_appearance_mode,
         )
         self.appearance_option_menu.grid(
-            row=8, column=0, padx=padding, pady=half_padding
+            row=9, column=0, padx=padding, pady=half_padding
         )
 
         self.scaling_label = ctk.CTkLabel(
@@ -101,7 +111,7 @@ class SideBar(ctk.CTkFrame):
             text="UI Scaling",
             font=(self.state["font"], 16, "bold"),
         )
-        self.scaling_label.grid(row=9, column=0, padx=padding, pady=half_padding)
+        self.scaling_label.grid(row=10, column=0, padx=padding, pady=half_padding)
 
         self.scaling_option_menu = ctk.CTkOptionMenu(
             master=self.sidebar_frame,
@@ -109,7 +119,7 @@ class SideBar(ctk.CTkFrame):
             command=self._change_scaling_value,
         )
         self.scaling_option_menu.grid(
-            row=10, column=0, padx=padding, pady=(half_padding, padding)
+            row=11, column=0, padx=padding, pady=(half_padding, padding)
         )
 
     def update_state(self, run_state: RunState) -> None:
@@ -117,6 +127,9 @@ class SideBar(ctk.CTkFrame):
         self.run = run_state
         self.run_counter_label.configure(
             text=f"Run: {self.run['run_index'] + 1} / {self.run['total_runs']}"
+        )
+        self.already_evaluated_label.configure(
+            text="Already evaluated" if self.run["already_evaluated"] else ""
         )
 
     def _previous(self) -> None:
