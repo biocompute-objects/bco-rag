@@ -3,6 +3,9 @@
 
 from typing import TypedDict, Literal
 from logging import Logger
+import json
+
+### JSON configuration schema
 
 
 class ConfigData(TypedDict):
@@ -19,6 +22,9 @@ class ConfigData(TypedDict):
     users_file_name: str
     padding: int
     font: str
+
+
+### Application attributes schema
 
 
 class AppAttributes(TypedDict):
@@ -69,6 +75,8 @@ def create_app_attributes(
     }
     return return_data
 
+
+### App state schemas
 
 AppStateKey = Literal[
     "logger",
@@ -124,6 +132,8 @@ def create_app_state(
     return return_data
 
 
+### Run state schemas
+
 RunStateKey = Literal[
     "domain",
     "generated_domain",
@@ -143,6 +153,8 @@ class RunState(TypedDict):
 
     domain: str
     generated_domain: str
+    score: float
+    score_version: float
     generated_file_path: str
     human_curated_domain: str
     param_set: str
@@ -155,7 +167,7 @@ class RunState(TypedDict):
 
 def create_run_state(
     domain: str,
-    generated_domain: str,
+    generated_domain: str | dict,
     generated_file_path: str,
     human_curated_domain: str,
     param_set: str,
@@ -166,9 +178,18 @@ def create_run_state(
     logger: Logger,
 ) -> RunState:
     """Constructor for the RunState TypedDict."""
+    score = -1.0
+    score_version = 0.0
+    if isinstance(generated_domain, dict):
+        # TODO : whenever the BCO score API endpoint is
+        # created hit that here.
+        generated_domain = json.dumps(generated_domain, indent=4)
+
     return_data: RunState = {
         "domain": domain,
         "generated_domain": generated_domain,
+        "score": score,
+        "score_version": score_version,
         "generated_file_path": generated_file_path,
         "human_curated_domain": human_curated_domain,
         "param_set": param_set,
@@ -179,3 +200,77 @@ def create_run_state(
         "logger": logger,
     }
     return return_data
+
+
+### Evaluation Schemas
+
+## Score evaluationa schemas
+
+ScoreEvalLiteral = Literal["Lower", "About right", "Higher"]
+
+
+class ScoreEval(TypedDict):
+    """TypedDict for the score evaluations."""
+
+    eval: ScoreEvalLiteral
+    eval_code: int
+    notes: str
+
+
+def create_score_eval(eval: ScoreEvalLiteral, notes: str) -> ScoreEval:
+    """Constructor for the ScoreEval TypedDict."""
+    eval_str = str(eval.strip().lower())
+
+    eval_code = 0
+    match eval_str:
+        case "lower":
+            eval_code = -1
+        case "higher":
+            eval_code = 1
+
+    return_data: ScoreEval = {"eval": eval, "eval_code": eval_code, "notes": notes}
+
+    return return_data
+
+
+def default_score_eval() -> ScoreEval:
+    """Get a default ScoreEval."""
+    return create_score_eval(eval="About right", notes="")
+
+
+def cast_score_eval(score_eval_str: str) -> ScoreEvalLiteral:
+    """Cast a string to ScoreEvalLiteral (if possible)."""
+    score_eval_str = score_eval_str.strip().lower()
+    match score_eval_str:
+        case "lower":
+            return "Lower"
+        case "about right":
+            return "About right"
+        case "higher":
+            return "Higher"
+    raise ValueError(f"Error casting `{score_eval_str}` to ScoreEvalLiteral.")
+
+## Error evaluation schemas
+
+class ErrorEval(TypedDict):
+    """Error evaluation data."""
+
+## Full evaluation data schemas
+
+
+class EvalData(TypedDict):
+    """Full evaluation data."""
+
+    score_eval: ScoreEval
+
+
+def create_full_eval(score_eval: ScoreEval) -> EvalData:
+    """Constructor for the EvalData TypedDict."""
+    return_data: EvalData = {"score_eval": score_eval}
+    return return_data
+
+
+def default_eval() -> EvalData:
+    """Get a default EvalData."""
+    score_eval = default_score_eval()
+    return create_full_eval(score_eval=score_eval)
