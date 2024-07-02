@@ -6,6 +6,9 @@ from evaluator.backend.custom_types import (
     create_score_eval,
     cast_score_eval,
 )
+from evaluator.backend import DEFAULT_SCORES
+
+EVAL_DEFAULTS = DEFAULT_SCORES["score_eval"]
 
 
 class ScoreFrame(ctk.CTkFrame):
@@ -18,6 +21,7 @@ class ScoreFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
         self.state = app_state
         self.run = run_state
+        self.score_eval = run_state["eval_data"]["score_eval"]
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -84,7 +88,7 @@ class ScoreFrame(ctk.CTkFrame):
             pady=(self.state["padding"], self.state["padding"] // 4),
         )
 
-        self.score_eval_var = ctk.StringVar(value="About right")
+        self.score_eval_var = ctk.StringVar(value=self.score_eval["eval"])
         self.score_eval_button = ctk.CTkSegmentedButton(
             master=self,
             values=["Lower", "About right", "Higher"],
@@ -126,17 +130,24 @@ class ScoreFrame(ctk.CTkFrame):
         """Update the run state and score frame."""
         self.run = run_state
         self.state = app_state
+        self.score_eval = self.run["eval_data"]["score_eval"]
 
         self.score_text.configure(text=f"{self.run['score']}")
         self.score_version_text.configure(text=f"{self.run['score_version']}")
-        self.score_eval_var = ctk.StringVar(value="About right")
+        self.score_eval_var = ctk.StringVar(
+            value=self.score_eval.get("eval", EVAL_DEFAULTS["eval"])
+        )
         self.score_eval_button.configure(variable=self.score_eval_var)
+
         self.score_notes.delete(0.0, "end")
+        self.score_notes.insert(
+            0.0, self.score_eval.get("notes", EVAL_DEFAULTS["notes"])
+        )
 
     def get_results(self) -> ScoreEval:
         """Returns the score evaluations."""
         score_eval_button_val = cast_score_eval(self.score_eval_var.get())
         score_eval = create_score_eval(
-            eval=score_eval_button_val, notes=self.score_notes.get(0.0, "end")
+            eval=score_eval_button_val, notes=self.score_notes.get(0.0, "end").strip()
         )
         return score_eval
