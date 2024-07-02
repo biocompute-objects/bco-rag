@@ -5,6 +5,7 @@ from evaluator.backend.custom_types import (
     AppState,
     create_full_eval,
 )
+from typing import Callable
 from .score_frame import ScoreFrame
 from .error_frame import ErrorFrame
 
@@ -13,13 +14,19 @@ class TabView(ctk.CTkTabview):
     """Class for the view page tab view."""
 
     def __init__(
-        self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
+        self,
+        master: ctk.CTkFrame,
+        app_state: AppState,
+        run_state: RunState,
+        on_submit: Callable,
+        **kwargs
     ):
         """Constructor."""
         super().__init__(master, **kwargs)
 
         self.state = app_state
         self.run = run_state
+        self.on_submit = on_submit
 
         self.add("Compare JSON")
         self.add("Source Nodes")
@@ -64,12 +71,14 @@ class TabView(ctk.CTkTabview):
         self.parameter_set_text.insert("0.0", self.run["param_set"])
         self.parameter_set_text.configure(state="disabled")
 
-        self.score_frame.update_state(app_state=app_state, run_state=self.run)
+        self.score_frame.update_state(app_state=self.state, run_state=self.run)
+        self.err_frame.update_state(app_state=self.state, run_state=self.run)
 
     def get_results(self) -> EvalData:
         """Returns the score evaluations."""
         score_eval = self.score_frame.get_results()
-        eval_data = create_full_eval(score_eval=score_eval)
+        error_eval = self.err_frame.get_results()
+        eval_data = create_full_eval(score_eval=score_eval, error_eval=error_eval)
         return eval_data
 
     def _create_evaluate_tab(self) -> None:
@@ -79,8 +88,9 @@ class TabView(ctk.CTkTabview):
         self.evaluate_frame.grid_rowconfigure(0, weight=0)
         self.evaluate_frame.grid_columnconfigure(1, weight=0)
         self.evaluate_frame.grid_rowconfigure(1, weight=0)
-        self.evaluate_frame.grid_columnconfigure(2, weight=2)
-        self.evaluate_frame.grid_rowconfigure(2, weight=2)
+        self.evaluate_frame.grid_columnconfigure(2, weight=1)
+        self.evaluate_frame.grid_rowconfigure(2, weight=1)
+        self.evaluate_frame.grid_rowconfigure(6, weight=1)
 
         self.score_frame = ScoreFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
@@ -94,6 +104,13 @@ class TabView(ctk.CTkTabview):
         )
         self.err_frame.grid(
             row=0, column=1, padx=self.state["padding"], pady=self.state["padding"]
+        )
+
+        self.submit_button = ctk.CTkButton(
+            master=self.evaluate_frame, text="Submit", command=self.on_submit
+        )
+        self.submit_button.grid(
+            row=6, column=2, padx=self.state["padding"], pady=self.state["padding"], sticky="se"
         )
 
     def _create_compare_json_tab(self) -> None:
