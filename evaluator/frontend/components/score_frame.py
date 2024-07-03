@@ -24,7 +24,6 @@ class ScoreFrame(ctk.CTkFrame):
         self.score_eval = run_state["eval_data"]["score_eval"]
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
         self.main_score_label = ctk.CTkLabel(
@@ -134,6 +133,7 @@ class ScoreFrame(ctk.CTkFrame):
 
         self.score_text.configure(text=f"{self.run['score']}")
         self.score_version_text.configure(text=f"{self.run['score_version']}")
+
         self.score_eval_var = ctk.StringVar(
             value=self.score_eval.get("eval", EVAL_DEFAULTS["eval"])
         )
@@ -148,6 +148,6 @@ class ScoreFrame(ctk.CTkFrame):
         """Returns the score evaluations."""
         score_eval_button_val = cast_score_eval(self.score_eval_var.get())
         score_eval = create_score_eval(
-            eval=score_eval_button_val, notes=self.score_notes.get(0.0, "end").strip()
+            eval=score_eval_button_val, notes=self.score_notes.get(0.0, "end")
         )
         return score_eval
