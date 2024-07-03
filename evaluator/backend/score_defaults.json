@@ -7,7 +7,13 @@
   "error_eval": {
     "inferred_knowledge_error": false,
     "external_knowledge_error": false,
+    "json_format_error": false,
     "other_error": false,
+    "notes": ""
+  },
+  "reference_eval": {
+    "reference_relevancy": 0,
+    "top_reference_retrieval": false,
     "notes": ""
   }
 }
