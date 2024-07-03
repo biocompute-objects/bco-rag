@@ -7,6 +7,25 @@ from bcorag import misc_functions as misc_fns
 import json
 from deepdiff import DeepDiff  # type: ignore
 
+
+def cast_checkbox(val: str) -> bool:
+    """Cast checkbox string to boolean."""
+    val = val.strip().lower()
+    if val == "on":
+        return True
+    elif val == "off":
+        return False
+    raise ValueError(f"Error casting `{val}` to bool.")
+
+
+def reverse_cast_checkbox(err: bool) -> str:
+    """Reverse cast checkbox bool to string."""
+    if err:
+        return "on"
+    else:
+        return "off"
+
+
 ### JSON configuration schema
 
 
@@ -53,7 +72,11 @@ def create_score_eval(eval: ScoreEvalLiteral, notes: str) -> ScoreEval:
         case "higher":
             eval_code = 1
 
-    return_data: ScoreEval = {"eval": eval, "eval_code": eval_code, "notes": notes}
+    return_data: ScoreEval = {
+        "eval": eval,
+        "eval_code": eval_code,
+        "notes": notes.strip(),
+    }
 
     return return_data
 
@@ -79,46 +102,63 @@ class ErrorEval(TypedDict):
 
     inferred_knowledge_error: bool
     external_knowledge_error: bool
+    json_format_error: bool
     other_error: bool
     notes: str
 
 
 def create_error_val(
-    inf_err: bool | str, ext_err: bool | str, other_err: bool | str, notes: str
+    inf_err: bool | str,
+    ext_err: bool | str,
+    json_err: bool | str,
+    other_err: bool | str,
+    notes: str,
 ) -> ErrorEval:
     """Constructor for the ErrorEval TypedDict."""
     if isinstance(inf_err, str):
-        inf_err = cast_error_type(inf_err)
+        inf_err = cast_checkbox(inf_err)
     if isinstance(ext_err, str):
-        ext_err = cast_error_type(ext_err)
+        ext_err = cast_checkbox(ext_err)
+    if isinstance(json_err, str):
+        json_err = cast_checkbox(json_err)
     if isinstance(other_err, str):
-        other_err = cast_error_type(other_err)
+        other_err = cast_checkbox(other_err)
 
     return_data: ErrorEval = {
         "inferred_knowledge_error": inf_err,
         "external_knowledge_error": ext_err,
+        "json_format_error": json_err,
         "other_error": other_err,
-        "notes": notes,
+        "notes": notes.strip(),
     }
     return return_data
 
 
-def cast_error_type(err: str) -> bool:
-    """Cast checkbox string to boolean."""
-    err = err.strip().lower()
-    if err == "on":
-        return True
-    elif err == "off":
-        return False
-    raise ValueError(f"Error casting `{err}` to bool.")
+## Reference node evaluation data schemas
 
 
-def reverse_cast_error_type(err: bool) -> str:
-    """Reverse cast checkbox bool to string."""
-    if err:
-        return "on"
-    else:
-        return "off"
+class RefereceEval(TypedDict):
+    """Reference evaluation data."""
+
+    reference_relevancy: int
+    top_reference_retrieval: bool
+    notes: str
+
+
+def create_reference_eval(
+    reference_relevancy: int, top_reference_retrieval: bool | str, notes: str
+) -> RefereceEval:
+    """Constructor for the RefereceEval TypedDict."""
+    if isinstance(top_reference_retrieval, str):
+        top_reference_retrieval = cast_checkbox(top_reference_retrieval)
+
+    return_data: RefereceEval = {
+        "reference_relevancy": reference_relevancy,
+        "top_reference_retrieval": top_reference_retrieval,
+        "notes": notes.strip(),
+    }
+
+    return return_data
 
 
 ## Full evaluation data schemas
@@ -129,11 +169,18 @@ class EvalData(TypedDict):
 
     score_eval: ScoreEval
     error_eval: ErrorEval
+    reference_eval: RefereceEval
 
 
-def create_full_eval(score_eval: ScoreEval, error_eval: ErrorEval) -> EvalData:
+def create_full_eval(
+    score_eval: ScoreEval, error_eval: ErrorEval, reference_eval: RefereceEval
+) -> EvalData:
     """Constructor for the EvalData TypedDict."""
-    return_data: EvalData = {"score_eval": score_eval, "error_eval": error_eval}
+    return_data: EvalData = {
+        "score_eval": score_eval,
+        "error_eval": error_eval,
+        "reference_eval": reference_eval,
+    }
     return return_data
 
 
