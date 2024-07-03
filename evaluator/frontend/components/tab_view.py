@@ -8,6 +8,7 @@ from evaluator.backend.custom_types import (
 from typing import Callable
 from .score_frame import ScoreFrame
 from .error_frame import ErrorFrame
+from .reference_frame import ReferenceFrame
 
 
 class TabView(ctk.CTkTabview):
@@ -78,39 +79,48 @@ class TabView(ctk.CTkTabview):
         """Returns the score evaluations."""
         score_eval = self.score_frame.get_results()
         error_eval = self.err_frame.get_results()
-        eval_data = create_full_eval(score_eval=score_eval, error_eval=error_eval)
+        reference_eval = self.ref_frame.get_results()
+        eval_data = create_full_eval(
+            score_eval=score_eval, error_eval=error_eval, reference_eval=reference_eval
+        )
         return eval_data
 
     def _create_evaluate_tab(self) -> None:
         """Creates the evaluate tab view."""
         self.evaluate_frame = self.tab("Evaluate")
-        self.evaluate_frame.grid_columnconfigure(0, weight=0)
-        self.evaluate_frame.grid_rowconfigure(0, weight=0)
-        self.evaluate_frame.grid_columnconfigure(1, weight=0)
-        self.evaluate_frame.grid_rowconfigure(1, weight=0)
-        self.evaluate_frame.grid_columnconfigure(2, weight=1)
-        self.evaluate_frame.grid_rowconfigure(2, weight=1)
-        self.evaluate_frame.grid_rowconfigure(6, weight=1)
+        self.evaluate_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        self.evaluate_frame.grid_rowconfigure(0, weight=1)
 
         self.score_frame = ScoreFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
         )
         self.score_frame.grid(
-            row=0, column=0, padx=self.state["padding"], pady=self.state["padding"]
+            row=0, column=0, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
         )
 
         self.err_frame = ErrorFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
         )
         self.err_frame.grid(
-            row=0, column=1, padx=self.state["padding"], pady=self.state["padding"]
+            row=0, column=1, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
+        )
+
+        self.ref_frame = ReferenceFrame(
+            master=self.evaluate_frame, app_state=self.state, run_state=self.run
+        )
+        self.ref_frame.grid(
+            row=0, column=2, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
         )
 
         self.submit_button = ctk.CTkButton(
             master=self.evaluate_frame, text="Submit", command=self.on_submit
         )
         self.submit_button.grid(
-            row=6, column=2, padx=self.state["padding"], pady=self.state["padding"], sticky="se"
+            row=6,
+            column=2,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="se",
         )
 
     def _create_compare_json_tab(self) -> None:
