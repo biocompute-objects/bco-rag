@@ -32,7 +32,7 @@ class ReferenceFrame(ctk.CTkFrame):
             font=(self.state["font"], 28, "bold"),
         )
         self.main_ref_label.grid(
-            row=0, column=0, padx=self.state["padding"], pady=self.state["padding"]
+            row=0, columnspan=2, padx=self.state["padding"], pady=self.state["padding"]
         )
 
         self.ref_eval_label = ctk.CTkLabel(
@@ -43,8 +43,9 @@ class ReferenceFrame(ctk.CTkFrame):
         self.ref_eval_label.grid(
             row=2,
             column=0,
-            padx=self.state["padding"],
-            pady=(self.state["padding"], self.state["padding"] // 4),
+            padx=(self.state["padding"], self.state["padding"] // 4),
+            pady=(self.state["padding"] // 2, self.state["padding"] // 4),
+            sticky="w",
         )
 
         self.ref_eval_var = ctk.IntVar(
@@ -53,12 +54,12 @@ class ReferenceFrame(ctk.CTkFrame):
             )
         )
         self.ref_eval_button = ctk.CTkSegmentedButton(
-            master=self, values=[0, 1, 2], variable=self.ref_eval_var
+            master=self, values=[-1, 0, 1, 2], variable=self.ref_eval_var
         )
         self.ref_eval_button.grid(
-            row=3,
-            column=0,
-            padx=self.state["padding"],
+            row=2,
+            column=1,
+            padx=(self.state["padding"] // 4, self.state["padding"]),
             pady=self.state["padding"] // 4,
         )
 
@@ -77,17 +78,21 @@ class ReferenceFrame(ctk.CTkFrame):
             offvalue="off",
         )
         self.top_ref_checkbox.grid(
-            row=4, column=0, padx=self.state["padding"], pady=self.state["padding"] // 4, sticky="w"
+            row=3,
+            column=0,
+            padx=self.state["padding"],
+            pady=self.state["padding"] // 4,
+            sticky="w",
         )
 
         self.ref_notes_label = ctk.CTkLabel(
             master=self, text="Notes", font=(self.state["font"], 16, "bold")
         )
         self.ref_notes_label.grid(
-            row=5,
+            row=4,
             column=0,
             padx=self.state["padding"],
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 2, self.state["padding"] // 4),
             sticky="w",
         )
 
@@ -95,10 +100,10 @@ class ReferenceFrame(ctk.CTkFrame):
             master=self, wrap="word", font=(self.state["font"], 18)
         )
         self.ref_notes.grid(
-            row=6,
-            column=0,
+            row=5,
+            columnspan=2,
             padx=self.state["padding"] // 2,
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 4, self.state["padding"]),
             sticky="nsew",
         )
 

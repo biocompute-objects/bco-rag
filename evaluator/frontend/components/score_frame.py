@@ -40,7 +40,7 @@ class ScoreFrame(ctk.CTkFrame):
             row=2,
             column=0,
             padx=(self.state["padding"], self.state["padding"] // 2),
-            pady=(self.state["padding"], self.state["padding"] // 4),
+            pady=self.state["padding"] // 4,
             sticky="w",
         )
 
@@ -49,7 +49,7 @@ class ScoreFrame(ctk.CTkFrame):
             row=2,
             column=1,
             padx=(self.state["padding"] // 2, self.state["padding"]),
-            pady=(self.state["padding"], self.state["padding"] // 4),
+            pady=self.state["padding"] // 4,
             sticky="w",
         )
 
@@ -84,7 +84,7 @@ class ScoreFrame(ctk.CTkFrame):
             row=2,
             column=2,
             padx=self.state["padding"],
-            pady=(self.state["padding"], self.state["padding"] // 4),
+            pady=self.state["padding"] // 4,
         )
 
         self.score_eval_var = ctk.StringVar(value=self.score_eval["eval"])
@@ -97,7 +97,7 @@ class ScoreFrame(ctk.CTkFrame):
             row=3,
             column=2,
             padx=self.state["padding"],
-            pady=(self.state["padding"] // 4, self.state["padding"]),
+            pady=self.state["padding"] // 4,
         )
 
         self.score_notes_label = ctk.CTkLabel(
@@ -107,7 +107,7 @@ class ScoreFrame(ctk.CTkFrame):
             row=6,
             column=0,
             padx=self.state["padding"],
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 2, self.state["padding"] // 4),
             sticky="w",
         )
 
@@ -119,7 +119,7 @@ class ScoreFrame(ctk.CTkFrame):
             column=0,
             columnspan=3,
             padx=self.state["padding"] // 2,
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 4, self.state["padding"]),
             sticky="nsew",
         )
 
