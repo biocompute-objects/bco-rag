@@ -293,8 +293,11 @@ def check_default_eval(val: dict | EvalData) -> bool:
 ### Run state schemas
 
 RunStateKey = Literal[
+    "paper",
     "domain",
     "generated_domain",
+    "score",
+    "score_version",
     "generated_file_path",
     "human_curated_domain",
     "param_set",
@@ -303,12 +306,14 @@ RunStateKey = Literal[
     "total_runs",
     "already_evaluated",
     "logger",
+    "eval_data"
 ]
 
 
 class RunState(TypedDict):
     """Holds the data for the current run being evaluated."""
 
+    paper: str
     domain: str
     generated_domain: str
     score: float
@@ -325,6 +330,7 @@ class RunState(TypedDict):
 
 
 def create_run_state(
+    paper: str,
     domain: str,
     generated_domain: str | dict,
     generated_file_path: str,
@@ -346,6 +352,7 @@ def create_run_state(
         generated_domain = json.dumps(generated_domain, indent=4)
 
     return_data: RunState = {
+        "paper": paper,
         "domain": domain,
         "generated_domain": generated_domain,
         "score": score,
