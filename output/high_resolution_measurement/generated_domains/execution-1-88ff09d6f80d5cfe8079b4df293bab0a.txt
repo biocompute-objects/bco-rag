@@ -1,0 +1,34 @@
+```json
+{
+    "script": [
+        {
+            "uri": {
+                "uri": "https://github.com/dpastling/plethora/blob/master/code/clean_files.pl",
+                "filename": "clean_files.pl",
+                "access_time": "2023-11-01T12:00:00Z",
+                "sha1_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+        }
+    ],
+    "script_driver": "shell",
+    "software_prerequisites": [
+        {
+            "name": "Perl",
+            "version": "5.30",
+            "uri": {
+                "uri": "https://www.perl.org/get.html"
+            }
+        }
+    ],
+    "external_data_endpoints": [
+        {
+            "name": "1000 Genomes Project",
+            "url": "https://www.internationalgenome.org/"
+        }
+    ],
+    "environment_variables": {
+        "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "PERL5LIB": "/usr/local/lib/perl5"
+    }
+}
+```

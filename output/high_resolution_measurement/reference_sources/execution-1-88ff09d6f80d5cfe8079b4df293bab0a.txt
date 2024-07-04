@@ -1,0 +1,183 @@
+
+--------------- Source Node '1/2' ---------------
+Node ID: '639d3b2a-ef68-4499-a4d5-f5b41c3145e0'
+Similarity: '0.35025016882429827'
+Metadata String:
+`file_path: README.md
+file_name: README.md
+url: https://github.com/dpastling/plethora/blob/master/README.md`
+Metadata Size: `106`
+Content Size: `3660`
+Retrieved Text:
+#### 4. (Optional) Remove temporary files
+
+```bash
+bsub < code/1000genomes/4_batch_clean.sh
+```
+
+This script removes intermediate files from earlier stages of the pipeline. This is useful because WGS files can take up a lot of disk space. This script first confirms that files from previous steps have been run correctly before removing them. 
+
+By default it assumes that the number of reads in the fastq file are
+correct (verified via checksum or read counting). Optionally you can provide a
+file with the expected number of reads. The script deletes the file from a
+prior step if the file in the next step has the correct number of reads (e.g.
+delete the original bam file if the sorted bam has the correct number of
+reads and delete the sorted bam if the resulting bed file has the correct number
+of reads).
+
+If the data have been downloaded from a public repository like the 1000 Genomes, this script can remove the fastq files by passing an optional flag.
+
+The script assumes the `.bam` file contains unaligned reads (e.g. the number of reads in the fastq file should match the number of reads in the .bam file).
+
+Behind the scenes the clean script runs `code/clean_files.pl`. For more information on how to run this directly:
+
+```bash
+code/clean_files.pl -h
+```
+
+
+#### 5. Calculate coverage for each region of interest
+
+```bash
+bsub < code/1000genomes/5_make_bed.sh
+```
+
+This script: 
+
+  - Coverts the .bam alignment file into bed format
+  - Parses the reads
+  - Calls the `merge_pairs.pl` script (described below) to combined proper pairs into a single
+fragment
+  - Finds overlaps with the reference bed file containing the regions of interest
+(e.g. DUF1220)
+  - Calculates the average coverage for each region: (number of bases that
+overlap) / (domain length)
+
+
+#### 6. (Optional) Remove temporary files
+
+```bash
+bsub < code/1000genomes/6_batch_clean.sh
+```
+
+This script is a link to the script above. At this stage it can remove the alignment and fastq files if present.
+
+
+#### 7. Correct coverage for GC bias
+
+```bash
+bsub < code/1000genomes/7_batch_gc_correction.sh
+```
+
+This script performs the GC correction step using conserved regions that are
+assumed to be found in diploid copy number. This script requires the `_read.depth.bed` file 
+generated in step 5 above as well as a file with the percent GC content for each domain.
+
+Behind the scenes, this shell script calls `code/gc_correction.R` which can be run manually like so:
+
+```bash
+code/gc_correction.R results/HG00250_read.depth.bed data/hg38_duf_full_domains_v2.3_GC.txt
+```
+
+## Other useful scripts
+
+#### preprocessing\_1000genomes.R
+
+This script is how we selected the ~300 samples from the full `sample.index`
+file for the 1000 Genomes Project. It filters out the exome sequencing data,
+selects samples with reasonably high coverage, etc. It tries to collect
+representative samples from each of the populations.
+
+
+#### gc\_from\_fasta.pl
+
+This script calculates the percent GC content for a set of domains and is called
+by the batch script above. Required are a set of domains in .bed file format and
+a .fasta file for the genome reference
+
+
+#### build\_gc\_model.sh
+
+This an LSF script for submitting a specific version of the DUF1220 annotation
+to the LSF queue.
+
+
+#### merge\_pairs.pl
+
+This is a helper script to `make_bed.sh` that combines proper pairs into a
+single fragment, and separates discordant pairs into single end reads. The
+lengths of the single end reads are extended by half the mean fragment size,
+which is determined from the data itself. The extended length is sampled from a
+normal distribution using the mean and standard deviation of the measured fragment sizes.
+
+
+--------------- Source Node '2/2' ---------------
+Node ID: 'afe5695f-9edd-4118-93a0-c366599de90f'
+Similarity: '0.3413038184052817'
+Metadata String:
+`page_label: 1
+file_name: High resolution measurement.pdf
+file_path: bcorag/test_papers/High resolution measurement.pdf
+file_type: application/pdf
+file_size: 1391462
+creation_date: 2024-06-23
+last_modified_date: 2024-06-23`
+Metadata Size: `221`
+Content Size: `4255`
+Retrieved Text:
+METHODOLOGY ARTICLE Open Access
+High resolution measurement of DUF1220
+domain copy number from whole genome
+sequence data
+David P. Astling1, Ilea E. Heft1, Kenneth L. Jones2and James M. Sikela1*
+Abstract
+Background: DUF1220 protein domains found primarily in Neuroblastoma BreakPoint Family ( NBPF ) genes show
+the greatest human lineage-specific increase in copy number of any coding region in the genome. There are 302
+haploid copies of DUF1220 in hg38 (~160 of which are human-specific) and the majority of these can be divided
+into 6 different subtypes (referred to as clades). Copy number changes of specific DUF1220 clades have been
+associated in a dose-dependent manner with brain size variation (both evolutionarily and within the human
+population), cognitive aptitude, autism severity, and schizophrenia severity. However, no published methods can
+directly measure copies of DUF1220 with high accuracy and no method can distinguish between domains within
+a clade.
+Results: Here we describe a novel method for measuring copies of DUF1220 domains and the NBPF genes in
+which they are found from whole genome sequence data. We have characterized the effect that various
+sequencing and alignment parameters and strategies have on the accuracy and precision of the method and
+defined the parameters that lead to optimal DUF1220 copy number measurement and resolution. We show that
+copy number estimates obtained using our read depth approach are highly correlated with those generated by
+ddPCR for three representative DUF1220 clades. By simulation, we demonstrate that our method provides sufficient
+resolution to analyze DUF1220 copy number variation at three levels: (1) DUF1220 clade copy number within
+individual genes and groups of genes (gene-specific clade groups) (2) genome wide DUF1220 clade copies and
+(3) gene copy number for DUF1220-encoding genes.
+Conclusions: To our knowledge, this is the first method to accurately measure copies of all six DUF1220 clades
+and the first method to provide gene specific resolution of these clades. This allows one to discriminate among
+the ~300 haploid human DUF1220 copies to an extent not possible with any other method. The result is a greatly
+enhanced capability to analyze the role that these sequences play in human variation and disease.
+Keywords: Copy number variation, CNV, DUF1220, Genome informatics, Next-generation sequencing,
+Bioinformatics
+Background
+Highly duplicated sequences, including genes, are preva-
+lent throughout the human genome [1]. While they have
+been linked to important evolutionary [2, 3] and medical
+phenotypes [4], they often go unexamined in studies of
+genetic disease due to their complexity. Thus, there is a
+growing need to develop improved strategies for accuratecopy number determination of highly duplicated se-
+quences. While a number of methods exist for scoring
+copy number variations (CNVs) (e.g. array comparative
+genomic hybridization (arrayCGH), SNP arrays, qPCR,
+ddPCR and read depth from exome sequencing) these
+methods are not ideal for high-resolution measurement of
+DUF1220 domains due to limitations in throughput, ac-
+curacy and/or coverage. The primary challenge for both
+array based methods and exome sequencing lies in the
+hybridization efficiency of each probe with its respective
+target and thus causing variance and resulting uneven* Correspondence: james.sikela@ucdenver.edu
+1Department of Biochemistry and Molecular Genetics, University of Colorado
+School of Medicine, Aurora, CO, USA
+Full list of author information is available at the end of the article
+© The Author(s). 2017 Open Access This article is distributed under the terms of the Creative Commons Attribution 4.0
+International License (http://creativecommons.org/licenses/by/4.0/), which permits unrestricted use, distribution, and
+reproduction in any medium, provided you give appropriate credit to the original author(s) and the source, provide a link to
+the Creative Commons license, and indicate if changes were made. The Creative Commons Public Domain Dedication waiver
+(http://creativecommons.org/publicdomain/zero/1.0/) applies to the data made available in this article, unless otherwise stated.Astling et al. BMC Genomics  (2017) 18:614 
+DOI 10.1186/s12864-017-3976-z
+

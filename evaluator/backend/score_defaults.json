@@ -1,0 +1,32 @@
+{
+  "score_eval": {
+    "eval": "About right",
+    "eval_code": 0,
+    "notes": ""
+  },
+  "error_eval": {
+    "inferred_knowledge_error": false,
+    "external_knowledge_error": false,
+    "json_format_error": false,
+    "other_error": false,
+    "notes": ""
+  },
+  "reference_eval": {
+    "reference_relevancy": -1,
+    "top_reference_retrieval": false,
+    "notes": ""
+  },
+  "general_eval": {
+    "relevancy": -1,
+    "readability": -1,
+    "reproducibility": -1,
+    "confidence_rating": -1,
+    "notes": ""
+  },
+  "misc_eval": {
+    "human_domain_rating": -1,
+    "evaluator_confidence_rating": -1,
+    "evaluator_familiarity_level": -1,
+    "notes": ""
+  }
+}
