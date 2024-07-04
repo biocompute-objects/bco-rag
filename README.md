@@ -4,18 +4,18 @@
 
 [Sean Kim](https://github.com/seankim658)
 
-## Documentation
+## Usage Guides
+
+- [Installation and Setup](./docs/installation.md)
+- [General Usage](./docs/usage.md)
+- [Output Structure](./docs/output_structure.md)
+
+---
 
 - [Background](#background)
 - [Approach Justification](#approach-justification)
   - [Issues with Long Context Windows](#issues-with-long-context-windows)
   - [Training Data and False Extrapolation](#training-data-and-false-extrapolation)
-
-## Usage Guides
-
-- [Installation and Setup](./docs/installation.md)
-- [Usage](./docs/usage.md)
-- [Output Structure](./docs/output_structure.md)
 
 ## Background
 
