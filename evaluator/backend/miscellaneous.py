@@ -39,6 +39,7 @@ def log_state(state: AppState | RunState, state_type: Literal["app", "run"]) -> 
                 "reference_nodes",
                 "param_set",
                 "logger",
+                "eval_data"
             }:
                 continue
             log_str += f"\t{run_key}: {run_state[run_key]}\n"
