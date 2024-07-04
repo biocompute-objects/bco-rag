@@ -54,7 +54,7 @@ class ErrorFrame(ctk.CTkFrame):
         self.inf_checkbox.grid(
             row=2,
             column=0,
-            padx=self.state["padding"],
+            padx=(self.state["padding"], self.state["padding"] // 4),
             pady=self.state["padding"] // 2,
             sticky="w",
         )
@@ -77,8 +77,8 @@ class ErrorFrame(ctk.CTkFrame):
         self.ext_checkbox.grid(
             row=3,
             column=0,
-            padx=self.state["padding"],
-            pady=(self.state["padding"] // 2, self.state["padding"]),
+            padx=(self.state["padding"], self.state["padding"] // 4),
+            pady=self.state["padding"] // 4,
             sticky="w",
         )
 
@@ -99,7 +99,7 @@ class ErrorFrame(ctk.CTkFrame):
         self.json_checkbox.grid(
             row=2,
             column=1,
-            padx=self.state["padding"],
+            padx=(self.state["padding"] // 4, self.state["padding"]),
             pady=self.state["padding"] // 2,
             sticky="w",
         )
@@ -119,8 +119,8 @@ class ErrorFrame(ctk.CTkFrame):
         self.other_err_checkbox.grid(
             row=3,
             column=1,
-            padx=self.state["padding"],
-            pady=(self.state["padding"] // 2, self.state["padding"]),
+            padx=(self.state["padding"] // 4, self.state["padding"]),
+            pady=self.state["padding"] // 4,
             sticky="w",
         )
 
@@ -131,7 +131,7 @@ class ErrorFrame(ctk.CTkFrame):
             row=4,
             column=0,
             padx=self.state["padding"],
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 2, self.state["padding"] // 4),
             sticky="w",
         )
 
@@ -142,7 +142,7 @@ class ErrorFrame(ctk.CTkFrame):
             row=5,
             columnspan=2,
             padx=self.state["padding"] // 2,
-            pady=self.state["padding"] // 2,
+            pady=(self.state["padding"] // 4, self.state["padding"]),
             sticky="nsew",
         )
 
