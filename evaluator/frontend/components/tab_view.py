@@ -9,6 +9,8 @@ from typing import Callable
 from .score_frame import ScoreFrame
 from .error_frame import ErrorFrame
 from .reference_frame import ReferenceFrame
+from .general_frame import GeneralFrame
+from .miscellaneous_frame import MiscFrame
 
 
 class TabView(ctk.CTkTabview):
@@ -74,14 +76,23 @@ class TabView(ctk.CTkTabview):
 
         self.score_frame.update_state(app_state=self.state, run_state=self.run)
         self.err_frame.update_state(app_state=self.state, run_state=self.run)
+        self.ref_frame.update_state(app_state=self.state, run_state=self.run)
+        self.general_frame.update_state(app_state=self.state, run_state=self.run)
+        self.misc_frame.update_state(app_state=self.state, run_state=self.run)
 
     def get_results(self) -> EvalData:
         """Returns the score evaluations."""
         score_eval = self.score_frame.get_results()
         error_eval = self.err_frame.get_results()
         reference_eval = self.ref_frame.get_results()
+        general_eval = self.general_frame.get_results()
+        misc_eval = self.misc_frame.get_results()
         eval_data = create_full_eval(
-            score_eval=score_eval, error_eval=error_eval, reference_eval=reference_eval
+            score_eval=score_eval,
+            error_eval=error_eval,
+            reference_eval=reference_eval,
+            general_eval=general_eval,
+            misc_eval=misc_eval,
         )
         return eval_data
 
@@ -89,27 +100,62 @@ class TabView(ctk.CTkTabview):
         """Creates the evaluate tab view."""
         self.evaluate_frame = self.tab("Evaluate")
         self.evaluate_frame.grid_columnconfigure((0, 1, 2), weight=1)
-        self.evaluate_frame.grid_rowconfigure(0, weight=1)
+        self.evaluate_frame.grid_rowconfigure((0, 1), weight=1)
 
         self.score_frame = ScoreFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
         )
         self.score_frame.grid(
-            row=0, column=0, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
+            row=0,
+            column=0,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="nsew",
         )
 
         self.err_frame = ErrorFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
         )
         self.err_frame.grid(
-            row=0, column=1, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
+            row=0,
+            column=1,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="nsew",
         )
 
         self.ref_frame = ReferenceFrame(
             master=self.evaluate_frame, app_state=self.state, run_state=self.run
         )
         self.ref_frame.grid(
-            row=0, column=2, padx=self.state["padding"], pady=self.state["padding"], sticky="nsew"
+            row=0,
+            column=2,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="nsew",
+        )
+
+        self.general_frame = GeneralFrame(
+            master=self.evaluate_frame, app_state=self.state, run_state=self.run
+        )
+        self.general_frame.grid(
+            row=1,
+            column=0,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="nsew",
+        )
+
+        self.misc_frame = MiscFrame(
+            master=self.evaluate_frame, app_state=self.state, run_state=self.run
+        )
+        self.misc_frame.grid(
+            row=1,
+            column=1,
+            columnspan=2,
+            padx=self.state["padding"],
+            pady=self.state["padding"],
+            sticky="nsew",
         )
 
         self.submit_button = ctk.CTkButton(
