@@ -112,6 +112,8 @@ def submit_eval_state(app_state: AppState, run_state: RunState) -> AppState:
         file_name = os.path.basename(run_state["generated_file_path"])
         file_eval = run_state["eval_data"]
 
+        ## update the users evaluation data file
+
         if user_hash not in app_state["user_results_data"]:
             misc_fns.graceful_exit(
                 1,
@@ -126,6 +128,9 @@ def submit_eval_state(app_state: AppState, run_state: RunState) -> AppState:
         user_data[file_name] = file_eval
 
         app_state["user_results_data"][user_hash] = user_data
+
+        ## update the evaluations data file
+        # TODO 
 
         app_state["logger"].info("Eval state updated...")
 
@@ -158,6 +163,8 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
     current_run = 0
 
     for directory in app_state["generated_directory_paths"]:
+
+        current_paper = os.path.basename(directory)
 
         output_map = misc_fns.load_json(os.path.join(directory, "output_map.json"))
         if output_map is None:
@@ -239,6 +246,7 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
                                     eval_data = user_file_eval
 
                         run_state = create_run_state(
+                            paper=current_paper,
                             domain=domain,
                             generated_domain=generated_domain,
                             generated_file_path=generated_domain_path,
