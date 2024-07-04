@@ -48,13 +48,13 @@ class ConfigData(TypedDict):
 ### Evaluation Schemas
 
 
-## Score evaluationa schemas
+## Score evaluation schemas
 
 ScoreEvalLiteral = Literal["Lower", "About right", "Higher"]
 
 
 class ScoreEval(TypedDict):
-    """TypedDict for the score evaluations."""
+    """Score evaluation data."""
 
     eval: ScoreEvalLiteral
     eval_code: int
@@ -134,7 +134,7 @@ def create_error_val(
     return return_data
 
 
-## Reference node evaluation data schemas
+## Reference node evaluation schemas
 
 
 class RefereceEval(TypedDict):
@@ -161,6 +161,65 @@ def create_reference_eval(
     return return_data
 
 
+## General evaluation schemas
+
+
+class GeneralEval(TypedDict):
+    """General evaluation data."""
+
+    relevancy: int
+    readability: int
+    reproducibility: int
+    confidence_rating: int
+    notes: str
+
+
+def create_general_eval(
+    relevancy: int,
+    readability: int,
+    reproducibility: int,
+    confidence_rating: int,
+    notes: str,
+) -> GeneralEval:
+    """Constructor for the GeneralEval TypedDict."""
+    return_data: GeneralEval = {
+        "relevancy": relevancy,
+        "readability": readability,
+        "reproducibility": reproducibility,
+        "confidence_rating": confidence_rating,
+        "notes": notes.strip(),
+    }
+    return return_data
+
+
+## Miscellaneous evaluation data schemas
+
+
+class MiscEval(TypedDict):
+    """Miscellaneous evaluation data."""
+
+    human_domain_rating: int
+    evaluator_confidence_rating: int
+    evaluator_familiarity_level: int
+    notes: str
+
+
+def create_misc_eval(
+    human_domain_rating: int,
+    evaluator_confidence_rating: int,
+    evaluator_familiarity_level: int,
+    notes: str,
+) -> MiscEval:
+    """Constructor for the MiscEval TypedDict."""
+    return_data: MiscEval = {
+        "human_domain_rating": human_domain_rating,
+        "evaluator_confidence_rating": evaluator_confidence_rating,
+        "evaluator_familiarity_level": evaluator_familiarity_level,
+        "notes": notes.strip(),
+    }
+    return return_data
+
+
 ## Full evaluation data schemas
 
 
@@ -170,16 +229,24 @@ class EvalData(TypedDict):
     score_eval: ScoreEval
     error_eval: ErrorEval
     reference_eval: RefereceEval
+    general_eval: GeneralEval
+    misc_eval: MiscEval
 
 
 def create_full_eval(
-    score_eval: ScoreEval, error_eval: ErrorEval, reference_eval: RefereceEval
+    score_eval: ScoreEval,
+    error_eval: ErrorEval,
+    reference_eval: RefereceEval,
+    general_eval: GeneralEval,
+    misc_eval: MiscEval,
 ) -> EvalData:
     """Constructor for the EvalData TypedDict."""
     return_data: EvalData = {
         "score_eval": score_eval,
         "error_eval": error_eval,
         "reference_eval": reference_eval,
+        "general_eval": general_eval,
+        "misc_eval": misc_eval,
     }
     return return_data
 
