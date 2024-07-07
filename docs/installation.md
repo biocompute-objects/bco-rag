@@ -7,24 +7,23 @@
 
 ## Prerequisites
 
-This directory requires at least Python 3.10 to setup. The code in this directory makes extensive use of an alternate way to indicate union type annotations as `X | Y` instead of `Union[X, Y]`.
+This directory requires at least Python 3.10 to setup. The code in this directory makes extensive use of an alternate way to indicate union type annotations as `X | Y` instead of `Union[X, Y]` from the `Typing` library.
 
 ## Clone the repository
 
 First, clone the repository to your machine: 
 
 ```bash
-git clone git@github.com:biocompute-objects/biocompute-object-llm.git
+git clone git@github.com:biocompute-objects/bco-rag.git
 ```
 
 This example uses the ssh method, replace with HTTPS URL as needed.
 
 ## Virtual Environment
 
-Create a virtual environment from with the `rag/` directory:
+Create a virtual environment from with the `bco-rag/` root directory:
 
 ```bash
-cd rag/
 virtualenv env
 ```
 
@@ -40,7 +39,7 @@ To activate the virtual environment on MacOS/Linux:
 source env/bin/activate 
 ```
 
-Then install the `rag/` directory dependencies:
+Then install the project dependencies:
 
 ```bash
 (env) pip install -r requirements.txt
@@ -61,7 +60,7 @@ References:
 
 ## Create log Directory
 
-Within the `rag/` directory, create the log directory:
+Within the root of the project, create the log directory:
 
 ```bash
 mkdir logs/
@@ -69,10 +68,16 @@ mkdir logs/
 
 ## Usage
 
-The RAG approach can be run like so: 
+The base `one-shot` approach can be run like so: 
 
 ```bash
 (env) python main.py
+```
+
+or 
+
+```bash
+(env) python main.py one-shot
 ```
 
 More documentation on usage can be found [here](./usage.md).
