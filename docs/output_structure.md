@@ -49,7 +49,9 @@ Along with the generated content output, an `output_map.json` file is generated 
           "chunking_config": "{chunking strategy used for node parsing}",
           "git_user": "{github user (or org) that owns the github repo used (if applicable)}",
           "git_repo": "{github repo indexed (if applicable)}",
-          "git_branch": "{github branch to index (if applicable)}"
+          "git_branch": "{github branch to index (if applicable)}",
+          "directory_git_filter": "{the directory filters included, if applicable}",
+          "fiel_ext_filter": "{the file extension filters included, if applicable}"
         },
         "runs": [
           {
@@ -58,6 +60,7 @@ Along with the generated content output, an `output_map.json` file is generated 
             "txt_file": "{filepath to the raw txt dump}",
             "json_file": "{filepath to the serialized JSON response (if applicable)}",
             "source_node_file": "{filepath to the retrieved nodes file}",
+            "elapsed_time": "{elapsed time in seconds to generate the domain}",
             "version": "{version of the tool that was used}"
           }
         ]
