@@ -23,7 +23,7 @@ Make sure the setup steps in the [Installation and Setup](./installation.md) doc
 
 ## Startup
 
-From within the `rag/` directory, start the project like so: 
+From within the project root directory, start the project like so: 
 
 ```bash
 (env) python main.py
