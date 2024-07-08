@@ -26,7 +26,7 @@ class SearchSpace(TypedDict):
     git_data: Optional[list[GitDataFileConfig]]
 ```
 
-The `SearchSpace` type has a corresponding initialization function to help with creating your search space. The `init_search_space` function is defined as such:
+The `SearchSpace` type has a corresponding initialization function to help with creating a search space. The `init_search_space` function is defined as such:
 
 ```python
 def init_search_space(
