@@ -9,6 +9,8 @@
 - [Installation and Setup](./docs/installation.md)
 - [General Usage](./docs/usage.md)
 - [Output Structure](./docs/output_structure.md)
+- [Parameter Search](./docs/parameter_search.md)
+- [Evaluation App](./docs/evaluation_app.md)
 
 ---
 
