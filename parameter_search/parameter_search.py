@@ -26,7 +26,6 @@ class BcoParameterSearch(ABC):
         self,
         search_space: SearchSpace,
         verbose: bool = True,
-        logger: Optional[Logger] = None,
     ):
         """Constructor.
 
@@ -36,8 +35,6 @@ class BcoParameterSearch(ABC):
             The parameter search space.
         verbose : bool (default: True)
             The verbosity level. False for no output, True for running output.
-        logger : Logger or None (default: None)
-            The logger if log output is desired.
         """
 
         self._files: list[str] = search_space["filenames"]
@@ -49,7 +46,7 @@ class BcoParameterSearch(ABC):
         self._llms: list[str] = search_space["llm"]
         self._git_data: Optional[list[GitDataFileConfig]] = search_space["git_data"]
         self._verbose: bool = verbose
-        self._logger = logger
+        self._logger = self._setup_logger()
         self.backoff_time = STANDARD_BACKOFF
         self.delay_reset = 3
 
@@ -83,6 +80,11 @@ class BcoParameterSearch(ABC):
                 self.backoff_time *= 2 + random.uniform(0, 1)
 
             self._log_output(f"Param set elapsed time: {time.time() - t0}")
+
+    @abstractmethod
+    def _setup_logger(self) -> Logger:
+        """Sets up the logger."""
+        pass
 
     @abstractmethod
     def _create_param_sets(self) -> list[UserSelections]:

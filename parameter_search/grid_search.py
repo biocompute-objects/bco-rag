@@ -4,7 +4,9 @@
 from .parameter_search import BcoParameterSearch
 from .custom_types import SearchSpace
 from bcorag.custom_types import UserSelections, create_git_data, create_user_selections
+from bcorag.misc_functions import setup_root_logger
 from itertools import product
+from logging import Logger
 import os
 
 
@@ -22,6 +24,9 @@ class BcoGridSearch(BcoParameterSearch):
             The parameter search space.
         """
         super().__init__(search_space)
+
+    def _setup_logger(self) -> Logger:
+        return setup_root_logger("./logs/grid-search.log")
 
     def _create_param_sets(self) -> list[UserSelections]:
         """Creates a cartesian product of the parameter space."""

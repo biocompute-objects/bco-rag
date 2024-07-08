@@ -112,22 +112,12 @@ def main() -> None:
 
         case "grid-search":
 
-            logger = misc_fns.setup_root_logger("./logs/grid-search.log")
-            logger.info(
-                "################################## RUN START ##################################"
-            )
-
             grid_search = BcoGridSearch(_create_search_space())
             grid_search.train()
 
             misc_fns.graceful_exit()
 
         case "random-search":
-
-            logger = misc_fns.setup_root_logger("./logs/random-search.log")
-            logger.info(
-                "################################## RUN START ##################################"
-            )
 
             random_search = BcoRandomSearch(_create_search_space(), subset_size=5)
             random_search.train()
