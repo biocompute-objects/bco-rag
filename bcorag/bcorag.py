@@ -18,6 +18,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.readers.github import GithubRepositoryReader, GithubClient  # type: ignore
 from llama_index.readers.file import PDFReader  # type: ignore
+from llama_index.readers.pdf_marker import PDFMarkerReader  # type: ignore
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from dotenv import load_dotenv
 import tiktoken
@@ -219,6 +220,9 @@ class BcoRag:
                 # with supress_stdout():
                 #     pdf_loader = download_loader("PDFReader")
                 pdf_loader = PDFReader()
+                paper_documents = pdf_loader.load_data(file=Path(self._file_path))
+            case "PDFMarker":
+                pdf_loader = PDFMarkerReader()
                 paper_documents = pdf_loader.load_data(file=Path(self._file_path))
 
         documents = paper_documents  # type: ignore
