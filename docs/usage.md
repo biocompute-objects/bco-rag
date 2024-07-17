@@ -48,7 +48,8 @@ Aside from the built in generic data loaders, LLamaIndex hosts an open source [h
 The currently supported data loaders are:
 
 - `SimpleDirectoryReader` (default): This is a built-in data loader provided directly by the LlamaIndex library. It is the most generic option and is not specialized in any specific file type.
-- `PDFReader`: This is an external data loader from LlamaHub that is specialized to PDF files.
+- `PDFReader`: The PDF reader is the generic PDF reader, offering some slight optimization over the more naive simple directory reader.
+- `PDFMarker`: The PDF marker converts the PDF file to clean markdown before ingesting.
 
 ### Chunking Strategy
 

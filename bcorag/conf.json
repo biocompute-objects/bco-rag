@@ -4,7 +4,8 @@
     "loader": {
       "list": [
         "SimpleDirectoryReader",
-        "PDFReader"
+        "PDFReader",
+        "PDFMarker"
       ],
       "default": "SimpleDirectoryReader",
       "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#data-loader"
