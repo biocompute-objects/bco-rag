@@ -18,6 +18,7 @@ from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.readers.github import GithubRepositoryReader, GithubClient  # type: ignore
 from llama_index.readers.file import PDFReader  # type: ignore
+from llama_index.core.postprocessor import SentenceTransformerRerank
 from dotenv import load_dotenv
 import tiktoken
 import time
@@ -273,11 +274,17 @@ class BcoRag:
                     self._index = VectorStoreIndex(nodes=nodes)
 
         retriever = VectorIndexRetriever(
-            index=self._index, similarity_top_k=self._similarity_top_k
+            index=self._index, similarity_top_k=self._similarity_top_k * 3
         )
         response_synthesizer = get_response_synthesizer()
+        rerank_postprocessor = SentenceTransformerRerank(
+            top_n=self._similarity_top_k,
+            keep_retrieval_score=True,
+        )
         self._query_engine = RetrieverQueryEngine(
-            retriever=retriever, response_synthesizer=response_synthesizer
+            retriever=retriever,
+            response_synthesizer=response_synthesizer,
+            node_postprocessors=[rerank_postprocessor],
         )
 
         if (
@@ -327,7 +334,7 @@ class BcoRag:
         for idx, source_node in enumerate(response_object.source_nodes):
             source_str += f"\n--------------- Source Node '{idx + 1}/{len(response_object.source_nodes)}' ---------------"
             source_str += f"\nNode ID: '{source_node.node.node_id}'"
-            source_str += f"\nSimilarity: '{source_node.score}'"
+            source_str += f"\nRerank Score: '{source_node.score}'"
             source_str += f"\nMetadata String:\n`{source_node.node.get_metadata_str()}`"
             source_str += (
                 f"\nMetadata Size: `{len(source_node.node.get_metadata_str())}`"
