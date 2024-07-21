@@ -1,0 +1,13 @@
+site_name: Bco-Rag Documentation
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_selection_style: table

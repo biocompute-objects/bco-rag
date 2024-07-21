@@ -116,7 +116,7 @@ class BcoRag:
         """Constructor.
 
         Parameters
-        ---------
+        ----------
         user_selections : UserSelections
             The user configuration selections.
         output_dir : str (default: "./output")
