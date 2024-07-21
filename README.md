@@ -1,5 +1,7 @@
 # Biocompute Object Retrieval-Augmented Generation Assistant
 
+Full documentation can be found [here](https://biocompute-objects.github.io/bco-rag/).
+
 [Sean Kim](https://github.com/seankim658)
 
 ## Background
