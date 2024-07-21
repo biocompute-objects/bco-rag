@@ -54,8 +54,8 @@ OPENAI_API_KEY=<KEY>
 GITHUB_TOKEN=<TOKEN>
 ```
 
-References:
-- [OpenAI API Key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key)
+References:  
+- [OpenAI API Key](https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key)  
 - [Github Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 
 ## Create log Directory
@@ -66,7 +66,7 @@ Within the root of the project, create the log directory:
 mkdir logs/
 ```
 
-## Usage
+## Basic Usage
 
 The base `one-shot` approach can be run like so: 
 
@@ -79,5 +79,3 @@ or
 ```bash
 (env) python main.py one-shot
 ```
-
-More documentation on usage can be found [here](./usage.md).

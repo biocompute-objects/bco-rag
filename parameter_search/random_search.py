@@ -3,8 +3,8 @@
 
 from .parameter_search import BcoParameterSearch
 from .custom_types import SearchSpace
-from bcorag.custom_types import UserSelections, create_git_data, create_user_selections
-from bcorag.misc_functions import setup_root_logger
+from bcorag.custom_types.core_types import UserSelections, create_git_data, create_user_selections
+from bcorag.misc_functions import setup_root_logger, check_dir
 from itertools import product
 from logging import Logger
 import os
@@ -12,8 +12,7 @@ import random
 
 
 class BcoRandomSearch(BcoParameterSearch):
-    """BCO random search class. Subclass of
-    BcoParameterSearch.
+    """BCO random search class. Subclass of `BcoParameterSearch`.
     """
 
     def __init__(self, search_space: SearchSpace, subset_size: int = 5):
@@ -29,11 +28,34 @@ class BcoRandomSearch(BcoParameterSearch):
         super().__init__(search_space)
         self.subset_size = subset_size
 
-    def _setup_logger(self) -> Logger:
-        return setup_root_logger("./logs/random-search.log")
+    def _setup_logger(self, path: str = "./logs", name: str = "random-search") -> Logger:
+        """Sets up the logger.
+
+        Parameters
+        ----------
+        path : str, optional
+            File path for the logger.
+        name : str, optional
+            Name for the logger output.
+
+        Returns
+        -------
+        Logger
+            The grid search logger.
+        """
+        check_dir(path)
+        if not name.endswith(".log"):
+            name = f"{name}.log"
+        return setup_root_logger(os.path.join(path, name))
 
     def _create_param_sets(self) -> list[UserSelections]:
-        """Creates a random subset of the parameter space."""
+        """Creates a random subset of the parameter space.
+
+        Returns
+        -------
+        list[UserSelections]
+            A random subset of the search space combinations.
+        """
         param_sets: list[UserSelections] = []
 
         for (

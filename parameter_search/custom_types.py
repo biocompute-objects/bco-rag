@@ -1,6 +1,6 @@
 import os
 from typing import TypedDict, Optional
-from bcorag.custom_types import GitData, OptionKey
+from bcorag.custom_types.core_types import GitData, OptionKey
 from bcorag.misc_functions import load_config_data, graceful_exit, get_file_list
 
 config_object = load_config_data("./bcorag/conf.json")
@@ -33,20 +33,60 @@ _avail_options: _AvailFilters = {
 
 
 class GitDataFileConfig(TypedDict):
-    """Git data instance for a file."""
+    """Git data instance for a file.
+
+    Attributes
+    ----------
+    filename : str
+        The file (paper) to associate this github repository info with.
+    git_info : GitData
+        The github repository information for document ingestion.
+    """
 
     filename: str
     git_info: GitData
 
 
 def create_git_data_file_config(filename: str, git_info: GitData) -> GitDataFileConfig:
-    """Constructor for the GitDataFileConfig TypedDict."""
+    """Constructor for the GitDataFileConfig TypedDict.
+
+    Parameters
+    ----------
+    filename : str
+        The file (paper) to associate this github repository info with.
+    git_info : GitData
+        The github repository information for document ingestion.
+
+    Returns
+    -------
+    GitDataFileConfig
+    """
     return_data: GitDataFileConfig = {"filename": filename, "git_info": git_info}
     return return_data
 
 
 class SearchSpace(TypedDict):
-    """Search space used for hyperparameter search."""
+    """Search space used for hyperparameter search.
+    
+    Attributes
+    ----------
+    filenames : list[str]
+        The file (paper) name's to process.
+    loader : list[str]
+        The list of available data loaders to test.
+    chunking_config : list[str]
+        The chunking strategies to test.
+    embedding_model : list[str]
+        The embedding models to test.
+    vector_store : list[str]
+        The vector stores to test.
+    similarity_top_k : list[int]
+        The similarity top k values to test.
+    llm : list[str]
+        The LLMs to test.
+    git_data : Optional[list[GitDataFileConfig]]
+        The git data information.
+    """
 
     filenames: list[str]
     loader: list[str]
@@ -72,32 +112,32 @@ def init_search_space(
 
     Parameters
     ----------
-    filenames : list[str], str, or None (default: None)
-        The filenames to test over for the search space (if None,
+    filenames : list[str] | str | None, optional
+        The filenames to test over for the search space (if `None`,
         defaults to all the filenames in the `bcorag/test_papers/`
         directory). Note, many files can increase run time
         significantly as a full parameter search will be executed
         on each paper sequentially.
-    loader : list[str], str, or None (default: None)
-        The data loaders for the search space (if None, defaults to
-        the full list as defined in the conf.json list).
-    chunking_config : list[str], str, or None (default: None)
-        The chunking strategies for the search space (if None, defaults
-        to the full list as defined in the conf.json list).
-    embedding_model : list[str], str, or None (default: None)
-        The embedding model for the search space (if None, defaults
-        to the full list as defined in the conf.json list).
-    vector_store : list[str], str, or None (default: None)
-        The vector store for the search space (if None, defaults
-        to the full list as defined in the conf.json list).
-    similarity_top_k : list[int], int, or None (default: None)
-        The similarity top k for the search space (if None, defaults
-        to the full list as defined in the conf.json list).
-    llm : list[str], str, or None (default: None)
-        The llm for the search space (if None, defaults
-        to the full list as defined in the conf.json list).
-    git_data : list[GitDataFileConfig], GitDataFileConfig or None (default: None)
-        The git data for each file (if None, assumes no git data for
+    loader : list[str] | str | None, optional
+        The data loaders for the search space (if `None`, defaults to
+        the full list as defined in the `conf.json` list).
+    chunking_config : list[str] | str | or None, optional
+        The chunking strategies for the search space (if `None`, defaults
+        to the full list as defined in the `conf.json` list).
+    embedding_model : list[str] | str | or None, optional
+        The embedding model for the search space (if `None`, defaults
+        to the full list as defined in the `conf.json` list).
+    vector_store : list[str] | str | or None, optional
+        The vector store for the search space (if `None`, defaults
+        to the full list as defined in the `conf.json` list).
+    similarity_top_k : list[int] | int | or None, optional
+        The similarity top k for the search space (if `None`, defaults
+        to the full list as defined in the `conf.json` list).
+    llm : list[str] | str | or None, optional
+        The llm for the search space (if `None`, defaults
+        to the full list as defined in the `conf.json` list).
+    git_data : list[GitDataFileConfig] | GitDataFileConfig | None, optional
+        The git data for each file (if `None`, assumes no git data for
         any files).
 
     Returns

@@ -1,0 +1,71 @@
+site_name: Bco-Rag Documentation
+
+theme:
+  name: "material"
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_selection_style: table
+            filters: []
+            show_symbol_type_heading: true
+            members_order: source
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Setup: installation.md
+  - Output Structure: output-structure.md
+  - Other Features:
+    - Parameter Search: "parameter-search.md"
+    - Evaluation App: "evaluation-app.md"
+  - Code Documentation:
+    - Core:
+      - "bcorag.md"
+      - Utils: "misc_functions.md"
+      - Option Picker: "option-picker.md"
+      - Prompts: "prompts.md"
+      - Types:
+        - Core Types: "bcorag-types.md"
+        - Output Map Types: "output-map-types.md"
+    - Parameter Search:
+      - Parent Class: "parameter-search-abc.md"
+      - Implementations:
+          - Grid Search: "grid-search.md"
+          - Random Search: "random-search.md"
+      - Types: "parameter-custom-types.md"
+    - Evaluation App:
+      - Frontend: 
+        - App: "app.md"
+        - Components:
+          - Intermediate Screen: "intermediate-screen.md"
+          - Login Screen: "login-screen.md"
+          - Sidebar: "sidebar.md"
+          - Tab View: "tab-view.md"
+          - View Page: "view-page.md"
+          - Evaluation Frames:
+            - Base Class: "base-evaluation-frame.md"
+            - General Frame: "general-frame.md"
+            - Error Frame: "error-frame.md"
+            - Miscellaneous Frame: "miscellaneous-frame.md"
+            - Reference Frame: "reference-frame.md"
+            - Score Frame: "score-frame.md"
+      - Backend:
+        - App Start: "app-start.md"
+        - Types: "evaluator-custom-types.md"
+        - Login: "login.md"
+        - Utils: "miscellaneous.md"
+        - State: "state.md"

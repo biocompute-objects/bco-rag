@@ -144,6 +144,8 @@ def submit_eval_state(app_state: AppState, run_state: RunState) -> AppState:
 def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunState:
     """Create run state.
 
+    TODO : This function is messy, should be cleaned up at some point.
+
     Parameters
     ----------
     run_index : int
@@ -153,12 +155,10 @@ def load_run_state(run_index: int, total_runs: int, app_state: AppState) -> RunS
     app_state : AppState
         The current app state.
 
-    TODO : This function is messy, should be cleaned up at some point.
-
     Returns
     -------
-    tuple (dict, dict)
-        The generated domain dict and the human curated domain dict.
+    RunState 
+        The run state for the run at the specified index.
     """
     current_run = 0
 

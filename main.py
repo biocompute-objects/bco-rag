@@ -6,7 +6,7 @@ from bcorag import option_picker as op
 from bcorag.bcorag import BcoRag
 from parameter_search.grid_search import BcoGridSearch
 from parameter_search.random_search import BcoRandomSearch
-from bcorag.custom_types import (
+from bcorag.custom_types.core_types import (
     GitFilter,
     GitFilters,
     create_git_data,

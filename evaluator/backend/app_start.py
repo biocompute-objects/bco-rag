@@ -83,6 +83,11 @@ def create_init_run_state(app_state: AppState) -> RunState:
     ----------
     app_state : AppState
         The current app state.
+
+    Returns
+    -------
+    RunState
+        The intial run state.
     """
     total_runs = _get_total_runs(app_state)
     run_state = load_run_state(run_index=0, total_runs=total_runs, app_state=app_state)
@@ -146,8 +151,13 @@ def _load_config_data(
 
     Parameters
     ----------
-    filepath : str (default: "./evaluator/backend/conf.json")
+    filepath : str, optional
         Filepath to the App config data.
+
+    Returns
+    -------
+    ConfigData | None
+        The configuration data on success, None on error.
     """
     naive_load_data = misc_fns.load_json(filepath)
     if naive_load_data is None:

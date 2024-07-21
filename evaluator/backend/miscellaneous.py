@@ -1,6 +1,5 @@
 from bcorag import misc_functions
-from .custom_types import AppAttributes, AppState, AppStateKey, RunState, RunStateKey
-import customtkinter as ctk  # type: ignore
+from .custom_types import AppState, AppStateKey, RunState, RunStateKey
 from typing import NoReturn, get_args, Literal, cast
 
 

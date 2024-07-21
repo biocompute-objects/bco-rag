@@ -1,12 +1,12 @@
 """ Simple CLI interface for choosing one of the pre-selected baseline testing paper. 
-Will automatically grab any PDF file in the ../../papers/ directory. 
+Will automatically grab any PDF file in the `../../papers/` directory. 
 """
 
 import os
 from pick import pick
 from bcorag import misc_functions as misc_fns
 from typing import Literal, Tuple, Optional, get_args
-from .custom_types import (
+from .custom_types.core_types import (
     UserSelections,
     GitData,
     GitFilter,
@@ -26,13 +26,13 @@ def initialize_picker(filetype: str = "pdf") -> Optional[UserSelections]:
 
     Parameters
     ----------
-    filetype : str (default: pdf)
+    filetype : str, optional
         The filetype to filter on, this project was build to handle PDF
         files so it is highly unlikely you will want to override this default.
 
     Returns
     -------
-    UserSelections or None
+    UserSelections | None
         The user selections or None indicating user chose to exit or error.
     """
 
@@ -82,13 +82,13 @@ def _file_picker(path: str, filetype: str = "pdf") -> Optional[Tuple[str, str]]:
     ----------
     path : str
         The path to the directory to display the CLI menu for.
-    filetype : str (default: pdf)
+    filetype : str, optional
         The filetype to filter on, this project was build to handle PDF
         files so it is highly unlikely you will want to override this default.
 
     Returns
     -------
-    (str, str) or None
+    (str, str) | None
         Returns the name and path of the selected file or None if the user selects exit.
     """
     target_files = misc_fns.get_file_list(path, filetype)
@@ -107,7 +107,7 @@ def _repo_picker() -> Optional[GitData] | Literal[0]:
 
     Returns
     -------
-    GitData, None, or 0
+    GitData | None | 0
         Returns parsed repo information from the link, None if the user skips this step,
         or 0 (exit status) if the user chooses to exit.
     """
@@ -196,12 +196,12 @@ def _create_picker(
         Link to the documentation for the option.
     option_list : list[str]
         The list of options to display in the picker menu.
-    default : str or None (default: None)
+    default : str | None, optional
         The option to mark one option as the default.
 
     Returns
     -------
-    str or None
+    str | None
         The chosen option of None if the user selected to exit.
     """
     pick_title = f"Please choose one of the following {title_keyword.replace('_', ' ').title()}s.\nDocumentation can be found at:\n{documentation}."
