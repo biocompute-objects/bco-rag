@@ -24,7 +24,7 @@ def login(
 
     Returns
     -------
-    tuple (str, AppState or None)
+    (str, AppState | None)
         A string containing the user hash on success or an
         error message on errror and the current app state
         on success or None on error.
@@ -61,7 +61,7 @@ def login(
 
 
 def _check_user_existence(user_hash: str, attributes: AppAttributes) -> bool:
-    """Chechks if the user already exists or not.
+    """Checks if the user already exists or not.
 
     user_hash : str
         The user's md5 hash.

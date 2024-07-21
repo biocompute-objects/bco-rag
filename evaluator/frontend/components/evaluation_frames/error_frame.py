@@ -1,3 +1,4 @@
+from .evaluation_parent import EvaluationBaseFrame
 import customtkinter as ctk  # type: ignore
 from evaluator.backend.custom_types import (
     AppState,
@@ -11,8 +12,8 @@ from evaluator.backend import DEFAULT_SCORES
 EVAL_DEFAULTS = DEFAULT_SCORES["error_eval"]
 
 
-class ErrorFrame(ctk.CTkFrame):
-    """Class for the error frame."""
+class ErrorFrame(ctk.CTkFrame, EvaluationBaseFrame):
+    """Class for the error evaluation frame."""
 
     def __init__(
         self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
@@ -147,7 +148,15 @@ class ErrorFrame(ctk.CTkFrame):
         )
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
-        """Update the state."""
+        """Update the component state.
+
+        Parameters
+        ----------
+        app_state : AppState
+            The updated app state.
+        run_state : RunState
+            The updated run state.
+        """
         self.run = run_state
         self.state = app_state
         self.error_eval = self.run["eval_data"]["error_eval"]
@@ -194,7 +203,13 @@ class ErrorFrame(ctk.CTkFrame):
         )
 
     def get_results(self) -> ErrorEval:
-        """Returns the error evaluations."""
+        """Returns the error evaluations.
+
+        Returns
+        -------
+        ErrorEval
+            The error evaluation results.
+        """
         error_eval = create_error_val(
             inf_err=self.inf_err_var.get(),
             ext_err=self.ext_err_var.get(),

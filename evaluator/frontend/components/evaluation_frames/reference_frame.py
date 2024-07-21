@@ -1,3 +1,4 @@
+from .evaluation_parent import EvaluationBaseFrame
 import customtkinter as ctk  # type: ignore
 from evaluator.backend.custom_types import (
     AppState,
@@ -11,8 +12,8 @@ from evaluator.backend import DEFAULT_SCORES
 EVAL_DEFAULTS = DEFAULT_SCORES["reference_eval"]
 
 
-class ReferenceFrame(ctk.CTkFrame):
-    """Class for the reference frame."""
+class ReferenceFrame(ctk.CTkFrame, EvaluationBaseFrame):
+    """Class for the reference evaluation frame."""
 
     def __init__(
         self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
@@ -108,7 +109,15 @@ class ReferenceFrame(ctk.CTkFrame):
         )
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
-        """Update the state."""
+        """Update the state.
+
+        Parameters
+        ----------
+        app_state : AppState
+            The updated app state.
+        run_state : RunState
+            The updated run state.
+        """
         self.run = run_state
         self.state = app_state
         self.reference_eval = self.run["eval_data"]["reference_eval"]
@@ -135,7 +144,13 @@ class ReferenceFrame(ctk.CTkFrame):
         )
 
     def get_results(self) -> RefereceEval:
-        """Returns the reference evaluations."""
+        """Returns the reference evaluations.
+
+        Returns
+        -------
+        ReferenceEval
+            The reference evaluation results.
+        """
         ref_eval_score = self.ref_eval_var.get()
         top_ref_val = self.top_ref_var.get()
         notes = self.ref_notes.get(0.0, "end")

@@ -7,7 +7,7 @@ import time
 from logging import Logger
 from abc import ABC, abstractmethod
 from bcorag.bcorag import BcoRag, supress_stdout
-from bcorag.custom_types import (
+from bcorag.custom_types.core_types import (
     UserSelections,
     DomainKey,
 )
@@ -20,6 +20,33 @@ STANDARD_BACKOFF = 1
 class BcoParameterSearch(ABC):
     """Parent class that lays the foundation for the specific parameter
     search classes. This class shouldn't be instantiated directly.
+
+    Attributes
+    ----------
+    _files : list[str]
+        The files search space.
+    _loaders : list[str]
+        The data loaders search space.
+    _chunking_configs : list[str]
+        The chunking strategies search space.
+    _embedding_models : list[str]
+        The embedding models search space.
+    _vector_stores : list[str]
+        The vector stores search space.
+    _similarity_top_k : list[int]
+        The similarity top k search space.
+    _llms : list[str]
+        The LLM search space.
+    _git_data : Optional[list[GitDataFileConfig]]
+        The git data to associate with test runs.
+    _verbose : bool
+        Parameter search verbosity mode.
+    _logger : logging.Logger
+        The logger to use.
+    backoff_time : int | float
+        The backoff time between runs. Uses exponential backoff time.
+    delay_reset : int
+        The amount of runs in between resetting the backoff time. 
     """
 
     def __init__(
@@ -33,7 +60,7 @@ class BcoParameterSearch(ABC):
         ----------
         search_space : SearchSpace
             The parameter search space.
-        verbose : bool (default: True)
+        verbose : bool, optional
             The verbosity level. False for no output, True for running output.
         """
 
@@ -47,7 +74,7 @@ class BcoParameterSearch(ABC):
         self._git_data: Optional[list[GitDataFileConfig]] = search_space["git_data"]
         self._verbose: bool = verbose
         self._logger = self._setup_logger()
-        self.backoff_time = STANDARD_BACKOFF
+        self.backoff_time: int | float = STANDARD_BACKOFF
         self.delay_reset = 3
 
     def train(self):
@@ -74,7 +101,7 @@ class BcoParameterSearch(ABC):
 
             self._log_output(f"Sleeping for {self.backoff_time}...")
             time.sleep(self.backoff_time)
-            if idx % 3 == 0:
+            if idx % self.delay_reset == 0:
                 self.backoff_time = STANDARD_BACKOFF
             else:
                 self.backoff_time *= 2 + random.uniform(0, 1)
@@ -82,7 +109,7 @@ class BcoParameterSearch(ABC):
             self._log_output(f"Param set elapsed time: {time.time() - t0}")
 
     @abstractmethod
-    def _setup_logger(self) -> Logger:
+    def _setup_logger(self, path: str, name: str) -> Logger:
         """Sets up the logger."""
         pass
 
@@ -92,6 +119,13 @@ class BcoParameterSearch(ABC):
         pass
 
     def _generate_domains(self, bcorag: BcoRag):
+        """Performs the bcorag query on each domain.
+
+        Parameters
+        ----------
+        bcorag : BcoRag
+            The setup BcoRag instance.
+        """
 
         domain: DomainKey
         for domain in get_args(DomainKey):
@@ -104,17 +138,30 @@ class BcoParameterSearch(ABC):
     def _create_bcorag(
         self, user_selections: UserSelections, evaluation_mode: bool = False
     ) -> BcoRag:
-        """Creates the user selections set for the BcoRag."""
+        """Creates the BcoRag instance.
+
+        Parameters
+        ----------
+        user_selections : UserSelections
+            The parameter set.
+        evaluation_mode : bool
+            The evaluation mode for the BcoRag instance.
+
+        Returns
+        -------
+        BcoRag
+            The instantiated BcoRag instance.
+        """
         bcorag = BcoRag(user_selections, evaluation_metrics=evaluation_mode)
         return bcorag
 
     def _log_output(self, message: str | UserSelections):
         """Handles output. If the logger was passed in handles logging, if
-        verbose is True handles printing (only info level logging).
+        verbose is `True` handles printing (only info level logging).
 
         Parameters
         ----------
-        message : str or UserSelections
+        message : str | UserSelections
             The message or param set to log and/or print.
         """
         if self._verbose:

@@ -29,10 +29,14 @@ import os
 from contextlib import contextmanager, redirect_stdout
 import json
 from . import EVALUATION_LLM
-from .custom_types import (
+from .custom_types.core_types import (
     GitData,
     GitFilter,
     GitFilters,
+    UserSelections,
+    DomainKey,
+)
+from .custom_types.output_map_types import (
     OutputTrackerGitFilter,
     create_output_tracker_param_set,
     create_output_tracker_git_filter,
@@ -40,8 +44,6 @@ from .custom_types import (
     create_output_tracker_entry,
     create_output_tracker_domain_entry,
     default_output_tracker_file,
-    UserSelections,
-    DomainKey,
 )
 import bcorag.misc_functions as misc_fns
 from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
@@ -119,10 +121,10 @@ class BcoRag:
         ----------
         user_selections : UserSelections
             The user configuration selections.
-        output_dir : str (default: "./output")
+        output_dir : str
             The directory to dump the outputs (relative to main.py entry point
             in the repo root).
-        evaluation_metrics : bool (default: False)
+        evaluation_metrics : bool
             Whether or not to calculate Faithfulness and Relevancy metrics.
         """
         load_dotenv()
@@ -301,7 +303,7 @@ class BcoRag:
             ] += self._token_counter.total_embedding_token_count
 
     def perform_query(self, domain: DomainKey) -> str:
-        """Performs a qeury for a specific BCO domain.
+        """Performs a query for a specific BCO domain.
 
         Parameters
         ----------
@@ -396,13 +398,13 @@ class BcoRag:
 
         Parameters
         ----------
-        automatic_query : bool (default: False)
+        automatic_query : bool
             Whether to automatically query after the user chooses a domain. If set to
-            True this is a shortcut to calling bcorag.perform_query(choose_domain()).
+            True this is a shortcut to calling `bcorag.perform_query(choose_domain())`.
 
         Returns
         -------
-        (DomainKey, str), str or None
+        (DomainKey, str) | str | None
             If automatic query is set to True will return a tuple containing the domain
             name and the query response. If automatic query is False will return the user
             chosen domain. None is returned if the user chooses to exit.
@@ -703,9 +705,9 @@ class BcoRag:
 
         Parameters
         ----------
-        info : dict, list, str UserSelections, or None
+        info : dict | list | str | UserSelections | None
             The object to log.
-        header : str or None (default: None)
+        header : str or None
             The optional header to log before the info.
         """
         log_str = header if header is not None else ""

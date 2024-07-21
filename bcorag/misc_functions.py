@@ -1,4 +1,4 @@
-""" Miscellaneous helper functions.
+""" Miscellaneous util functions.
 """
 
 import sys
@@ -12,7 +12,8 @@ import datetime
 import pytz
 from typing import Optional, NoReturn, cast, get_args
 from . import TIMEZONE, TIMESTAMP_FORMAT
-from .custom_types import OutputTrackerFile, DomainKey, ConfigObject
+from .custom_types.core_types import DomainKey, ConfigObject
+from .custom_types.output_map_types import OutputTrackerFile
 
 
 def graceful_exit(exit_code: int = 0, error_msg: Optional[str] = None) -> NoReturn:
@@ -20,8 +21,10 @@ def graceful_exit(exit_code: int = 0, error_msg: Optional[str] = None) -> NoRetu
 
     Parameters
     ----------
-    exit_code : int (default: 0)
-    error_msg : str or None (default: None)
+    exit_code : int, optional
+        The exit code.
+    error_msg : str | None, optional
+        The error message to print before exiting.
     """
     if exit_code != 0:
         if error_msg is not None:
@@ -46,7 +49,7 @@ def load_json(filepath: str) -> Optional[dict]:
 
     Returns
     -------
-    dict or None
+    dict | None
         The deserialized JSON data or None if the file doesn't exist.
     """
     if not os.path.isfile(filepath):
@@ -61,12 +64,12 @@ def load_config_data(filepath: str = "./conf.json") -> Optional[ConfigObject]:
 
     Parameters
     ----------
-    filepath : str (default: "./conf.json")
+    filepath : str, optional
         File path to the config JSON file.
 
     Returns
     -------
-    ConfigObject or None
+    ConfigObject | None
         Casted ConfigObject or None on some type of error.
     """
     naive_load_data = load_json(filepath)
@@ -79,8 +82,7 @@ def load_config_data(filepath: str = "./conf.json") -> Optional[ConfigObject]:
 
 
 def load_output_tracker(filepath: str) -> Optional[OutputTrackerFile]:
-    """Loads the JSON output tracker file or returns None if it doesn't
-    exist (or on some other unforeseen error).
+    """Loads the JSON output tracker file.
 
     Parameters
     ----------
@@ -89,7 +91,7 @@ def load_output_tracker(filepath: str) -> Optional[OutputTrackerFile]:
 
     Returns
     -------
-    OutputTrackerFile or None
+    OutputTrackerFile | None
         Casted OutputTrackerFile or None on some type of error.
     """
     naive_load_data = load_json(filepath)
@@ -108,7 +110,7 @@ def write_json(output_path: str, data: dict | list | OutputTrackerFile) -> bool:
     ----------
     output_path : str
         The output file path.
-    data : dict or list
+    data : dict | list | OutputTrackerFile
         The data to dump.
 
     Returns
@@ -228,7 +230,7 @@ def setup_root_logger(log_path: str, name: str = "bcorag") -> logging.Logger:
     ----------
     log_path : str
         The filepath to the log handler.
-    name : str (default: "bcorag")
+    name : str, optional
         The name of the root logger.
 
     Returns
@@ -254,7 +256,7 @@ def setup_document_logger(name: str, parent_logger: str = "bcorag") -> logging.L
     ----------
     name : str
         The name of the document to setup the logger for.
-    parent_logger : str (default: "bcorag")
+    parent_logger : str, optional
         Name of the parent logger to setup under.
 
     Returns
@@ -290,7 +292,7 @@ def extract_repo_data(url: str) -> Optional[tuple[str, str]]:
 
     Returns
     -------
-    tuple (str, str) or None
+    (str, str) | None
         Returns the tuple containing the extracted github user
         and repo or None on failure to parse the URL.
     """
@@ -311,7 +313,7 @@ def get_file_list(path: str, filetype: str = "pdf") -> list[str]:
     ----------
     path : str
         The file path to the target directory.
-    filetype : str (default: pdf)
+    filetype : str, optional
         The file type to capture.
 
     Returns

@@ -1,3 +1,4 @@
+from .evaluation_parent import EvaluationBaseFrame
 import customtkinter as ctk  # type: ignore
 from evaluator.backend.custom_types import (
     AppState,
@@ -11,8 +12,8 @@ from evaluator.backend import DEFAULT_SCORES
 EVAL_DEFAULTS = DEFAULT_SCORES["score_eval"]
 
 
-class ScoreFrame(ctk.CTkFrame):
-    """Class for the score frame."""
+class ScoreFrame(ctk.CTkFrame, EvaluationBaseFrame):
+    """Class for the score evaluation frame."""
 
     def __init__(
         self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
@@ -126,7 +127,15 @@ class ScoreFrame(ctk.CTkFrame):
         self.update_state(app_state=self.state, run_state=self.run)
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
-        """Update the run state and score frame."""
+        """Update the component state.
+
+        Parameters
+        ----------
+        app_state : AppState
+            The updated app state.
+        run_state : RunState
+            The updated run state.
+        """
         self.run = run_state
         self.state = app_state
         self.score_eval = self.run["eval_data"]["score_eval"]
@@ -145,7 +154,13 @@ class ScoreFrame(ctk.CTkFrame):
         )
 
     def get_results(self) -> ScoreEval:
-        """Returns the score evaluations."""
+        """Returns the score evaluations.
+
+        Returns
+        -------
+        ScoreEval
+            The score evaluation results.
+        """
         score_eval_button_val = cast_score_eval(self.score_eval_var.get())
         score_eval = create_score_eval(
             eval=score_eval_button_val, notes=self.score_notes.get(0.0, "end")

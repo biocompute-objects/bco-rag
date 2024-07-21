@@ -1,3 +1,4 @@
+from .evaluation_parent import EvaluationBaseFrame
 import customtkinter as ctk  # type: ignore
 from evaluator.backend.custom_types import (
     AppState,
@@ -10,8 +11,8 @@ from evaluator.backend import DEFAULT_SCORES
 EVAL_DEFAULTS = DEFAULT_SCORES["misc_eval"]
 
 
-class MiscFrame(ctk.CTkFrame):
-    """Class for the miscellaneous frame."""
+class MiscFrame(ctk.CTkFrame, EvaluationBaseFrame):
+    """Class for the miscellaneous evaluation frame."""
 
     def __init__(
         self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
@@ -153,7 +154,15 @@ class MiscFrame(ctk.CTkFrame):
         )
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
-        """Update the state."""
+        """Update the component state.
+
+        Parameters
+        ----------
+        app_state : AppState
+            The updated app state.
+        run_state : RunState
+            The updated run state.
+        """
         self.run = run_state
         self.state = app_state
         self.misc_eval = self.run["eval_data"]["misc_eval"]
@@ -185,7 +194,13 @@ class MiscFrame(ctk.CTkFrame):
         self.misc_notes.insert(0.0, self.misc_eval.get("notes", EVAL_DEFAULTS["notes"]))
 
     def get_results(self) -> MiscEval:
-        """Returns the miscellaneous evaluations."""
+        """Returns the miscellaneous evaluations.
+
+        Returns
+        -------
+        MiscEval
+            The miscellaneous evaluation results.
+        """
         human_domain_rating = self.human_domain_rating_var.get()
         evaluator_conf_rating = self.evaluator_conf_var.get()
         evaluator_familiarity_level = self.evaluator_fam_var.get()

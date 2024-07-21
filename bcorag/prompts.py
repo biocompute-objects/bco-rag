@@ -1,18 +1,18 @@
-""" The standardized query prompts.
+"""The standardized query prompts.
 
-QUERY_PROMPT: The standard wrapper used for each prompt.
-_TOP_LEVEL_SCHEMA: The entire top level 2791 object schema.
-SUPPLEMENT_PROMPT: Supplementary prompt for the domains that require the top level schema.
-USABILITY_DOMAIN: The usability domain specific prompt and schema.
-IO_DOMAIN: The IO domain specific prompt and schema.
-DESCRIPTION_DOMAIN: The description domain specific prompt and schema.
-EXECUTION_DOMAIN: The execution domain specific prompt and schema.
-PARAMETRIC_DOMAIN: The parametric domain specific prompt and schema.
-ERROR_DOMAIN: The error domain specific prompt and schema.
-DOMAIN_MAP: The domain map for the BcoRag object.
+- `QUERY_PROMPT`: The standard wrapper used for each prompt.
+- `_TOP_LEVEL_SCHEMA`: The entire top level 2791 object schema.
+- `SUPPLEMENT_PROMPT`: Supplementary prompt for the domains that require the top level schema.
+- `USABILITY_DOMAIN`: The usability domain specific prompt and schema.
+- `IO_DOMAIN`: The IO domain specific prompt and schema.
+- `DESCRIPTION_DOMAIN`: The description domain specific prompt and schema.
+- `EXECUTION_DOMAIN`: The execution domain specific prompt and schema.
+- `PARAMETRIC_DOMAIN`: The parametric domain specific prompt and schema.
+- `ERROR_DOMAIN`: The error domain specific prompt and schema.
+- `DOMAIN_MAP`: The domain map for the BcoRag object.
 """
 
-from .custom_types import DomainMap
+from .custom_types.core_types import DomainMap
 
 QUERY_PROMPT = "Can you give me a BioCompute Object {} domain for the provided paper. The return response must be valid JSON and must validate against the JSON schema I am providing you. {}"
 

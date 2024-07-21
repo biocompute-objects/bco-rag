@@ -1,3 +1,4 @@
+from .evaluation_parent import EvaluationBaseFrame
 import customtkinter as ctk  # type: ignore
 from evaluator.backend.custom_types import (
     AppState,
@@ -10,8 +11,8 @@ from evaluator.backend import DEFAULT_SCORES
 EVAL_DEFAULTS = DEFAULT_SCORES["general_eval"]
 
 
-class GeneralFrame(ctk.CTkFrame):
-    """Class for the general frame."""
+class GeneralFrame(ctk.CTkFrame, EvaluationBaseFrame):
+    """Class for the general evaluation frame."""
 
     def __init__(
         self, master: ctk.CTkFrame, app_state: AppState, run_state: RunState, **kwargs
@@ -169,7 +170,15 @@ class GeneralFrame(ctk.CTkFrame):
         )
 
     def update_state(self, app_state: AppState, run_state: RunState) -> None:
-        """Update the state."""
+        """Update the component state.
+
+        Parameters
+        ----------
+        app_state : AppState
+            The updated app state.
+        run_state : RunState
+            The updated run state.
+        """
         self.run = run_state
         self.state = app_state
         self.general_eval = self.run["eval_data"]["general_eval"]
@@ -204,7 +213,13 @@ class GeneralFrame(ctk.CTkFrame):
         )
 
     def get_results(self) -> GeneralEval:
-        """Returns the general evaluations."""
+        """Returns the general evaluations.
+
+        Returns
+        -------
+        GeneralEval
+            The general evaluation results.
+        """
         relevancy_val = self.relevancy_var.get()
         readability_var = self.readability_var.get()
         reproducibility_var = self.reproducibility_var.get()

@@ -6,14 +6,17 @@ from evaluator.backend.custom_types import (
     create_full_eval,
 )
 from typing import Callable
-from .score_frame import ScoreFrame
-from .error_frame import ErrorFrame
-from .reference_frame import ReferenceFrame
-from .general_frame import GeneralFrame
-from .miscellaneous_frame import MiscFrame
+from .evaluation_frames import (
+    ScoreFrame,
+    ErrorFrame,
+    ReferenceFrame,
+    GeneralFrame,
+    MiscFrame,
+    EvaluationBaseFrame
+)
 
 
-class TabView(ctk.CTkTabview):
+class TabView(ctk.CTkTabview, EvaluationBaseFrame):
     """Class for the view page tab view."""
 
     def __init__(

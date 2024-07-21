@@ -1,4 +1,7 @@
-"""bco-rag init file"""
+"""BcoRag module.
+
+The BcoRag module defines the core functionality for the BioCompute Object RAG Assistant.
+"""
 
 __version__ = "0.2.1"
 __author__ = "seankim658"
