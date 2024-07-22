@@ -35,6 +35,8 @@ from .custom_types.core_types import (
     GitFilters,
     UserSelections,
     DomainKey,
+    DomainContent,
+    default_domain_content,
 )
 from .custom_types.output_map_types import (
     OutputTrackerGitFilter,
@@ -157,6 +159,7 @@ class BcoRag:
             if user_selections["git_data"] is not None
             else None
         )
+        self.domain_content: DomainContent = default_domain_content()
         self._faithfulness_evaluator: Optional[FaithfulnessEvaluator] = None
         self._relevancy_evaluator: Optional[RelevancyEvaluator] = None
         if evaluation_metrics:
@@ -224,8 +227,9 @@ class BcoRag:
                 pdf_loader = PDFReader()
                 paper_documents = pdf_loader.load_data(file=Path(self._file_path))
             case "PDFMarker":
-                pdf_loader = PDFMarkerReader()
-                paper_documents = pdf_loader.load_data(file=Path(self._file_path))
+                with supress_stdout():
+                    pdf_loader = PDFMarkerReader()
+                    paper_documents = pdf_loader.load_data(file=Path(self._file_path))
 
         documents = paper_documents  # type: ignore
         if self._git_data is not None:
@@ -316,9 +320,15 @@ class BcoRag:
             The generated domain.
         """
         query_start_time = time.time()
-        query_prompt = QUERY_PROMPT.format(domain, self._domain_map[domain]["prompt"])
+        domain_prompt = self._domain_map[domain]["prompt"]
+        for dependency in self._domain_map[domain]["dependencies"]:
+            if self.domain_content[dependency] is not None:
+                dependency_prompt = f"The {domain} domain is dependent on the {dependency} domain. Here is the {dependency} domain: {self.domain_content[dependency]}."
+                domain_prompt += dependency_prompt
+        query_prompt = QUERY_PROMPT.format(domain, domain_prompt)
         if self._domain_map[domain]["top_level"]:
             query_prompt += f"\n{SUPPLEMENT_PROMPT}"
+
         response_object = self._query_engine.query(query_prompt)
         if isinstance(response_object, Response):
             response_object = Response(
@@ -335,6 +345,8 @@ class BcoRag:
             )
             misc_fns.graceful_exit(1)
         query_response = str(response_object.response)
+
+        self.domain_content[domain] = query_response
 
         source_str = ""
         for idx, source_node in enumerate(response_object.source_nodes):
@@ -398,7 +410,7 @@ class BcoRag:
 
         Parameters
         ----------
-        automatic_query : bool
+        automatic_query : bool, optional
             Whether to automatically query after the user chooses a domain. If set to
             True this is a shortcut to calling `bcorag.perform_query(choose_domain())`.
 
@@ -451,6 +463,12 @@ class BcoRag:
                         f"Unrecognized input {domain_selection} entered, please try again."
                     )
                     continue
+            if not self._check_dependencies(domain_selection):
+                print(
+                    f"Dependencies for the `{domain_selection}` domain are not satisfied. Please choose another domain."
+                )
+                continue
+
             break
 
         if automatic_query:
@@ -461,7 +479,7 @@ class BcoRag:
             return domain_selection, self.perform_query(domain_selection)
         if self._debug:
             self._display_info(
-                f"User chose '{domain_selection}' with no automatic query."
+                f"User chose '{domain_selection}' domain with no automatic query."
             )
         return domain_selection
 
@@ -760,3 +778,24 @@ class BcoRag:
         hash_str = "_".join(hash_list)
         hash_hex = md5(hash_str.encode("utf-8")).hexdigest()
         return hash_hex
+
+    def _check_dependencies(self, domain: DomainKey) -> bool:
+        """Checks a domain's dependencies.
+
+        Parameters
+        ----------
+        domain : DomainKey
+            The domain to check.
+
+        Returns
+        -------
+        bool
+            True if dependencies are satisfied, False otherwise.
+        """
+        for dependency in self._domain_map[domain]["dependencies"]:
+            if self.domain_content[dependency] is None:
+                print(
+                    f"Error: {dependency.title()} domain must be generated before the {domain.title()} domain."
+                )
+                return False
+        return True
