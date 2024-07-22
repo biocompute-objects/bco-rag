@@ -199,8 +199,8 @@ _TOP_LEVEL_SCHEMA = """
 
 SUPPLEMENT_PROMPT = f"Some of the fields are defined in the top level 2791object JSON schema which is as follows: {_TOP_LEVEL_SCHEMA}"
 
-USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain languages description of what was done in the project or paper workflow. The Usasability domain conveys the purpose of the paper. The Usability domain is to provide a specific scientific use case and a description of the paper and/or experiement."""
-USABILITY_DOMAIN += """The JSON schema is as follows:
+USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain languages description of what was done in the project or paper workflow. The Usasability domain conveys the purpose of the paper. The Usability domain is to provide a specific scientific use case and a description of the paper and/or experiement. The usability domain information is likely to be in sections paper sections such as the abstract, background, summary, conclusions, etc. Any section that describes the purpose and background of the project."""
+USABILITY_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/usability_domain.json",
@@ -219,8 +219,8 @@ USABILITY_DOMAIN += """The JSON schema is as follows:
 }
 """
 
-IO_DOMAIN = """The Input Output domain (or IO domain) represents the list of global input and output files created by the computational workflow. These fields are pointers to objects that can reside in the system performing the ecomputation or any other accessible system. The input subdomain records the references and input files for the entire pipeline. The output subdomain records the references and outputs (including media types) for the entire pipeline."""
-IO_DOMAIN += """The JSON schema is as follows:
+IO_DOMAIN = """The Input Output domain (or IO domain) represents the list of global input and output files created by the computational workflow. These fields are pointers to objects that can reside in the system performing the ecomputation or any other accessible system. The input subdomain records the references and input files for the entire pipeline. The output subdomain records the references and outputs (including media types) for the entire pipeline. The io domain information is likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project steps and their intermediate input and output contents. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information). If the github repository information is included, it is highly likely that the input and output files are located in the repository. Make sure any links to files in the repository are exact."""
+IO_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/io_domain.json",
@@ -281,8 +281,8 @@ IO_DOMAIN += """The JSON schema is as follows:
 }
 """
 
-DESCRIPTION_DOMAIN = """The description domain specifies structured fields for the description of external resources, the pipeline or workflow steps, and the relationship of I/O objects. Information in this domain is not used for computation."""
-DESCRIPTION_DOMAIN += """The JSON schema is as follows:
+DESCRIPTION_DOMAIN = """The description domain specifies structured fields for the description of external resources, the pipeline or workflow steps, and the relationship of I/O objects. The description domain information is likely to be contained in multiple sections of the paper. The keywords are likely in sections such as the keywords, abstract, background, summary, etc. The xref information is likely in paper sections such as the data section. The pipeline steps are likely to be in paper sections such as the methods, methodologie, steps, etc. Any section that describes the project's pipeline steps and the background on the data used. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+DESCRIPTION_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/description_domain.json",
@@ -450,8 +450,8 @@ DESCRIPTION_DOMAIN += """The JSON schema is as follows:
 }
 """
 
-EXECUTION_DOMAIN = """The Execution domain specifies information needed for deployment, software configuration, and running applications in a dependent environment. Everything that is needed for someone to set up their machine to run the workflow should be described here."""
-EXECUTION_DOMAIN += """The JSON schema is as follows:
+EXECUTION_DOMAIN = """The Execution domain specifies information needed for deployment, software configuration, and running applications in a dependent environment. Everything that is needed for someone to set up their machine to run the workflow should be described here. The execution domain information is likely to in paper sections such as prerequisites, setup, data, methods, methodologies, etc. Any section that describes the setup, prerequisites, or environment for the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+EXECUTION_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/execution_domain.json",
@@ -565,8 +565,8 @@ EXECUTION_DOMAIN += """The JSON schema is as follows:
 }
 """
 
-PARAMETRIC_DOMAIN = """The parametric domain represents a list of parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis and are tied to a particular pipeline implementation. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user."""
-PARAMETRIC_DOMAIN += """The JSON schema is as follows:
+PARAMETRIC_DOMAIN = """The parametric domain represents a list of parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis and are tied to a particular pipeline implementation. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. The parametric domain is likely contained in the paper sections such as methods, methodologies, etc. Any section that describes the exact details of the implementation and execution of the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+PARAMETRIC_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/parametric_domain.json",
@@ -611,8 +611,8 @@ PARAMETRIC_DOMAIN += """The JSON schema is as follows:
 }
 """
 
-ERROR_DOMAIN = """The error domain can be used to determine what range of input returns and outputs are within the tolerance level defined in this subdomain and therefore can be used to optimize the algorithm. It consists of two subdomains: empirical and algorithmic. The empirical error subdomain contains empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. The algorithmic subdomain is descriptive of errors that originate by the fuzziness of the algorithms. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user."""
-ERROR_DOMAIN = """The JSON schema is as follows:
+ERROR_DOMAIN = """The error domain can be used to determine what range of input returns and outputs are within the tolerance level defined in this subdomain and therefore can be used to optimize the algorithm. It consists of two subdomains: empirical and algorithmic. The empirical error subdomain contains empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. The algorithmic subdomain is descriptive of errors that originate by the fuzziness of the algorithms. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+ERROR_DOMAIN = """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/2791/error_domain.json",
@@ -645,35 +645,41 @@ DOMAIN_MAP: DomainMap = {
         "top_level": False,
         "user_prompt": "[u]sability",
         "code": "u",
+        "dependencies": [],
     },
     "io": {
         "prompt": IO_DOMAIN,
         "top_level": True,
         "user_prompt": "[i]o",
         "code": "i",
+        "dependencies": [],
     },
     "description": {
         "prompt": DESCRIPTION_DOMAIN,
         "top_level": True,
         "user_prompt": "[d]escription",
         "code": "d",
+        "dependencies": [],
     },
     "execution": {
         "prompt": EXECUTION_DOMAIN,
         "top_level": True,
         "user_prompt": "[e]xecution",
         "code": "e",
+        "dependencies": [],
     },
     "parametric": {
         "prompt": PARAMETRIC_DOMAIN,
         "top_level": False,
         "user_prompt": "[p]arametric",
         "code": "p",
+        "dependencies": ["description"],
     },
     "error": {
         "prompt": ERROR_DOMAIN,
         "top_level": False,
         "user_prompt": "[err]or",
         "code": "err",
+        "dependencies": [],
     },
 }
