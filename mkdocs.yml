@@ -29,6 +29,7 @@ nav:
   - Home: index.md
   - Setup: installation.md
   - Output Structure: output-structure.md
+  - Usage: options.md
   - Other Features:
     - Parameter Search: "parameter-search.md"
     - Evaluation App: "evaluation-app.md"
