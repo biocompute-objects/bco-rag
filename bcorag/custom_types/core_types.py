@@ -242,6 +242,48 @@ def create_user_selections(
     return return_data
 
 
+### Most recent generated domain schema
+
+
+class DomainContent(TypedDict):
+    """Holds the most recent generated domain for in memory storage.
+
+    Attributes
+    ----------
+    usability: Optional[str]
+    io: Optional[str]
+    description: Optional[str]
+    execution: Optional[str]
+    parametric: Optional[str]
+    error: Optional[str]
+    """
+
+    usability: Optional[str]
+    io: Optional[str]
+    description: Optional[str]
+    execution: Optional[str]
+    parametric: Optional[str]
+    error: Optional[str]
+
+
+def default_domain_content() -> DomainContent:
+    """Creates an empty, default DomainContent TypedDict.
+
+    Returns
+    -------
+    DomainContent
+    """
+    return_data: DomainContent = {
+        "usability": None,
+        "io": None,
+        "description": None,
+        "execution": None,
+        "parametric": None,
+        "error": None,
+    }
+    return return_data
+
+
 ### Domain map prompting schemas
 
 
@@ -258,16 +300,19 @@ class IndividualDomainMapEntry(TypedDict):
         The prompt string to display to the user.
     code : str
         The short hand code for choosing the domain.
+    dependencies : list[DomainKey]
+        The domain dependencies.
     """
 
     prompt: str
     top_level: bool
     user_prompt: str
     code: str
+    dependencies: list[DomainKey]
 
 
 class DomainMap(TypedDict):
-    """Domain map for processing user input. Maps the user input for 
+    """Domain map for processing user input. Maps the user input for
     the domain prompt to the prompt to use for querying the RAG pipeline.
 
     Attributes
