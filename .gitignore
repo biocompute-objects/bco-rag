@@ -4,3 +4,5 @@ env/
 __pycache__/
 evaluation_results/
 site/
+prompt.md
+summary.md
