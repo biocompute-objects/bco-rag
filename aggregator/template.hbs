@@ -1,3 +1,14 @@
+Based on the provided file(s), can you summarize some documentation that would be relevant for creating a BioCompute Object (BCO)? Here are the BioCompute domains:
+
+- Usability domain: The usability domain is a plain language description of what was done in the project. It essentially describes the purpose of the project and provides the scientific use case for the project.
+- IO domain: The input output (IO) domain describes the list of the global input and output files created by the computational workflow. It should list the expected input files from running code in the project (if any) and the output files for any of the steps of the code (if any).
+- Description domain: The description domain describes the pipeline/workflow steps and the relationships of I/O objects. The description domain section should contain keywords for the project (words that could describe the project if it were being searched for in some sort of database) and a list of the explicit workflow steps (i.e. first run this script followed by this code, etc.). Each workflow step should be linked to any applicable input or output objects.
+- Execution domain: The execution domain describes information needed for deployment, software configuration, and running applications in a dependent environment. All the dependencies and information that someone would need on their machine to run the workflow should be described in this section. 
+- Parametric domain: The parametric domain describes the list of parameters customizing the computational workflow which can affect the output of calculations. It should be closely tied to the workflow steps in the description domain and describe the types and domain's of the parameters that each workflow step can take.
+- Error domain: The error domain section should describe what range of inputs return and outputs are within the tolerable level defined in the project.
+
+For the resulting documentation, please complete this to the best of your ability based on the information provided. If the specific information for a domain isn't already well documented you can mention that in your documentation report. You do not need to explain the BCO domains in your output, just create documentation for each section according to the project details you are being provided. The project details and code are below.  
+
 Project Path: {{ absolute_code_path }}
 
 Source Tree:
@@ -6,7 +17,7 @@ Source Tree:
 {{ source_tree }}
 ```
 
-## Code
+## Code/Content
 
 {{#each files}}
 {{#if code}}
