@@ -100,7 +100,7 @@ def main() -> None:
     parser.add_argument(
         "--exclude-from-tree",
         action="store_true",
-        help="Whether exclude non-included files in the source tree (for in-progress mode)",
+        help="Whether to exclude non-included files in the source tree (for in-progress mode)",
     )
     parser.add_argument(
         "--include-priority",
