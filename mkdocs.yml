@@ -26,11 +26,12 @@ markdown_extensions:
   - pymdownx.superfences
 
 nav:
-  - Home: index.md
-  - Setup: installation.md
-  - Output Structure: output-structure.md
-  - Usage: options.md
+  - Home: "index.md"
+  - Setup: "installation.md"
+  - Output Structure: "output-structure.md"
+  - Usage: "options.md"
   - Other Features:
+    - In-Progress Documentation: "in-progress.md"
     - Parameter Search: "parameter-search.md"
     - Evaluation App: "evaluation-app.md"
   - Code Documentation:
@@ -42,6 +43,7 @@ nav:
       - Types:
         - Core Types: "bcorag-types.md"
         - Output Map Types: "output-map-types.md"
+    - In-Progress Documentation: "aggregator.md"
     - Parameter Search:
       - Parent Class: "parameter-search-abc.md"
       - Implementations:
