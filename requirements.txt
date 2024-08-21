@@ -4,7 +4,7 @@ llama-index-readers-github==0.1.8
 llama-index-readers-file==0.1.25
 llama-index-readers-pdf_marker==0.1.0
 python-dotenv==1.0.1
-tiktoken==0.6.0
+tiktoken==0.7.0
 pick==2.2.0
 customtkinter==5.2.2
 deepdiff==7.0.1
