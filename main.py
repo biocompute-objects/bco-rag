@@ -1,5 +1,3 @@
-"""Entry point for a singular, manual run."""
-
 from llama_index.readers.github import GithubRepositoryReader  # type: ignore
 from bcorag import misc_functions as misc_fns
 from bcorag import option_picker as op
@@ -18,6 +16,7 @@ from parameter_search.custom_types import (
     init_search_space,
 )
 from evaluator.frontend.app import App
+from aggregator.aggregator import Aggregator
 import argparse
 import os
 
@@ -83,9 +82,32 @@ def main() -> None:
         "run_mode",
         default="one-shot",
         nargs="?",
-        choices=["one-shot", "grid-search", "random-search", "evaluate"],
-        help="one-shot/grid-search/random-search/evaluate",
+        choices=["one-shot", "in-progress", "grid-search", "random-search", "evaluate"],
+        help="one-shot/in-progress/grid-search/random-search/evaluate",
     )
+
+    parser.add_argument(
+        "--path", help="Path to the directory to process (for in-progress mode)"
+    )
+    parser.add_argument(
+        "--include",
+        help="Comma delimited list of glob patterns to include (for in-progress mode)",
+    )
+    parser.add_argument(
+        "--exclude",
+        help="Comma delimited list of glob patterns to exclude (for in-progress mode)",
+    )
+    parser.add_argument(
+        "--exclude-from-tree",
+        action="store_true",
+        help="Whether exclude non-included files in the source tree (for in-progress mode)",
+    )
+    parser.add_argument(
+        "--include-priority",
+        action="store_false",
+        help="Prioritize include patterns (for in-progress mode)",
+    )
+
     options = parser.parse_args()
     run_mode = options.run_mode.lower().strip()
 
@@ -109,6 +131,20 @@ def main() -> None:
                     misc_fns.graceful_exit()
                 _ = bco_rag.perform_query(domain)
                 print(f"Successfully generated the {domain} domain.\n")
+
+        case "in-progress":
+
+            if not options.path:
+                misc_fns.graceful_exit(1, "Path is required for in-progress mode")
+
+            aggregator = Aggregator(
+                path=options.path,
+                include=options.include,
+                exclude=options.exclude,
+                include_priority=options.include_priority,
+            )
+            aggregator.get_prompt()
+            aggregator.generate_summary()
 
         case "grid-search":
 
