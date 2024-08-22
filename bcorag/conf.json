@@ -65,6 +65,7 @@
       ],
       "default": "production",
       "documentation": "https://github.com/biocompute-objects/bco-rag/blob/main/docs/usage.md#mode"
-    }
+    },
+    "other_docs": null
   }
 }
