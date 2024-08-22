@@ -18,7 +18,7 @@ BINARY_MAP = {
 }
 PROMPT_PATH = os.path.join(os.path.dirname(__file__), "prompt.md")
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "summary.md")
-MAX_TOKENS = 110_000  # leave 28k tokens for instructions, responses, etc
+MAX_TOKENS = 115_000  # leave 28k tokens for instructions, responses, etc
 MODEL = "gpt-4o-mini"
 SYSTEM_PROMPT = "You are an assistant that helps summarize in progress project's into plain text documentation which follows the general structure of a BioCompute Object."
 
@@ -44,6 +44,8 @@ class Aggregator:
         prompt generation.
     client : OpenAI
         OpenAI API client.
+    encoding : Encoding
+        The encoding for the LLM.
     """
 
     def __init__(
@@ -78,6 +80,7 @@ class Aggregator:
         self.include_priority = include_priority
         self.exclude_from_tree = exclude_from_tree
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.encoding = tiktoken.encoding_for_model(MODEL)
 
         host_os = platform.system().lower()
         machine = platform.machine().lower()
@@ -128,16 +131,23 @@ class Aggregator:
         with open(PROMPT_PATH, "r") as f:
             prompt = f.read()
 
-        token_count = self._count_tokens(prompt)
+        tokens = self._count_tokens(prompt)
+        token_count = len(tokens)
         print(f"Total prompt token count: {token_count}")
 
         if token_count <= MAX_TOKENS:
-            self._process_prompt(prompt)
+            response = self._process_prompt(prompt)
         else:
-            chunks = self._split_prompt(prompt)
-            self._process_chunks(chunks)
+            print(
+                f"Warning: Prompt size exceeds the max tokens limit ({MAX_TOKENS}), response will still be generated but will likely be somewhat degraded in quality. Consider limiting the include patterns."
+            )
+            chunks = self._split_prompt(tokens, token_count)
+            responses = self._process_chunks(chunks)
+            response = self._combine_responses(responses)
+        
+        self._write_output(response)
 
-    def _process_prompt(self, prompt: str) -> None:
+    def _process_prompt(self, prompt: str) -> str:
         """Process a single prompt using the OpenAI API.
 
         Parameters
@@ -161,45 +171,50 @@ class Aggregator:
                     {"role": "user", "content": prompt},
                 ],
             )
-            response_content = response.choices[0].message.content
-            with open(OUTPUT_PATH, "w") as out_file:
-                if response_content:
-                    out_file.write(response_content)
+            response_txt = (
+                response.choices[0].message.content
+                if response.choices[0].message.content
+                else ""
+            )
 
         except Exception as e:
             error_msg = f"Unexpected error in generating summary.\n{e}"
             graceful_exit(1, error_msg)
 
-    def _split_prompt(self, prompt: str) -> list[str]:
+        return response_txt
+
+    def _split_prompt(self, tokens: list[int], token_count: int) -> list[str]:
         """Split a large prompt into smaller chunks that fit within the token limit.
 
         Parameters
         ----------
-        prompt : str
-            The original prompt to be split.
 
         Returns
         -------
         list[str]
             A list of prompt chunks, each within the token limit.
         """
+        print("Splitting prompt...")
         chunks = []
-        current_chunk = ""
-        lines = prompt.split("\n")
 
-        for line in lines:
-            if self._count_tokens(current_chunk + line + "\n") > MAX_TOKENS:
-                chunks.append(current_chunk)
-                current_chunk = f"{line}\n"
-            else:
-                current_chunk += f"{line}\n"
+        start = 0
+        while start < token_count:
+            end = min(start + MAX_TOKENS, token_count)
+            if end < token_count:
+                split_range = max(10, int(MAX_TOKENS * 0.1))
+                for i in range(end, end - split_range, -1):
+                    if tokens[i] == self.encoding.encode("\n")[0]:
+                        end = i + 1
+                        break
 
-        if current_chunk:
-            chunks.append(current_chunk)
+            chunk_tokens = tokens[start:end]
+            chunks.append(self.encoding.decode(chunk_tokens))
+            start = end
 
+        print(f"Split into {len(chunks)} chunks")
         return chunks
 
-    def _process_chunks(self, chunks: list[str]) -> None:
+    def _process_chunks(self, chunks: list[str]) -> list[str]:
         """Process multiple prompt chunks and combine their responses.
 
         Parameters
@@ -212,7 +227,7 @@ class Aggregator:
         Exception
             If there's an unexpected error in generating the summary for any chunk.
         """
-        full_response = ""
+        responses: list[str] = []
         for i, chunk in enumerate(chunks):
             try:
                 response = self.client.chat.completions.create(
@@ -225,16 +240,59 @@ class Aggregator:
                         {"role": "user", "content": chunk},
                     ],
                 )
-                full_response += f"{response.choices[0].message.content} + \n\n"
+                response_txt = (
+                    response.choices[0].message.content
+                    if response.choices[0].message.content
+                    else ""
+                )
+                responses.append(response_txt)
             except Exception as e:
                 graceful_exit(
                     1, f"Unexpected error in generating summary for chunk {i + 1}.\n{e}"
                 )
+        return responses
 
-        with open(OUTPUT_PATH, "w") as out_file:
-            out_file.write(full_response)
+    def _combine_responses(self, responses: list[str]) -> str:
+        combine_prompt = f"""
+        You are tasked with combining multiple responses into cohesive BioCompute Object-like (BCO) documentation. 
+        The BCO-like plain text documentation should include the following domains:
+        - Usability Domain
+        - IO Domain
+        - Description Domain
+        - Execution Domain
+        - Parametric Domain
+        - Error Domain
 
-    def _count_tokens(self, text: str) -> int:
+        Here are the responses to combine:
+
+        {' '.join(responses)}
+
+        Please structure the information into a single, coherent BCO documentation, ensuring that:
+        1. All relevant information from the responses is included.
+        2. The information is organized under the appropriate BCO domains.
+        3. Any redundant information is removed.
+        4. The final document flows logically and reads cohesively.
+        5. If specific information for a domain isn't available, mention that in the respective section.
+
+        Format the output as markdown, with each domain as a second-level header (##).
+        """
+        try:
+            response = self.client.chat.completions.create(
+                model=MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": combine_prompt},
+                ],
+            )
+            return (
+                response.choices[0].message.content
+                if response.choices[0].message.content
+                else ""
+            )
+        except Exception as e:
+            graceful_exit(1, f"{e}\nUnexpected error in combining responses.")
+
+    def _count_tokens(self, text: str) -> list[int]:
         """Count the number of tokens in the given text.
 
         Parameters
@@ -244,8 +302,11 @@ class Aggregator:
 
         Returns
         -------
-        int
-            The number of tokens in the text.
+        list[int]
+            The number of tokens in each line of the text.
         """
-        encoding = tiktoken.encoding_for_model(MODEL)
-        return len(encoding.encode(text))
+        return self.encoding.encode(text)
+
+    def _write_output(self, content: str) -> None:
+        with open(OUTPUT_PATH, "w") as out_file:
+            out_file.write(content)
