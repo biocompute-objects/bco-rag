@@ -172,6 +172,8 @@ class UserSelections(TypedDict):
         The chunking configuration to use during node parsing.
     git_data : Optional[GitData]
         The optional github repository information to include in the documents.
+    other_docs : Optional[list[str]]
+        The file path to any additional documentation to include in the documents.
     """
 
     llm: str
@@ -184,6 +186,7 @@ class UserSelections(TypedDict):
     similarity_top_k: int
     chunking_config: str
     git_data: Optional[GitData]
+    other_docs: Optional[list[str]]
 
 
 def create_user_selections(
@@ -197,6 +200,7 @@ def create_user_selections(
     similarity_top_k: int,
     chunking_config: str,
     git_data: Optional[GitData],
+    other_docs: Optional[list[str]],
 ) -> UserSelections:
     """Constructor for the `UserSelections` TypedDict.
 
@@ -222,6 +226,8 @@ def create_user_selections(
         The chunking configuration to use during node parsing.
     git_data : Optional[GitData]
         The optional github repository information to include in the documents.
+    other_docs : Optional[list[str]]
+        The file path to any additional documentation to include in the documents.
 
     Returns
     -------
@@ -238,6 +244,7 @@ def create_user_selections(
         "similarity_top_k": similarity_top_k,
         "chunking_config": chunking_config,
         "git_data": git_data,
+        "other_docs": other_docs,
     }
     return return_data
 

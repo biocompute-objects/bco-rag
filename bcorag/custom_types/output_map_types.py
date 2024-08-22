@@ -61,6 +61,8 @@ class OutputTrackerParamSet(TypedDict):
         The directory filter used for indexing the github repository (if applicable).
     file_ext_git_filter : Optional[OutputTrackerGitFilter]
         The file extension filter used for indexing the github repository (if applicable).
+    other_docs : Optional[list[str]]
+        The file path to any additional documentation included in the documents.
     """
 
     loader: str
@@ -74,6 +76,7 @@ class OutputTrackerParamSet(TypedDict):
     git_branch: Optional[str]
     directory_git_filter: Optional[OutputTrackerGitFilter]
     file_ext_git_filter: Optional[OutputTrackerGitFilter]
+    other_docs: Optional[list[str]]
 
 
 def create_output_tracker_param_set(
@@ -88,6 +91,7 @@ def create_output_tracker_param_set(
     git_branch: Optional[str],
     directory_git_filter: Optional[OutputTrackerGitFilter] = None,
     file_ext_git_filter: Optional[OutputTrackerGitFilter] = None,
+    other_docs: Optional[list[str]] = None
 ) -> OutputTrackerParamSet:
     """Constructor for the `OutputTrackerParamSet` TypedDict.
 
@@ -115,6 +119,8 @@ def create_output_tracker_param_set(
         The directory filter used for indexing the github repository (if applicable).
     file_ext_git_filter : Optional[OutputTrackerGitFilter], optional
         The file extension filter used for indexing the github repository (if applicable).
+    other_docs : Optional[list[str]]
+        The file path to any additional documentation included in the documents.
 
     Returns
     -------
@@ -132,6 +138,7 @@ def create_output_tracker_param_set(
         "git_branch": git_branch,
         "directory_git_filter": directory_git_filter,
         "file_ext_git_filter": file_ext_git_filter,
+        "other_docs": other_docs,
     }
     return return_data
 
