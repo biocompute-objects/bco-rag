@@ -72,6 +72,10 @@ def initialize_picker(filetype: str = "pdf") -> Optional[UserSelections]:
     else:
         return_data["git_data"] = repo_data
 
+    in_progress_docs_path = _in_progress_docs()
+    if in_progress_docs_path:
+        return_data["other_docs"] = [in_progress_docs_path]
+
     return return_data
 
 
@@ -216,3 +220,21 @@ def _create_picker(
     if " (default)" in option:
         option = option.replace(" (default)", "")
     return option
+
+def _in_progress_docs() -> Optional[str]:
+    """Checks if in progress documentation is found.
+    
+    Returns
+    -------
+    str or None
+        The file path to the in progress documentation to include or None
+        if the user chose not to include or no documentation was found.
+    """
+    in_progress_docs_path = os.path.join(os.getcwd(), "aggregator", "summary.md")
+    if os.path.isfile(in_progress_docs_path):
+        prompt = "Found summary.md, include it in the vector store? (y/n)\n> "
+        answer = input(prompt)
+        answer = answer.strip().lower()
+        if answer == "y":
+            return in_progress_docs_path
+    return None
