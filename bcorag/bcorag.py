@@ -159,6 +159,7 @@ class BcoRag:
             if user_selections["git_data"] is not None
             else None
         )
+        self._other_docs: list[str] | None = user_selections["other_docs"]
         self.domain_content: DomainContent = default_domain_content()
         self._faithfulness_evaluator: Optional[FaithfulnessEvaluator] = None
         self._relevancy_evaluator: Optional[RelevancyEvaluator] = None
@@ -231,7 +232,13 @@ class BcoRag:
                     pdf_loader = PDFMarkerReader()
                     paper_documents = pdf_loader.load_data(file=Path(self._file_path))
 
-        documents = paper_documents  # type: ignore
+        other_docs = []
+        if self._other_docs:
+            for path in self._other_docs:
+                loader = SimpleDirectoryReader(input_files=[path])
+                other_docs += loader.load_data()
+
+        documents = paper_documents + other_docs  # type: ignore
         if self._git_data is not None:
 
             github_client = GithubClient(github_token)
@@ -598,6 +605,7 @@ class BcoRag:
                 ),
                 directory_git_filter=directory_filter,
                 file_ext_git_filter=file_ext_filter,
+                other_docs=self._other_docs,
             )
 
             instance_entry = create_output_tracker_entry(1, param_set, [run_entry])
@@ -681,17 +689,24 @@ class BcoRag:
                             )
 
                 param_set = create_output_tracker_param_set(
-                    self._loader,
-                    self._vector_store,
-                    self._llm_model_name,
-                    self._embed_model_name,
-                    self._similarity_top_k,
-                    self._chunking_config,
-                    self._git_data["user"] if self._git_data is not None else None,
-                    self._git_data["repo"] if self._git_data is not None else None,
-                    self._git_data["branch"] if self._git_data is not None else None,
+                    loader=self._loader,
+                    vector_store=self._vector_store,
+                    llm=self._llm_model_name,
+                    embedding_model=self._embed_model_name,
+                    similarity_top_k=self._similarity_top_k,
+                    chunking_config=self._chunking_config,
+                    git_user=(
+                        self._git_data["user"] if self._git_data is not None else None
+                    ),
+                    git_repo=(
+                        self._git_data["repo"] if self._git_data is not None else None
+                    ),
+                    git_branch=(
+                        self._git_data["branch"] if self._git_data is not None else None
+                    ),
                     directory_git_filter=directory_filter,
                     file_ext_git_filter=file_ext_filter,
+                    other_docs=self._other_docs,
                 )
 
                 instance_entry = create_output_tracker_entry(1, param_set, [run_entry])
