@@ -50,6 +50,8 @@ from .custom_types.output_map_types import (
 import bcorag.misc_functions as misc_fns
 from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
 
+# import llama_index.core
+# llama_index.core.set_global_handler("simple")
 
 @contextmanager
 def supress_stdout():
