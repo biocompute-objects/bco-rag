@@ -6,3 +6,4 @@ evaluation_results/
 site/
 prompt.md
 summary.md
+.deepeval-cache.json
