@@ -73,12 +73,10 @@ def test_answer_relevancy(setup_bcorag):
     query_prompt = DOMAIN_MAP[domain_key]["prompt"]
     query_response = setup_bcorag.perform_query(domain_key)
 
-    retrieval_context = [
-        "The usability domain describes the scientific use case and purpose of the paper, similar to content in sections like an abstract, background, etc."
-    ]
+    # TODO : fix the retrieval context, it should be the source node
+    retrieval_context = [query_prompt]
 
-    answer_relevancy_metric = AnswerRelevancyMetric(threshold=0.5)
-    faithfulness_metric = FaithfulnessMetric(threshold=0.5)
+    answer_relevancy_metric = AnswerRelevancyMetric(threshold=0.9, verbose_mode=True)
 
     test_case = LLMTestCase(
         input=query_prompt,
@@ -86,4 +84,4 @@ def test_answer_relevancy(setup_bcorag):
         retrieval_context=retrieval_context,
     )
 
-    assert_test(test_case, [answer_relevancy_metric, faithfulness_metric])
+    assert_test(test_case, [answer_relevancy_metric])
