@@ -16,6 +16,7 @@ Type Aliases
 from typing import TypedDict, Optional, Literal
 from enum import Enum
 from llama_index.readers.github import GithubRepositoryReader  # type: ignore
+from llama_index.core.schema import NodeWithScore
 
 ### General literals
 
@@ -252,6 +253,23 @@ def create_user_selections(
 ### Most recent generated domain schema
 
 
+class SourceNode(TypedDict):
+    """Holds the source node information for one node.
+
+    Attributes
+    ----------
+    node_id : str
+    content : str
+    metdata : str
+    score : str
+    """
+
+    node_id: str
+    content: str
+    metadata: str
+    score: str
+
+
 class DomainContent(TypedDict):
     """Holds the most recent generated domain for in memory storage.
 
@@ -262,7 +280,7 @@ class DomainContent(TypedDict):
     description: Optional[str]
     execution: Optional[str]
     parametric: Optional[str]
-    error: Optional[str]
+    error: Optional[list[str]]
     """
 
     usability: Optional[str]
@@ -271,6 +289,7 @@ class DomainContent(TypedDict):
     execution: Optional[str]
     parametric: Optional[str]
     error: Optional[str]
+    last_source_nodes: Optional[list[SourceNode]]
 
 
 def default_domain_content() -> DomainContent:
@@ -287,8 +306,40 @@ def default_domain_content() -> DomainContent:
         "execution": None,
         "parametric": None,
         "error": None,
+        "last_source_nodes": None,
     }
     return return_data
+
+
+def add_source_nodes(
+    domain_content: DomainContent, nodes: list[NodeWithScore]
+) -> DomainContent:
+    """Adds source node data to the domain content.
+
+    Parameters
+    ----------
+    domain_content : DomainContent
+        The domain content instance to add source node data to.
+    nodes : list[NodeWithScore]
+        List of nodes with score data.
+
+    Returns
+    -------
+    DomainContent
+        The updated domain content object.
+    """
+    node_list: list[SourceNode] = []
+    for node in nodes:
+        node_list.append(
+            {
+                "node_id": node.node.node_id,
+                "content": node.node.get_content(),
+                "metadata": node.node.get_metadata_str(),
+                "score": str(node.score),
+            }
+        )
+    domain_content["last_source_nodes"] = node_list
+    return domain_content
 
 
 ### Domain map prompting schemas

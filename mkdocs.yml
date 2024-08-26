@@ -33,6 +33,7 @@ nav:
   - Other Features:
     - In-Progress Documentation: "in-progress.md"
     - Parameter Search: "parameter-search.md"
+    - Automated Testing: "unit-testing.md"
     - Evaluation App: "evaluation-app.md"
   - Code Documentation:
     - Core:

@@ -12,7 +12,6 @@ from llama_index.core import (
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.core.evaluation import FaithfulnessEvaluator, RelevancyEvaluator
 from llama_index.llms.openai import OpenAI  # type: ignore
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
 from llama_index.core.node_parser import SemanticSplitterNodeParser
@@ -28,7 +27,6 @@ from hashlib import md5
 import os
 from contextlib import contextmanager, redirect_stdout
 import json
-from . import EVALUATION_LLM
 from .custom_types.core_types import (
     GitData,
     GitFilter,
@@ -36,6 +34,7 @@ from .custom_types.core_types import (
     UserSelections,
     DomainKey,
     DomainContent,
+    add_source_nodes,
     default_domain_content,
 )
 from .custom_types.output_map_types import (
@@ -49,6 +48,9 @@ from .custom_types.output_map_types import (
 )
 import bcorag.misc_functions as misc_fns
 from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
+
+# import llama_index.core
+# llama_index.core.set_global_handler("simple")
 
 
 @contextmanager
@@ -99,23 +101,22 @@ class BcoRag:
         The token counts or None if in production mode.
     _git_data : GitData or None
         The git data or None if no github repo was included.
-    _faithfulness_evaluator : Optional[FaithfulnessEvaluator]
-        The faithfulness evalauator instance.
-    _relevancy_evaluator : Optional[RelevancyEvaluator]
-        The relevancy evaluator instance.
     _documents : list[Documents]
         The list of documents (containers for the data source).
     _index : VectorStoreIndex
         The vector store index instance.
     _query_engine : RetrieverQueryEngine
         The query engine.
+    _other_docs : list[str] | None
+        Any other miscellaneous documents to include in the indexing process.
+    _domain_content : DomainContent
+        Holds the most recent generated domain.
     """
 
     def __init__(
         self,
         user_selections: UserSelections,
         output_dir: str = "./output",
-        evaluation_metrics: bool = False,
     ):
         """Constructor.
 
@@ -161,12 +162,6 @@ class BcoRag:
         )
         self._other_docs: list[str] | None = user_selections["other_docs"]
         self.domain_content: DomainContent = default_domain_content()
-        self._faithfulness_evaluator: Optional[FaithfulnessEvaluator] = None
-        self._relevancy_evaluator: Optional[RelevancyEvaluator] = None
-        if evaluation_metrics:
-            _evaluation_llm = OpenAI(model=EVALUATION_LLM, temperature=0.0)
-            self._faithfulness_evaluator = FaithfulnessEvaluator(llm=_evaluation_llm)
-            self._relevancy_evaluator = RelevancyEvaluator(llm=_evaluation_llm)
 
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if not openai_api_key:
@@ -354,6 +349,9 @@ class BcoRag:
         query_response = str(response_object.response)
 
         self.domain_content[domain] = query_response
+        self.domain_content = add_source_nodes(
+            domain_content=self.domain_content, nodes=response_object.source_nodes
+        )
 
         source_str = ""
         for idx, source_node in enumerate(response_object.source_nodes):
@@ -369,30 +367,6 @@ class BcoRag:
                 f"\nRetrieved Text:\n{source_node.node.get_content().strip()}\n"
             )
             source_str += "\n"
-
-        if self._faithfulness_evaluator and self._relevancy_evaluator:
-            for idx, source_node in enumerate(response_object.source_nodes):
-                faithfulness_eval = self._faithfulness_evaluator.evaluate(
-                    response=response_object.response,
-                    contexts=[source_node.get_content()],
-                )
-                relevancy_eval = self._relevancy_evaluator.evaluate(
-                    query=query_prompt,
-                    response=response_object.response,
-                    contexts=[source_node.get_content()],
-                )
-                for name, eval in {
-                    "faithfulness": faithfulness_eval,
-                    "relevancy": relevancy_eval,
-                }.items():
-                    self._display_info(
-                        {
-                            "passing": eval.passing,
-                            "score": eval.score,
-                            "feedback": eval.feedback,
-                        },
-                        f"{name.title()} Evaluation for node {idx + 1}:",
-                    )
 
         if self._debug:
             self._display_info(query_prompt, f"QUERY PROMPT for the {domain} domain:")
