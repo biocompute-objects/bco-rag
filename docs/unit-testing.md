@@ -23,7 +23,7 @@ The answer relevancy metric is used to evaluate how relevant the finalized gener
 
 > The answer relevancy metric measures the quality of your RAG pipeline's generator by evaluating how relevant the `actual_output` of your LLM application is compared to the provided input.
 
-- Source: https://docs.confident-ai.com/docs/metrics-answer-relevancy
+- Source: [Answer Relevancy](https://docs.confident-ai.com/docs/metrics-answer-relevancy)
 
 **Faithfulness**:
 
@@ -31,7 +31,7 @@ The faithfulness metric assesses how accurate and truthful the finalized generat
 
 > The faithfulness metric measures the quality of your RAG pipeline's generator by evaluating whether the `actual_output` factually aligns with the contents of your `retrieval_context`.
 
-- Source: https://docs.confident-ai.com/docs/metrics-faithfulness
+- Source: [Faithfulness](https://docs.confident-ai.com/docs/metrics-faithfulness)
 
 ## Running The Tests
 
