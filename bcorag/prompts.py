@@ -14,7 +14,7 @@
 
 from .custom_types.core_types import DomainMap
 
-QUERY_PROMPT = "Can you give me a BioCompute Object {} domain for the provided paper. The return response must be valid JSON and must validate against the JSON schema I am providing you. {}"
+QUERY_PROMPT = "Can you give me a BioCompute Object (BCO) {} domain for the provided paper. The return response must be valid JSON and must validate against the JSON schema I am providing you. {}"
 
 _TOP_LEVEL_SCHEMA = """
 {
@@ -199,7 +199,7 @@ _TOP_LEVEL_SCHEMA = """
 
 SUPPLEMENT_PROMPT = f"Some of the fields are defined in the top level 2791object JSON schema which is as follows: {_TOP_LEVEL_SCHEMA}"
 
-USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain languages description of what was done in the project or paper workflow. The Usasability domain conveys the purpose of the paper. The Usability domain is to provide a specific scientific use case and a description of the paper and/or experiement. The usability domain information is likely to be in sections paper sections such as the abstract, background, summary, conclusions, etc. Any section that describes the purpose and background of the project."""
+USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain language description of what was done in the project or paper workflow. The Usability domain conveys the purpose of the paper. The Usability domain is to provide a specific scientific use case and a description of the paper and/or experiment. The Usability domain information is likely to be in paper sections such as the abstract, background, summary, conclusions, etc. Any section that describes the purpose and background of the project."""
 USABILITY_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -219,7 +219,7 @@ USABILITY_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-IO_DOMAIN = """The Input Output domain (or IO domain) represents the list of global input and output files created by the computational workflow. These fields are pointers to objects that can reside in the system performing the ecomputation or any other accessible system. The input subdomain records the references and input files for the entire pipeline. The output subdomain records the references and outputs (including media types) for the entire pipeline. The io domain information is likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project steps and their intermediate input and output contents. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information). If the github repository information is included, it is highly likely that the input and output files are located in the repository. Make sure any links to files in the repository are exact."""
+IO_DOMAIN = """The Input Output domain (or IO domain) represents the list of global input and output files created by the computational workflow. These fields are pointers to objects that can reside in the system performing the computation or any other accessible system. The input subdomain records the references and input files for the entire pipeline. The output subdomain records the references and outputs (including media types) for the entire pipeline. The io domain information is likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project steps and their intermediate input and output contents. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information). If the github repository information is included, it is highly likely that the input and output files are located in the repository. Make sure any links to files in the repository are exact."""
 IO_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -281,7 +281,7 @@ IO_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-DESCRIPTION_DOMAIN = """The description domain specifies structured fields for the description of external resources, the pipeline or workflow steps, and the relationship of I/O objects. The description domain information is likely to be contained in multiple sections of the paper. The keywords are likely in sections such as the keywords, abstract, background, summary, etc. The xref information is likely in paper sections such as the data section. The pipeline steps are likely to be in paper sections such as the methods, methodologie, steps, etc. Any section that describes the project's pipeline steps and the background on the data used. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+DESCRIPTION_DOMAIN = """The description domain specifies structured fields for the description of external resources, the pipeline or workflow steps, and the relationship of I/O objects. The description domain information is likely to be contained in multiple sections of the paper. The keywords are likely in sections such as the keywords, abstract, background, summary, etc. The xref information is likely in paper sections such as the data section. The pipeline steps are likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project's pipeline steps and the background on the data used. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
 DESCRIPTION_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -450,7 +450,7 @@ DESCRIPTION_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-EXECUTION_DOMAIN = """The Execution domain specifies information needed for deployment, software configuration, and running applications in a dependent environment. Everything that is needed for someone to set up their machine to run the workflow should be described here. The execution domain information is likely to in paper sections such as prerequisites, setup, data, methods, methodologies, etc. Any section that describes the setup, prerequisites, or environment for the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
+EXECUTION_DOMAIN = """The Execution domain specifies information needed for deployment, software configuration, and running applications in a dependent environment. Everything that is needed for someone to set up their machine to run the workflow should be described here. The execution domain information is likely to be in paper sections such as prerequisites, setup, data, methods, methodologies, etc. Any section that describes the setup, prerequisites, or environment for the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
 EXECUTION_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
