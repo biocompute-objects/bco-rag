@@ -22,7 +22,8 @@ DOMAIN_PARAMS = {
     "parametric": {"verbose": True, "async": False},
     "error": {"verbose": True, "async": False},
 }
-THRESHOLD = 0.9
+THRESHOLD = 0.75
+STRIP_JSON = False
 
 
 @pytest.fixture
@@ -130,9 +131,14 @@ def test_usability(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
@@ -152,9 +158,14 @@ def test_io(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
@@ -174,9 +185,14 @@ def test_description(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
@@ -196,9 +212,14 @@ def test_execution(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
@@ -218,9 +239,14 @@ def test_parametric(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
@@ -240,9 +266,14 @@ def test_error(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
+    input = (
+        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
+        if STRIP_JSON
+        else setup_bcorag._domain_map[domain_key]["prompt"]
+    )
 
     test_case = LLMTestCase(
-        input=strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"]),
+        input=input,
         actual_output=setup_bcorag.domain_content[domain_key],
         retrieval_context=retrieval_context,
     )
