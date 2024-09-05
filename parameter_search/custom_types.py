@@ -67,7 +67,7 @@ def create_git_data_file_config(filename: str, git_info: GitData) -> GitDataFile
 
 class SearchSpace(TypedDict):
     """Search space used for hyperparameter search.
-    
+
     Attributes
     ----------
     filenames : list[str]
@@ -86,6 +86,9 @@ class SearchSpace(TypedDict):
         The LLMs to test.
     git_data : Optional[list[GitDataFileConfig]]
         The git data information.
+    other_docs : Optional[dict[str, list[str]]]
+        Any other documents to include (keys are the paper name to
+        associate with).
     """
 
     filenames: list[str]
@@ -96,6 +99,7 @@ class SearchSpace(TypedDict):
     similarity_top_k: list[int]
     llm: list[str]
     git_data: Optional[list[GitDataFileConfig]]
+    other_docs: Optional[dict[str, list[str]]]
 
 
 def init_search_space(
@@ -107,6 +111,7 @@ def init_search_space(
     similarity_top_k: Optional[list[int] | int] = None,
     llm: Optional[list[str] | str] = None,
     git_data: Optional[list[GitDataFileConfig]] = None,
+    other_docs: Optional[dict[str, list[str]]] = None,
 ) -> SearchSpace:
     """Creates a search space instance.
 
@@ -139,6 +144,9 @@ def init_search_space(
     git_data : list[GitDataFileConfig] | GitDataFileConfig | None, optional
         The git data for each file (if `None`, assumes no git data for
         any files).
+    other_docs : dict[str, list[str]] | None, optional
+        The other documents to include (if `None`, assumes no other docs
+        for any files).
 
     Returns
     -------
@@ -256,6 +264,15 @@ def init_search_space(
         case None:
             git_data_space = None
 
+    match other_docs:
+        case None:
+            other_docs_space = None
+        case _:
+            if all(isinstance(item, list) for item in list(other_docs.values())):
+                other_docs_space = other_docs
+            else:
+                graceful_exit(1, "Invalid other docs search space foramt.")
+
     return_data: SearchSpace = {
         "filenames": filenames_space,
         "loader": loader_space,
@@ -265,6 +282,7 @@ def init_search_space(
         "similarity_top_k": similarity_top_k_space,
         "llm": llm_space,
         "git_data": git_data_space,
+        "other_docs": other_docs_space,
     }
 
     return return_data

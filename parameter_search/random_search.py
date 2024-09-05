@@ -3,7 +3,11 @@
 
 from .parameter_search import BcoParameterSearch
 from .custom_types import SearchSpace
-from bcorag.custom_types.core_types import UserSelections, create_git_data, create_user_selections
+from bcorag.custom_types.core_types import (
+    UserSelections,
+    create_git_data,
+    create_user_selections,
+)
 from bcorag.misc_functions import setup_root_logger, check_dir
 from itertools import product
 from logging import Logger
@@ -12,8 +16,7 @@ import random
 
 
 class BcoRandomSearch(BcoParameterSearch):
-    """BCO random search class. Subclass of `BcoParameterSearch`.
-    """
+    """BCO random search class. Subclass of `BcoParameterSearch`."""
 
     def __init__(self, search_space: SearchSpace, subset_size: int = 5):
         """Constructor.
@@ -28,7 +31,9 @@ class BcoRandomSearch(BcoParameterSearch):
         super().__init__(search_space)
         self.subset_size = subset_size
 
-    def _setup_logger(self, path: str = "./logs", name: str = "random-search") -> Logger:
+    def _setup_logger(
+        self, path: str = "./logs", name: str = "random-search"
+    ) -> Logger:
         """Sets up the logger.
 
         Parameters
@@ -100,6 +105,14 @@ class BcoRandomSearch(BcoParameterSearch):
                             branch=git_data["git_info"]["branch"],
                             filters=git_data["git_info"]["filters"],
                         )
+
+            if self._other_docs is None:
+                base_selections["other_docs"] = None
+            else:
+                for paper, other_docs in self._other_docs.items():
+                    if paper == os.path.basename(str(filepath)):
+                        base_selections["other_docs"] = other_docs
+
             user_selections = create_user_selections(
                 base_selections["llm"],
                 base_selections["embedding_model"],
@@ -111,6 +124,7 @@ class BcoRandomSearch(BcoParameterSearch):
                 base_selections["similarity_top_k"],
                 base_selections["chunking_config"],
                 base_selections["git_data"],
+                base_selections["other_docs"],
             )
             param_sets.append(user_selections)
 

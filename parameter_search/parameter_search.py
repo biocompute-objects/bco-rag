@@ -72,6 +72,7 @@ class BcoParameterSearch(ABC):
         self._similarity_top_k: list[int] = search_space["similarity_top_k"]
         self._llms: list[str] = search_space["llm"]
         self._git_data: Optional[list[GitDataFileConfig]] = search_space["git_data"]
+        self._other_docs: Optional[dict[str, list[str]]] = search_space["other_docs"]
         self._verbose: bool = verbose
         self._logger = self._setup_logger()
         self.backoff_time: int | float = STANDARD_BACKOFF
@@ -136,7 +137,7 @@ class BcoParameterSearch(ABC):
             self._log_output(f"\t{domain.upper()} domain generated, elapsed time: {time.time() - t0}")
 
     def _create_bcorag(
-        self, user_selections: UserSelections, evaluation_mode: bool = False
+        self, user_selections: UserSelections
     ) -> BcoRag:
         """Creates the BcoRag instance.
 
@@ -144,15 +145,13 @@ class BcoParameterSearch(ABC):
         ----------
         user_selections : UserSelections
             The parameter set.
-        evaluation_mode : bool
-            The evaluation mode for the BcoRag instance.
 
         Returns
         -------
         BcoRag
             The instantiated BcoRag instance.
         """
-        bcorag = BcoRag(user_selections, evaluation_metrics=evaluation_mode)
+        bcorag = BcoRag(user_selections)
         return bcorag
 
     def _log_output(self, message: str | UserSelections):
