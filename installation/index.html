@@ -20,7 +20,7 @@
     
     
       
-        <title>Setup - Bco-Rag Documentation</title>
+        <title>Setup and Quickstart - Bco-Rag Documentation</title>
       
     
     
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Setup
+              Setup and Quickstart
             
           </span>
         </div>
@@ -226,7 +226,7 @@
           
   
   <span class="md-ellipsis">
-    Setup
+    Setup and Quickstart
   </span>
   
 
@@ -237,7 +237,7 @@
         
   
   <span class="md-ellipsis">
-    Setup
+    Setup and Quickstart
   </span>
   
 
@@ -268,6 +268,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quickstart
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#clone-the-repository" class="md-nav__link">
     <span class="md-ellipsis">
       Clone the repository
@@ -275,8 +285,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#virtual-environment" class="md-nav__link">
     <span class="md-ellipsis">
       Virtual Environment
@@ -284,8 +294,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#openai-api-key" class="md-nav__link">
     <span class="md-ellipsis">
       OpenAI API Key
@@ -293,8 +303,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#create-log-directory" class="md-nav__link">
     <span class="md-ellipsis">
       Create log Directory
@@ -302,13 +312,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Usage
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1539,6 +1554,16 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quickstart
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#clone-the-repository" class="md-nav__link">
     <span class="md-ellipsis">
       Clone the repository
@@ -1546,8 +1571,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#virtual-environment" class="md-nav__link">
     <span class="md-ellipsis">
       Virtual Environment
@@ -1555,8 +1580,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#openai-api-key" class="md-nav__link">
     <span class="md-ellipsis">
       OpenAI API Key
@@ -1564,8 +1589,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#create-log-directory" class="md-nav__link">
     <span class="md-ellipsis">
       Create log Directory
@@ -1573,13 +1598,18 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#basic-usage" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Usage
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1601,48 +1631,168 @@
 <h1 id="installation-and-setup">Installation and Setup</h1>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#quickstart">Quickstart</a></li>
 <li><a href="#virtual-environment">Virtual Environment</a></li>
 <li><a href="#create-log-directory">Create Log Directory</a></li>
 <li><a href="#openai-api-key">OpenAI API Key</a></li>
 </ul>
 <h2 id="prerequisites">Prerequisites</h2>
-<p>This directory requires at least Python 3.10 to setup. The code in this directory makes extensive use of an alternate way to indicate union type annotations as <code>X | Y</code> instead of <code>Union[X, Y]</code> from the <code>Typing</code> library.</p>
-<h2 id="clone-the-repository">Clone the repository</h2>
-<p>First, clone the repository to your machine: </p>
+<p>This directory requires at least Python 3.10 to setup. The code in this directory makes extensive use of an <a href="https://peps.python.org/pep-0604/">alternate way</a> to indicate union type annotations as <code>X | Y</code> instead of <code>Union[X, Y]</code> from the <code>Typing</code> library.</p>
+<h2 id="quickstart">Quickstart</h2>
+<p>Getting started with the BCO-RAG assistant requires minimal setup. From a high level, this guide will walk you through:</p>
+<ol>
+<li>Getting the code on your local machine.</li>
+<li>Setting up a virtual environment and downloading the project dependencies.</li>
+<li>Required environment variable(s).</li>
+<li>Starting up the assistant in its primary usage form.</li>
+</ol>
+<h3 id="clone-the-repository">Clone the repository</h3>
+<p>First, clone the repository to your machine:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:biocompute-objects/bco-rag.git
 </span></code></pre></div>
 <p>This example uses the ssh method, replace with HTTPS URL as needed.</p>
-<h2 id="virtual-environment">Virtual Environment</h2>
+<h3 id="virtual-environment">Virtual Environment</h3>
 <p>Create a virtual environment from with the <code>bco-rag/</code> root directory:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>virtualenv<span class="w"> </span>env
 </span></code></pre></div>
+<p>This example uses <a href="https://virtualenv.pypa.io/en/latest/"><code>virtualenv</code></a> to create the virtual environment, replace with <a href="https://docs.python.org/3/library/venv.html"><code>venv</code></a> or your preferred virtual environment handler as needed.</p>
 <p>To activate the virtual environment on Windows:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>env/Scripts/activate
 </span></code></pre></div>
 <p>To activate the virtual environment on MacOS/Linux:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">source</span><span class="w"> </span>env/bin/activate<span class="w"> </span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">source</span><span class="w"> </span>env/bin/activate
 </span></code></pre></div>
 <p>Then install the project dependencies:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="o">(</span>env<span class="o">)</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </span></code></pre></div>
-<h2 id="openai-api-key">OpenAI API Key</h2>
+<h3 id="openai-api-key">OpenAI API Key</h3>
 <p>Create your <code>.env</code> file and add your OpenAI API key and Github personal access token (if using Github option). For example:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>OPENAI_API_KEY=&lt;KEY&gt;
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>GITHUB_TOKEN=&lt;TOKEN&gt;
 </span></code></pre></div>
-<p>References:<br />
-- <a href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key">OpenAI API Key</a><br />
-- <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Github Personal Access Token</a></p>
-<h2 id="create-log-directory">Create log Directory</h2>
+<p>If you are not planning on including Github repositories in the data ingestion process, you don't need to include a Github personal access token in your <code>.env</code> file.</p>
+<p>Additional information on obtaining API keys/tokens:</p>
+<ul>
+<li><a href="https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key">OpenAI API Key</a></li>
+<li><a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">Github Personal Access Token</a></li>
+</ul>
+<h3 id="create-log-directory">Create log Directory</h3>
 <p>Within the root of the project, create the log directory:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>mkdir<span class="w"> </span>logs/
 </span></code></pre></div>
-<h2 id="basic-usage">Basic Usage</h2>
-<p>The base <code>one-shot</code> approach can be run like so: </p>
+<h3 id="basic-usage">Basic Usage</h3>
+<p>The base <code>one-shot</code> approach can be run like so:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="o">(</span>env<span class="o">)</span><span class="w"> </span>python<span class="w"> </span>main.py
 </span></code></pre></div>
-<p>or </p>
+<p>or</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="o">(</span>env<span class="o">)</span><span class="w"> </span>python<span class="w"> </span>main.py<span class="w"> </span>one-shot
+</span></code></pre></div>
+<p>On startup, you will be prompted to choose the paper generate the BCO domains for. You can place any <code>.pdf</code> paper in the <code>./bco-rag/bcorag/test_papers</code> directory for it to be included in this menu. The arrow keys or <code>j</code>/<code>k</code> can be used to navigate the menus. Press <code>Enter</code> to choose an option.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a> Please choose the PDF file to index:
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a> -&gt; High resolution measurement.pdf
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the paper to index, you'll be prompted for the data loader to use. On any configuration menu step, there will be a link that will direct you to detailed documentation on the differences, strengths, and weaknesses between each of the options.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a> Please choose one of the following Loaders.
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a> Documentation can be found at:
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a> https://biocompute-objects.github.io/bco-rag/options/#data-loader.
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a> -&gt; SimpleDirectoryReader (default)
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    PDFReader
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    PDFMarker
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the data loader, the chunking strategy has to be chosen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a> Please choose one of the following Chunking Configs.
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a> Documentation can be found at:
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a> https://biocompute-objects.github.io/bco-rag/options/#chunking-strategy.
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a> -&gt; 256 chunk size/20 chunk overlap
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    512 chunk size/50 chunk overlap
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    1024 chunk size/20 chunk overlap (default)
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    2048 chunk size/50 chunk overlap
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    semantic
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the chunking strategy, the embedding model has to be chosen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a> Please choose one of the following Embedding Models.
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a> Documentation can be found at:
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a> https://biocompute-objects.github.io/bco-rag/options/#embedding-model.
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a> -&gt; text-embedding-3-small (default)
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    text-embedding-3-large
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    text-embedding-ada-002
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the embedding model, the vector store has to be chosen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a> Please choose one of the following Vector Stores.
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a> Documentation can be found at:
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a> https://biocompute-objects.github.io/bco-rag/options/#vector-store.
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a> -&gt; VectorStoreIndex (default)
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the vector store, the similarity top k value has to be chosen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> Please choose one of the following Similarity Top Ks.
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a> Documentation can be found at:
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a> https://biocompute-objects.github.io/bco-rag/options/#similarity-top-k.
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a> -&gt; 1 (default)
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    2
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    3
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    4
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    5
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    Exit
+</span></code></pre></div>
+<p>After choosing the similarity top k value, the LLM has to be chosen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a> Please choose one of the following Llms.
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a> Documentation can be found at:
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a> https://biocompute-objects.github.io/bco-rag/options/#llm-model.
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a> -&gt; gpt-3.5-turbo
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    gpt-4-turbo (default)
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    gpt-4-turbo-preview
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>    gpt-4
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>    Exit
+</span></code></pre></div>
+<p>Next, choose the run mode. The run mode will control the verbosity of the logging for each generated domain. Choosing <code>debug</code> mode will include an extensive logging of everything that is happening under the hood during ewach run. Choosing <code>production</code> mode will only include the minimum necessary logging, wuch as the user options and return responses.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a> Please choose one of the following Modes.
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a> Documentation can be found at:
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a> https://biocompute-objects.github.io/bco-rag/options/#mode.
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a> -&gt; debug
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    production (default)
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    Exit
+</span></code></pre></div>
+<p>Next, you will be prompted to include a Github repository to include as supplemental knowledge for the retrieval step. In this example, we have pasted the URL to the repository for this project. If you have included a Github repository, you will then be prompted for more granular configuration options regarding how the repository will be ingested. These configuration options include which repository branch to index and optional directory/file extension filters. In this example, we are indexing the repository's <code>main</code> branch, excluding the <code>output/</code>, <code>logs/</code>, <code>parameter_search/</code>, <code>output/</code>, and <code>evaluator/</code> directories. We are also excluding any files with the file extensions of <code>.txt</code>, <code>.log</code>, and <code>.md</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>If you would like to include a Github repository enter the URL below. Enter &quot;x&quot; to exit or leave blank to skip.
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>&gt; https://github.com/biocompute-objects/bco-rag
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Repo branch to index (case sensitive):
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>&gt; main
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Would you like to include a directory filter?
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Enter a list of comma-delimited directories to either conditionally exclude or inclusively include. Or leave blank to skip.
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>&gt; output, logs, parameter_search, output, evaluator
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Enter &quot;include&quot; or &quot;exclude&quot; for the directory filter.
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>&gt; exclude
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>Would you like to include a file extension filter?
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>Enter a list of comma-delimited file extensions to either conditionally exclude or inclusively include. Or leave blank to skip.
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>&gt; .txt, .log, .md
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>Enter &quot;include&quot; or &quot;exclude&quot; for the file extension filter.
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>&gt; exclude
+</span></code></pre></div>
+<p>More extensive documentation that goes past this quick start guide can be found on the <a href="https://biocompute-objects.github.io/bco-rag/options/">usage</a> page.</p>
+<p>Once the configuration steps are completed, you can select which domains to generate. You can enter the shorthand code, denoted inside the <code>[]</code> brackets, or the full domain name and then pressing <code>Enter</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Which domain would you like to generate? Supported domains are:
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>    [u]sability
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    [i]o
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    [d]escription
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    [e]xecution
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    [p]arametric
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>    [err]or
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    E[x]it
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>&gt;
 </span></code></pre></div>
 
 

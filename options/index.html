@@ -217,7 +217,7 @@
         
   
   <span class="md-ellipsis">
-    Setup
+    Setup and Quickstart
   </span>
   
 
@@ -1746,7 +1746,7 @@
 <h2 id="generate-domains">Generate Domains</h2>
 <p>After your configurations selections are confirmed, you'll be asked which domain you would like to generate. You can enter either the one letter shortcode for each domain or the full domain name. A new output subdirectory will be created in the <code>output/</code> directory named after the PDF file. Each domain will have at least one output file on each generation. The code will attempt to serialize the return response into a valid JSON object. Regardless if the JSON serialization succeeds, the raw return response will be dumped in a text file. More detailed information about the output behaviour and structure can be found in the <a href="../output-structure/">output structure</a> documentation.</p>
 <h2 id="options">Options</h2>
-<p>The option picker interface can be navigated with the <code>n</code> or <code>down arrow</code> keys for the next option, <code>p</code> or <code>up arrow</code> key for the previous option, and the <code>Enter</code> key to choose the option. If you choose the <code>Exit</code> option at any step in the process the program will exit with a status code of <code>0</code>.</p>
+<p>The option picker interface can be navigated with the <code>j</code> or <code>down arrow</code> keys for the next option, <code>k</code> or <code>up arrow</code> key for the previous option, and the <code>Enter</code> key to choose the option. If you choose the <code>Exit</code> option at any step in the process the program will exit with a status code of <code>0</code>.</p>
 <h3 id="data-loader">Data Loader</h3>
 <p>The data loader (or Reader) is one of the key abstraction concepts in the LlamaIndex library. Data loaders handle the data ingestion and formatting into Document objects, which will eventually be chunked into Node objects by the vector store. At a high level, Documents are a generic container for the data source. By default, Documents store the text (and/or images) from the data source, a dictionary of annotations containing the metadata, and a dictionary of relationships to other Documents and Nodes. A Node represents a "chunk" of a source Document. </p>
 <p>Aside from the built in generic data loaders, LLamaIndex hosts an open source <a href="https://llamahub.ai/?tab=readers">hub</a> for various community built data loaders for a variety of data sources. Different data loaders differ in how they create and structure the resulting Documents. Depending on the specialization of the data loader in relation to the structure of the raw data source, this can have a significant impact on the overall performance of the downstream pipeline steps.</p>
@@ -1800,7 +1800,7 @@
 <p>The mode option has no effect on the RAG performance, but controls how much extra information is included in the run log. Choosing the <code>debug</code> mode will include an extensive logging of everything that is happening during each run. Choosing the <code>production</code> mode will only include the necessary logging, such as the user options and return responses.</p>
 <h3 id="github-repository">Github Repository</h3>
 <p>After choosing the configuration options, you have the choice to also include a Github repository URL to include in the indexing process. The URL provided will automatically be parsed for the repository owner and repository name information. This will supplement the PDF data ingestion to provide more specific output for workflow specific steps in the description and parametric domains. If a github URL is entered, you'll be asked to confirm the branch of the repo to index (if none is entered, will default to <code>main</code>). You will also have the choice to specify directory and filter extension filters.</p>
-<p>For each filter, you will have the option to specify whether to conditionally exclude certain directories and file types or to inclusively include certain directories and file types. Specify the directory path for directories to include in the filter. For file types, include the file extension, for example, <code>".txt", ".md"</code> with the <code>"include"</code> filter type will only include files that are of type text and markdown. Note, the filters are potentially important for large repositories. Indexing repositories with large output, log, or data files can incur signficant performance overhead and additionally can lower output quality by polluting the retrieval step with noise.</p>
+<p>For each filter, you will have the option to specify whether to conditionally exclude certain directories and file types or to inclusively include certain directories and file types. Specify the directory path for directories to include in the filter. For file types, include the file extension, for example, <code>.txt, .md</code> with the <code>include</code> filter type will only include files that are of type text and markdown. Note, the filters are important for large repositories and will have a significant impact on the runtime performance of the indexing process and the quality of the retrieval step. Indexing repositories with large output, log, or data files can incur signficant performance overhead and additionally can lower output quality by polluting the retrieval step with noise.</p>
 
 
 
