@@ -35,7 +35,7 @@ After your configurations selections are confirmed, you'll be asked which domain
 
 ## Options
 
-The option picker interface can be navigated with the `n` or `down arrow` keys for the next option, `p` or `up arrow` key for the previous option, and the `Enter` key to choose the option. If you choose the `Exit` option at any step in the process the program will exit with a status code of `0`.
+The option picker interface can be navigated with the `j` or `down arrow` keys for the next option, `k` or `up arrow` key for the previous option, and the `Enter` key to choose the option. If you choose the `Exit` option at any step in the process the program will exit with a status code of `0`.
 
 ### Data Loader
 
@@ -112,4 +112,4 @@ The mode option has no effect on the RAG performance, but controls how much extr
 
 After choosing the configuration options, you have the choice to also include a Github repository URL to include in the indexing process. The URL provided will automatically be parsed for the repository owner and repository name information. This will supplement the PDF data ingestion to provide more specific output for workflow specific steps in the description and parametric domains. If a github URL is entered, you'll be asked to confirm the branch of the repo to index (if none is entered, will default to `main`). You will also have the choice to specify directory and filter extension filters.
 
-For each filter, you will have the option to specify whether to conditionally exclude certain directories and file types or to inclusively include certain directories and file types. Specify the directory path for directories to include in the filter. For file types, include the file extension, for example, `".txt", ".md"` with the `"include"` filter type will only include files that are of type text and markdown. Note, the filters are potentially important for large repositories. Indexing repositories with large output, log, or data files can incur signficant performance overhead and additionally can lower output quality by polluting the retrieval step with noise.
+For each filter, you will have the option to specify whether to conditionally exclude certain directories and file types or to inclusively include certain directories and file types. Specify the directory path for directories to include in the filter. For file types, include the file extension, for example, `.txt, .md` with the `include` filter type will only include files that are of type text and markdown. Note, the filters are important for large repositories and will have a significant impact on the runtime performance of the indexing process and the quality of the retrieval step. Indexing repositories with large output, log, or data files can incur signficant performance overhead and additionally can lower output quality by polluting the retrieval step with noise.
