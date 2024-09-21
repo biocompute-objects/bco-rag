@@ -43,19 +43,24 @@
         "2",
         "3",
         "4",
-        "5"
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
       ],
-      "default": "1",
+      "default": "5",
       "documentation": "https://biocompute-objects.github.io/bco-rag/options/#similarity-top-k"
     },
     "llm": {
       "list": [
         "gpt-3.5-turbo",
         "gpt-4-turbo",
-        "gpt-4-turbo-preview",
-        "gpt-4"
+        "gpt-4",
+        "gpt-4o"
       ],
-      "default": "gpt-4-turbo",
+      "default": "gpt-4o",
       "documentation": "https://biocompute-objects.github.io/bco-rag/options/#llm-model"
     },
     "mode": {
