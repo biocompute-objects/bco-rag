@@ -14,7 +14,11 @@
 
 from .custom_types.core_types import DomainMap
 
-QUERY_PROMPT = "Can you give me a BioCompute Object (BCO) {} domain for the provided paper. The return response must be valid JSON and must validate against the JSON schema I am providing you. {}"
+QUERY_PROMPT = """
+            Can you give me a BioCompute Object (BCO) {} domain for the provided paper. The return response must be valid JSON and must 
+            validate against the JSON schema I am providing you. If the information for a field is not provided, leave it blank, do not 
+            make up any information. {}
+            """
 
 _TOP_LEVEL_SCHEMA = """
 {
@@ -199,7 +203,7 @@ _TOP_LEVEL_SCHEMA = """
 
 SUPPLEMENT_PROMPT = f"Some of the fields are defined in the top level 2791object JSON schema which is as follows: {_TOP_LEVEL_SCHEMA}"
 
-USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain language description of what was done in the project or paper workflow. The Usability domain conveys the purpose of the paper. The Usability domain is to provide a specific scientific use case and a description of the paper and/or experiment. The Usability domain information is likely to be in paper sections such as the abstract, background, summary, conclusions, etc. Any section that describes the purpose and background of the project."""
+USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain language description of what was done in the project or paper workflow. The Usability domain conveys the purpose of the paper. The Usability domain information is likely to be in paper sections such as the abstract, background, summary, conclusions, or any section that describes the purpose and background of the project."""
 USABILITY_DOMAIN += """ The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
