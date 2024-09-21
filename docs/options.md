@@ -89,7 +89,7 @@ The currently supported vector stores are:
 
 ### Similarity Top K
 
-The `similarity_top_k` parameter in the similarity search process refers to the number of nodes to return as a result of the semantic retrieval process. When the semantic search process is performend, the node embeddings are ranked by how smenatically similar they are to the query embedding. After the ranking process is completed, the top `k` most similar embeddings are sent to the LLM along with the query. Larger values will result in more input tokens.
+The `similarity_top_k` parameter in the similarity search process refers to the number of nodes to return as a result of the retrieval process. When the retrieval process is performend, the node embeddings are ranked by how smenatically similar they are to the query embedding. After the ranking process is completed, the top `k` most similar embeddings are sent to the LLM along with the query. Larger values will result in more input tokens.
 
 Note: The `similarity_top_k` parameter here is unrelated to the `top k` parameter for large language models which limits the model's vocabulary sampling set when considering the next word to generate.
 
@@ -98,9 +98,9 @@ Note: The `similarity_top_k` parameter here is unrelated to the `top k` paramete
 The currently supported LLM models are:
 
 - `gpt-3.5-turbo`: This is the least powerful model, offering the fastest performance at a low cost with the caveat of being the least powerful of the OpenAI offerings.
-- `gpt-4-turbo` (default): This is the default model and is OpenAI's newest offering. As of writing, this model currently points to the `gpt-4-turbo-2024-04-09` model.
-- `gpt-4-turbo-preview`: As of writing, this model currently points to the `gpt-4-0125-preview` model. Generally not recommended outside of testing purposes as the `gpt-4-turbo` offers better performance at the same cost.
-- `gpt-4`: This is the most powerful model, but also the most expensive.
+- `gpt-4-turbo`: This is the default model and is OpenAI's newest offering. As of writing, this model currently points to the `gpt-4-turbo-2024-04-09` model.
+- `gpt-4`: This is the legacy model in the version 4 line, but also the most expensive.
+- `gpt-4o` (default): Similar to `gpt-4` but faster and cheaper.
 
 Currently, only OpenAI LLM models are supported. Futher documentation on the specific LLM models can be found [here](https://platform.openai.com/docs/models/overview) and information on pricing can be found [here](https://openai.com/pricing).
 
