@@ -10,7 +10,7 @@ from llama_index.core import (
     Response,
 )
 from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
-from llama_index.core.retrievers import VectorIndexRetriever
+from llama_index.core.retrievers import VectorIndexRetriever, TransformRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.llms.openai import OpenAI  # type: ignore
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
@@ -47,7 +47,14 @@ from .custom_types.output_map_types import (
     default_output_tracker_file,
 )
 import bcorag.misc_functions as misc_fns
-from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
+from .prompts import (
+    PROMPT_DOMAIN_MAP,
+    RETRIEVAL_PROMPT,
+    LLM_PROMPT,
+    DELIMITER,
+    SUPPLEMENT_PROMPT,
+)
+from .query_transform import CustomQueryTransform
 
 # import llama_index.core
 # llama_index.core.set_global_handler("simple")
@@ -133,7 +140,7 @@ class BcoRag:
         load_dotenv()
 
         self._parameter_set_hash = self._user_selection_hash(user_selections)
-        self._domain_map = DOMAIN_MAP
+        self._domain_map = PROMPT_DOMAIN_MAP
         self._file_name = user_selections["filename"]
         self._file_path = user_selections["filepath"]
         self._output_path_root = os.path.join(
@@ -285,8 +292,13 @@ class BcoRag:
                     )
                     self._index = VectorStoreIndex(nodes=nodes)
 
-        retriever = VectorIndexRetriever(
-            index=self._index, similarity_top_k=self._similarity_top_k * 3
+        base_retriever = VectorIndexRetriever(
+            index=self._index,
+            similarity_top_k=self._similarity_top_k * 3,
+        )
+        retriever = TransformRetriever(
+            retriever=base_retriever,
+            query_transform=CustomQueryTransform(delimiter=DELIMITER),
         )
         response_synthesizer = get_response_synthesizer()
         rerank_postprocessor = SentenceTransformerRerank(
@@ -322,12 +334,15 @@ class BcoRag:
             The generated domain.
         """
         query_start_time = time.time()
-        domain_prompt = self._domain_map[domain]["prompt"]
+        domain_retrieval_prompt = self._domain_map[domain]["retrieval_prompt"]
+        domain_llm_prompt = self._domain_map[domain]["llm_prompt"]
+
         for dependency in self._domain_map[domain]["dependencies"]:
             if self.domain_content[dependency] is not None:
                 dependency_prompt = f"The {domain} domain is dependent on the {dependency} domain. Here is the {dependency} domain: {self.domain_content[dependency]}."
-                domain_prompt += dependency_prompt
-        query_prompt = QUERY_PROMPT.format(domain, domain_prompt)
+                domain_llm_prompt += dependency_prompt
+
+        query_prompt = f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)} {DELIMITER} {LLM_PROMPT.format(domain, domain_llm_prompt)}"
         if self._domain_map[domain]["top_level"]:
             query_prompt += f"\n{SUPPLEMENT_PROMPT}"
 

@@ -350,8 +350,10 @@ class IndividualDomainMapEntry(TypedDict):
 
     Attributes
     ----------
-    prompt : str
-        The prompt to use for querying the RAG pipeline for a specific domain generation.
+    retrieval_prompt : str
+        The prompt to use for the RAG pipeline retrieval process.
+    llm_prompt : str
+        The prompt to use for the LLM.
     top_level : bool
         Whether the specified domain includes object's defined in the top level JSON schema.
     user_prompt : str
@@ -362,7 +364,8 @@ class IndividualDomainMapEntry(TypedDict):
         The domain dependencies.
     """
 
-    prompt: str
+    retrieval_prompt: str
+    llm_prompt: str
     top_level: bool
     user_prompt: str
     code: str
