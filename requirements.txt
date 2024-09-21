@@ -1,8 +1,8 @@
-llama-index==0.10.23
+llama-index==0.11.11
 llama-hub==0.0.79
-llama-index-readers-github==0.1.8
-llama-index-readers-file==0.1.25
-llama-index-readers-pdf_marker==0.1.0
+llama-index-readers-github==0.2.0
+llama-index-readers-file==0.2.2
+llama-index-readers-pdf_marker==0.2.0
 python-dotenv==1.0.1
 tiktoken==0.7.0
 pick==2.2.0
