@@ -14,15 +14,17 @@ from bcorag.custom_types.core_types import (
 from bcorag.misc_functions import extract_repo_data, graceful_exit
 import os
 
+VERBOSE = False
+
 DOMAIN_PARAMS = {
-    "usability": {"verbose": True, "async": False},
-    "io": {"verbose": True, "async": False},
-    "description": {"verbose": True, "async": False},
-    "execution": {"verbose": True, "async": False},
-    "parametric": {"verbose": True, "async": False},
-    "error": {"verbose": True, "async": False},
+    "usability": {"verbose": VERBOSE, "async": False},
+    "io": {"verbose": VERBOSE, "async": False},
+    "description": {"verbose": VERBOSE, "async": False},
+    "execution": {"verbose": VERBOSE, "async": False},
+    "parametric": {"verbose": VERBOSE, "async": False},
+    "error": {"verbose": VERBOSE, "async": False},
 }
-THRESHOLD = 0.75
+THRESHOLD = 0.70
 STRIP_JSON = False
 
 
@@ -64,9 +66,9 @@ def setup_bcorag() -> BcoRag:
             "High resolution measurement.pdf",
         ),
         vector_store="VectorStoreIndex",
-        loader="SimpleDirectoryReader",
-        mode="debug",
-        similarity_top_k=5,
+        loader="PDFReader",
+        mode="production",
+        similarity_top_k=8,
         chunking_config="1024 chunk size/20 chunk overlap",
         git_data=git_data,
         other_docs=None,
