@@ -56,7 +56,7 @@ def setup_bcorag() -> BcoRag:
     )
 
     user_selection = create_user_selections(
-        llm="gpt-4-turbo",
+        llm="gpt-4o",
         embedding_model="text-embedding-3-small",
         filename="High resolution measurement.pdf",
         filepath=os.path.join(
