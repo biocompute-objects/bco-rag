@@ -16,10 +16,8 @@ from .llm_prompts import (
     EXECUTION_DOMAIN_LLM,
     PARAMETRIC_DOMAIN_LLM,
     ERROR_DOMAIN_LLM,
-    SUPPLEMENT_PROMPT
+    SUPPLEMENT_PROMPT,
 )
-
-DELIMITER = "|;"
 
 LLM_PROMPT_TEMPLATE = """
 Below is some excerpts from a bioinformatics project. The information is from the project's publication and could also contain some information from the project's code repository.
