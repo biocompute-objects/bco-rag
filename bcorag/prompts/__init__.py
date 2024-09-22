@@ -21,6 +21,16 @@ from .llm_prompts import (
 
 DELIMITER = "|;"
 
+LLM_PROMPT_TEMPLATE = """
+Below is some excerpts from a bioinformatics project. The information is from the project's publication and could also contain some information from the project's code repository.
+
+{context_str}
+
+---------\n
+
+{query_str}
+"""
+
 
 PROMPT_DOMAIN_MAP: DomainMap = {
     "usability": {

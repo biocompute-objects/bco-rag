@@ -9,8 +9,13 @@ from llama_index.core import (
     get_response_synthesizer,
     Response,
 )
-from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
-from llama_index.core.retrievers import VectorIndexRetriever, TransformRetriever
+from llama_index.core.callbacks import (
+    CallbackManager,
+    TokenCountingHandler,
+)
+from llama_index.core.prompts import PromptTemplate
+from llama_index.core.schema import QueryBundle
+from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.llms.openai import OpenAI  # type: ignore
 from llama_index.embeddings.openai import OpenAIEmbedding  # type: ignore
@@ -51,10 +56,9 @@ from .prompts import (
     PROMPT_DOMAIN_MAP,
     RETRIEVAL_PROMPT,
     LLM_PROMPT,
-    DELIMITER,
     SUPPLEMENT_PROMPT,
+    LLM_PROMPT_TEMPLATE,
 )
-from .query_transform import CustomQueryTransform
 
 # import llama_index.core
 # llama_index.core.set_global_handler("simple")
@@ -296,17 +300,20 @@ class BcoRag:
             index=self._index,
             similarity_top_k=self._similarity_top_k * 3,
         )
-        retriever = TransformRetriever(
-            retriever=base_retriever,
-            query_transform=CustomQueryTransform(delimiter=DELIMITER),
+        # transform_retriever = TransformRetriever(
+        #     retriever=base_retriever,
+        #     query_transform=CustomQueryTransform(delimiter=DELIMITER),
+        # )
+        llm_prompt_template = PromptTemplate(template=LLM_PROMPT_TEMPLATE)
+        response_synthesizer = get_response_synthesizer(
+            text_qa_template=llm_prompt_template
         )
-        response_synthesizer = get_response_synthesizer()
         rerank_postprocessor = SentenceTransformerRerank(
             top_n=self._similarity_top_k,
             keep_retrieval_score=True,
         )
         self._query_engine = RetrieverQueryEngine(
-            retriever=retriever,
+            retriever=base_retriever,
             response_synthesizer=response_synthesizer,
             node_postprocessors=[rerank_postprocessor],
         )
@@ -342,11 +349,20 @@ class BcoRag:
                 dependency_prompt = f"The {domain} domain is dependent on the {dependency} domain. Here is the {dependency} domain: {self.domain_content[dependency]}."
                 domain_llm_prompt += dependency_prompt
 
-        query_prompt = f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)} {DELIMITER} {LLM_PROMPT.format(domain, domain_llm_prompt)}"
+        # full_prompt = f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)} {DELIMITER} {LLM_PROMPT.format(domain, domain_llm_prompt)}"
+        llm_prompt = f"{LLM_PROMPT.format(domain, domain_llm_prompt)}"
         if self._domain_map[domain]["top_level"]:
-            query_prompt += f"\n{SUPPLEMENT_PROMPT}"
+            llm_prompt += f"\n{SUPPLEMENT_PROMPT}"
+        query_bundle = QueryBundle(
+            query_str=llm_prompt,
+            custom_embedding_strs=[
+                f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)}"
+            ],
+            embedding=None,
+        )
 
-        response_object = self._query_engine.query(query_prompt)
+        response_object = self._query_engine.query(query_bundle)
+
         if isinstance(response_object, Response):
             response_object = Response(
                 response=response_object.response,
@@ -384,7 +400,14 @@ class BcoRag:
             source_str += "\n"
 
         if self._debug:
-            self._display_info(query_prompt, f"QUERY PROMPT for the {domain} domain:")
+            self._display_info(
+                query_bundle.query_str, f"LLM PROMPT for the {domain} domain:"
+            )
+            if query_bundle.custom_embedding_strs is not None:
+                self._display_info(
+                    query_bundle.custom_embedding_strs[0],
+                    f"RETRIEVAL PROMPT for the {domain} domain:",
+                )
             self._token_counts["input"] += self._token_counter.prompt_llm_token_count  # type: ignore
             self._token_counts["output"] += self._token_counter.completion_llm_token_count  # type: ignore
             self._token_counts["total"] += self._token_counter.total_llm_token_count  # type: ignore
