@@ -1,6 +1,6 @@
 import pytest
 from deepeval import assert_test  # type: ignore
-from deepeval.metrics import AnswerRelevancyMetric, FaithfulnessMetric, BaseMetric, BaseConversationalMetric  # type: ignore
+from deepeval.metrics import AnswerRelevancyMetric, FaithfulnessMetric, BaseMetric, BaseConversationalMetric, BaseMultimodalMetric  # type: ignore
 from deepeval.test_case import LLMTestCase  # type: ignore
 from bcorag.bcorag import BcoRag
 from llama_index.readers.github import GithubRepositoryReader  # type: ignore
@@ -15,17 +15,17 @@ from bcorag.misc_functions import extract_repo_data, graceful_exit
 import os
 
 VERBOSE = False
+ASYNC = False
 
 DOMAIN_PARAMS = {
-    "usability": {"verbose": VERBOSE, "async": False},
-    "io": {"verbose": VERBOSE, "async": False},
-    "description": {"verbose": VERBOSE, "async": False},
-    "execution": {"verbose": VERBOSE, "async": False},
-    "parametric": {"verbose": VERBOSE, "async": False},
-    "error": {"verbose": VERBOSE, "async": False},
+    "usability": {"verbose": VERBOSE, "async": ASYNC},
+    "io": {"verbose": VERBOSE, "async": ASYNC},
+    "description": {"verbose": VERBOSE, "async": ASYNC},
+    "execution": {"verbose": VERBOSE, "async": ASYNC},
+    "parametric": {"verbose": VERBOSE, "async": ASYNC},
+    "error": {"verbose": VERBOSE, "async": ASYNC},
 }
 THRESHOLD = 0.70
-STRIP_JSON = False
 
 
 @pytest.fixture
@@ -78,26 +78,9 @@ def setup_bcorag() -> BcoRag:
     return bcorag_instance
 
 
-def strip_json_schema(prompt: str) -> str:
-    """Strips the JSON schema portion of the prompt.
-
-    Parameters
-    ----------
-    prompt : str
-        The prompt to strip the JSON schema from.
-
-    Returns
-    -------
-    str
-        The cleaned prompt.
-    """
-    schema_start = prompt.find("The JSON schema is as follows:")
-    return prompt[:schema_start]
-
-
 def create_metrics(
     verbose_mode: bool, async_mode: bool
-) -> list[BaseMetric | BaseConversationalMetric]:
+) -> list[BaseMetric | BaseConversationalMetric | BaseMultimodalMetric]:
     """Creates a BaseMetric list.
 
     Parameters
@@ -133,11 +116,7 @@ def test_usability(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["llm_prompt"]
 
     test_case = LLMTestCase(
         input=input,
@@ -160,11 +139,7 @@ def test_io(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["retrieval_prompt"]
 
     test_case = LLMTestCase(
         input=input,
@@ -187,11 +162,7 @@ def test_description(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["retrieval_prompt"]
 
     test_case = LLMTestCase(
         input=input,
@@ -214,11 +185,7 @@ def test_execution(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["retrieval_prompt"]
 
     test_case = LLMTestCase(
         input=input,
@@ -241,11 +208,7 @@ def test_parametric(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["retrieval_prompt"]
 
     test_case = LLMTestCase(
         input=input,
@@ -268,11 +231,7 @@ def test_error(setup_bcorag):
     ]
 
     metrics = create_metrics(verbose_mode, async_mode)
-    input = (
-        strip_json_schema(setup_bcorag._domain_map[domain_key]["prompt"])
-        if STRIP_JSON
-        else setup_bcorag._domain_map[domain_key]["prompt"]
-    )
+    input = setup_bcorag._domain_map[domain_key]["retrieval_prompt"]
 
     test_case = LLMTestCase(
         input=input,
