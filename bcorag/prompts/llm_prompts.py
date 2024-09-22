@@ -1,210 +1,8 @@
-"""The standardized query prompts.
+LLM_PROMPT = """Can you give me a BioCompute Object (BCO) {} domain using the provided information from a bioinformatics workflow documentation. The return response must be valid JSON and must validate against the JSON schema I am providing you. If the information for a field is not provided, leave it blank, do not make up any information. Do not repeat the JSON schema in your response, just make sure your response conforms against the schema. Please check your work before finalizing your response. The style of writing for the free text response fields should be similar to the style of a scientific paper, it should be written in past tense and not use any first person references. {}"""
 
-- `QUERY_PROMPT`: The standard wrapper used for each prompt.
-- `_TOP_LEVEL_SCHEMA`: The entire top level 2791 object schema.
-- `SUPPLEMENT_PROMPT`: Supplementary prompt for the domains that require the top level schema.
-- `USABILITY_DOMAIN`: The usability domain specific prompt and schema.
-- `IO_DOMAIN`: The IO domain specific prompt and schema.
-- `DESCRIPTION_DOMAIN`: The description domain specific prompt and schema.
-- `EXECUTION_DOMAIN`: The execution domain specific prompt and schema.
-- `PARAMETRIC_DOMAIN`: The parametric domain specific prompt and schema.
-- `ERROR_DOMAIN`: The error domain specific prompt and schema.
-- `DOMAIN_MAP`: The domain map for the BcoRag object.
-"""
+USABILITY_DOMAIN_LLM = """The usability domain is a high level, plain langauge description of the purpose and overall goal of the project workflow. It is analogous to an abstract. Keep the information high level and representative of the provided project paper and documentation excerpts.
 
-from .custom_types.core_types import DomainMap
-
-QUERY_PROMPT = """
-            Can you give me a BioCompute Object (BCO) {} domain for the provided paper. The return response must be valid JSON and must 
-            validate against the JSON schema I am providing you. If the information for a field is not provided, leave it blank, do not 
-            make up any information. {}
-            """
-
-_TOP_LEVEL_SCHEMA = """
-{
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://w3id.org/ieee/ieee-2791-schema/2791object.json",
-    "type": "object",
-    "title": "Base type for all IEEE-2791 Objects",
-    "description": "All IEEE-2791 object types must adhear to this type in order to be compliant with IEEE-2791 standard",
-    "required": [
-        "object_id",
-        "spec_version",
-        "etag",
-        "provenance_domain",
-        "usability_domain",
-        "description_domain",
-        "execution_domain",
-        "io_domain"
-    ],
-    "definitions": {
-        "object_id": {
-            "type": "string",
-            "description": "A unique identifier that should be applied to each IEEE-2791 Object instance, generated and assigned by a IEEE-2791 database engine. IDs should never be reused"
-        },
-        "uri": {
-            "type": "object",
-            "description": "Any of the four Resource Identifers defined at https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-7.3.5",
-            "additionalProperties": false,
-            "required": [
-                "uri"
-            ],
-            "properties": {
-                "filename": {
-                    "type": "string"
-                },
-                "uri": {
-                    "type": "string",
-                    "format": "uri"
-                },
-                "access_time": {
-                    "type": "string",
-                    "description": "Time stamp of when the request for this data was submitted",
-                    "format": "date-time"
-                },
-                "sha1_checksum": {
-                    "type": "string",
-                    "description": "output of hash function that produces a message digest",
-                    "pattern": "[A-Za-z0-9]+"
-                }
-            }
-        }, 
-        "contributor": {
-            "type": "object",
-            "description": "Contributor identifier and type of contribution (determined according to PAV ontology) is required",
-            "required": [
-                "contribution",
-                "name"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of contributor",
-                    "examples": [
-                        "Charles Darwin"
-                    ]
-                },
-                "affiliation": {
-                    "type": "string",
-                    "description": "Organization the particular contributor is affiliated with",
-                    "examples": [
-                        "HMS Beagle"
-                    ]
-                },
-                "email": {
-                    "type": "string",
-                    "description": "electronic means for identification and communication purposes",
-                    "examples": [
-                        "name@example.edu"
-                    ],
-                    "format": "email"
-                },
-                "contribution": {
-                    "type": "array",
-                    "description": "type of contribution determined according to PAV ontology",
-                    "reference": "https://doi.org/10.1186/2041-1480-4-37",
-                    "items": {
-                        "type": "string",
-                        "enum": [
-                            "authoredBy",
-                            "contributedBy",
-                            "createdAt",
-                            "createdBy",
-                            "createdWith",
-                            "curatedBy",
-                            "derivedFrom",
-                            "importedBy",
-                            "importedFrom",
-                            "providedBy",
-                            "retrievedBy",
-                            "retrievedFrom",
-                            "sourceAccessedBy"
-                        ]
-                    }
-                },
-                "orcid": {
-                    "type": "string",
-                    "description": "Field to record author information. ORCID identifiers allow for the author to curate their information after submission. ORCID identifiers must be valid and must have the prefix ‘https://orcid.org/’",
-                    "examples": [
-                        "http://orcid.org/0000-0002-1825-0097"
-                    ],
-                    "format": "uri"
-                }
-            }
-        }
-    },
-    "additionalProperties": false,
-    "properties": {
-        "object_id": {
-            "$ref": "#/definitions/object_id",
-            "readOnly": true
-        },
-        "spec_version": {
-            "type": "string",
-            "description": "Version of the IEEE-2791 specification used to define this document",
-            "examples": [
-                "https://w3id.org/ieee/ieee-2791-schema/"
-            ],
-            "readOnly": true,
-            "format": "uri"
-        },
-        "etag": {
-            "type": "string",
-            "description": "See https://tools.ietf.org/html/rfc7232#section-2.1 for full description. It is recommended that the ETag be deleted or updated if the object file is changed (except in cases using weak ETags in which the entirety of the change comprises a simple re-writing of the JSON).",
-            "examples": [
-                "5986B05969341343E77A95B4023600FC8FEF48B7E79F355E58B0B404A4F50995"
-            ],
-            "readOnly": true,
-            "pattern": "^([A-Za-z0-9]+)$"
-        },
-        "provenance_domain": {
-            "$ref": "provenance_domain.json"
-        },
-        "usability_domain": {
-            "$ref": "usability_domain.json"
-        },
-        "extension_domain": {
-            "type": "array",
-            "description": "An optional domain that contains user-defined fields.",
-            "items":{
-                "required":[
-                    "extension_schema"
-                ],
-                "additionalProperties": true,
-                "properties": {
-                    "extension_schema":{
-                        "title": "Extension Schema",
-                        "description": "resolving this URI should provide this extension's JSON Schema",
-                        "type": "string",
-                        "format": "uri"
-                    }
-                }
-            }
-        },
-        "description_domain": {
-            "$ref": "description_domain.json"
-        },
-        "execution_domain": {
-            "$ref": "execution_domain.json"
-        },
-        "parametric_domain": {
-            "$ref": "parametric_domain.json"
-        },
-        "io_domain": {
-            "$ref": "io_domain.json"
-        },
-        "error_domain": {
-            "$ref": "error_domain.json"
-        }
-    }
-}
-"""
-
-SUPPLEMENT_PROMPT = f"Some of the fields are defined in the top level 2791object JSON schema which is as follows: {_TOP_LEVEL_SCHEMA}"
-
-USABILITY_DOMAIN = """The Usability domain in a BioCompute Object is a plain language description of what was done in the project or paper workflow. The Usability domain conveys the purpose of the paper. The Usability domain information is likely to be in paper sections such as the abstract, background, summary, conclusions, or any section that describes the purpose and background of the project."""
-USABILITY_DOMAIN += """ The JSON schema is as follows:
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/usability_domain.json",
@@ -223,8 +21,9 @@ USABILITY_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-IO_DOMAIN = """The Input Output domain (or IO domain) represents the list of global input and output files created by the computational workflow. These fields are pointers to objects that can reside in the system performing the computation or any other accessible system. The input subdomain records the references and input files for the entire pipeline. The output subdomain records the references and outputs (including media types) for the entire pipeline. The io domain information is likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project steps and their intermediate input and output contents. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information). If the github repository information is included, it is highly likely that the input and output files are located in the repository. Make sure any links to files in the repository are exact."""
-IO_DOMAIN += """ The JSON schema is as follows:
+IO_DOMAIN_LLM = """The input output (io) domain is represents the list of global input and output files created by the computational workflow of the project. The input subdomain lists the project's input files and corresponding metadata. The output subdomain lists the project's corresponding output files and metadata. Essentially, if someone were to re-create the project workflow, they would check this domain in order to see what the expected global input files are and their corresponding output files (this is not including intermediate steps of the project).
+
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/io_domain.json",
@@ -285,8 +84,9 @@ IO_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-DESCRIPTION_DOMAIN = """The description domain specifies structured fields for the description of external resources, the pipeline or workflow steps, and the relationship of I/O objects. The description domain information is likely to be contained in multiple sections of the paper. The keywords are likely in sections such as the keywords, abstract, background, summary, etc. The xref information is likely in paper sections such as the data section. The pipeline steps are likely to be in paper sections such as the methods, methodologies, steps, etc. Any section that describes the project's pipeline steps and the background on the data used. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
-DESCRIPTION_DOMAIN += """ The JSON schema is as follows:
+DESCRIPTION_DOMAIN_LLM = """The description domain describes the project workflow. It has a section that describes keywords, similar to a publication. It also has an external references section that describes other resources that are referenced in the workflow. The description domain also has a platform section that describes what or which platforms the workflow was run on. Finally, the pipeline steps describes the details of each specific step in executing the workflow. The pipeline steps are very important. If someone wanted to recreate the project workflow, they would view this section to see what steps to take and in what order. The pipeline steps can include various metadata such as prerequisites (or dependencies), name, description, and input and output files relating to the particular step.
+
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/description_domain.json",
@@ -454,8 +254,9 @@ DESCRIPTION_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-EXECUTION_DOMAIN = """The Execution domain specifies information needed for deployment, software configuration, and running applications in a dependent environment. Everything that is needed for someone to set up their machine to run the workflow should be described here. The execution domain information is likely to be in paper sections such as prerequisites, setup, data, methods, methodologies, etc. Any section that describes the setup, prerequisites, or environment for the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
-EXECUTION_DOMAIN += """ The JSON schema is as follows:
+EXECUTION_DOMAIN_LLM = """The execution domain describes the global execution metadata for the project workflow. This includes things like how the scripts in the project are run, the environment variables set, software prerequisites and dependencies, and any external data endpoints needed to recreate the execution environment.
+
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/execution_domain.json",
@@ -569,8 +370,9 @@ EXECUTION_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-PARAMETRIC_DOMAIN = """The parametric domain represents a list of parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis and are tied to a particular pipeline implementation. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. The parametric domain is likely contained in the paper sections such as methods, methodologies, etc. Any section that describes the exact details of the implementation and execution of the workflow. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
-PARAMETRIC_DOMAIN += """ The JSON schema is as follows:
+PARAMETRIC_DOMAIN_LLM = """The parametric domain contains all of the parameters and arguments that were set for each pipeline step. A particular set of parameters should be connected to a specific pipeline step from the description domain. This domain is optional is optional and if the content is not provided you can return an empty JSON response.
+
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/ieee/ieee-2791-schema/parametric_domain.json",
@@ -615,8 +417,9 @@ PARAMETRIC_DOMAIN += """ The JSON schema is as follows:
 }
 """
 
-ERROR_DOMAIN = """The error domain can be used to determine what range of input returns and outputs are within the tolerance level defined in this subdomain and therefore can be used to optimize the algorithm. It consists of two subdomains: empirical and algorithmic. The empirical error subdomain contains empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. The algorithmic subdomain is descriptive of errors that originate by the fuzziness of the algorithms. This domain as a whole is optional so if there is no information in the paper that fits this domain then you can indicate that to the user. It is also likely that this data is contained in the documentation and markdown files in the github repository (provided the user includes this information)."""
-ERROR_DOMAIN = """ The JSON schema is as follows:
+ERROR_DOMAIN_LLM = """The error domain specifies ranges of input returns and outputs that are not within the tolerance level of the project output expectations. The errors are split into two categories. The first category is empirical errors. Empirical errors describe empirically determined values such as limits of detectability, false positives, false negatives, statistical confidence of outcomes, etc. The second category is algorithmic errors. Algorithmic errors are descriptive of errors that originate by fuzziness of the algorithms, driven by stochastic processes, in dynamically parallelized multi-threaded executions, or in machine learning methodologies where the state of the machine can affect the outcome. This domain is optional is optional and if the content is not provided you can return an empty JSON response.
+
+The JSON schema is as follows:
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://w3id.org/2791/error_domain.json",
@@ -643,47 +446,36 @@ ERROR_DOMAIN = """ The JSON schema is as follows:
 }
 """
 
-DOMAIN_MAP: DomainMap = {
-    "usability": {
-        "prompt": USABILITY_DOMAIN,
-        "top_level": False,
-        "user_prompt": "[u]sability",
-        "code": "u",
-        "dependencies": [],
-    },
-    "io": {
-        "prompt": IO_DOMAIN,
-        "top_level": True,
-        "user_prompt": "[i]o",
-        "code": "i",
-        "dependencies": [],
-    },
-    "description": {
-        "prompt": DESCRIPTION_DOMAIN,
-        "top_level": True,
-        "user_prompt": "[d]escription",
-        "code": "d",
-        "dependencies": [],
-    },
-    "execution": {
-        "prompt": EXECUTION_DOMAIN,
-        "top_level": True,
-        "user_prompt": "[e]xecution",
-        "code": "e",
-        "dependencies": [],
-    },
-    "parametric": {
-        "prompt": PARAMETRIC_DOMAIN,
-        "top_level": False,
-        "user_prompt": "[p]arametric",
-        "code": "p",
-        "dependencies": ["description"],
-    },
-    "error": {
-        "prompt": ERROR_DOMAIN,
-        "top_level": False,
-        "user_prompt": "[err]or",
-        "code": "err",
-        "dependencies": [],
-    },
+_TOP_LEVEL_SCHEMA = """
+{
+  "uri": {
+    "type": "object",
+    "description": "Any of the four Resource Identifers defined at https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-7.3.5",
+    "additionalProperties": false,
+    "required": [
+      "uri"
+    ],
+    "properties": {
+      "filename": {
+        "type": "string"
+      },
+      "uri": {
+        "type": "string",
+        "format": "uri"
+      },
+      "access_time": {
+        "type": "string",
+        "description": "Time stamp of when the request for this data was submitted",
+        "format": "date-time"
+      },
+      "sha1_checksum": {
+        "type": "string",
+        "description": "output of hash function that produces a message digest",
+        "pattern": "[A-Za-z0-9]+"
+      }
+    }
+  }
 }
+"""
+
+SUPPLEMENT_PROMPT = f"The `uri` object is described in the top level 2791object JSON schema. Here is the definition to reference for those fields: {_TOP_LEVEL_SCHEMA}"

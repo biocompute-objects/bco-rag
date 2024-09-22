@@ -9,7 +9,12 @@ from llama_index.core import (
     get_response_synthesizer,
     Response,
 )
-from llama_index.core.callbacks import CallbackManager, TokenCountingHandler
+from llama_index.core.callbacks import (
+    CallbackManager,
+    TokenCountingHandler,
+)
+from llama_index.core.prompts import PromptTemplate
+from llama_index.core.schema import QueryBundle
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.llms.openai import OpenAI  # type: ignore
@@ -47,7 +52,13 @@ from .custom_types.output_map_types import (
     default_output_tracker_file,
 )
 import bcorag.misc_functions as misc_fns
-from .prompts import DOMAIN_MAP, QUERY_PROMPT, SUPPLEMENT_PROMPT
+from .prompts import (
+    PROMPT_DOMAIN_MAP,
+    RETRIEVAL_PROMPT,
+    LLM_PROMPT,
+    SUPPLEMENT_PROMPT,
+    LLM_PROMPT_TEMPLATE,
+)
 
 # import llama_index.core
 # llama_index.core.set_global_handler("simple")
@@ -133,7 +144,7 @@ class BcoRag:
         load_dotenv()
 
         self._parameter_set_hash = self._user_selection_hash(user_selections)
-        self._domain_map = DOMAIN_MAP
+        self._domain_map = PROMPT_DOMAIN_MAP
         self._file_name = user_selections["filename"]
         self._file_path = user_selections["filepath"]
         self._output_path_root = os.path.join(
@@ -285,16 +296,24 @@ class BcoRag:
                     )
                     self._index = VectorStoreIndex(nodes=nodes)
 
-        retriever = VectorIndexRetriever(
-            index=self._index, similarity_top_k=self._similarity_top_k * 3
+        base_retriever = VectorIndexRetriever(
+            index=self._index,
+            similarity_top_k=self._similarity_top_k * 3,
         )
-        response_synthesizer = get_response_synthesizer()
+        # transform_retriever = TransformRetriever(
+        #     retriever=base_retriever,
+        #     query_transform=CustomQueryTransform(delimiter=DELIMITER),
+        # )
+        llm_prompt_template = PromptTemplate(template=LLM_PROMPT_TEMPLATE)
+        response_synthesizer = get_response_synthesizer(
+            text_qa_template=llm_prompt_template
+        )
         rerank_postprocessor = SentenceTransformerRerank(
             top_n=self._similarity_top_k,
             keep_retrieval_score=True,
         )
         self._query_engine = RetrieverQueryEngine(
-            retriever=retriever,
+            retriever=base_retriever,
             response_synthesizer=response_synthesizer,
             node_postprocessors=[rerank_postprocessor],
         )
@@ -322,16 +341,28 @@ class BcoRag:
             The generated domain.
         """
         query_start_time = time.time()
-        domain_prompt = self._domain_map[domain]["prompt"]
+        domain_retrieval_prompt = self._domain_map[domain]["retrieval_prompt"]
+        domain_llm_prompt = self._domain_map[domain]["llm_prompt"]
+
         for dependency in self._domain_map[domain]["dependencies"]:
             if self.domain_content[dependency] is not None:
                 dependency_prompt = f"The {domain} domain is dependent on the {dependency} domain. Here is the {dependency} domain: {self.domain_content[dependency]}."
-                domain_prompt += dependency_prompt
-        query_prompt = QUERY_PROMPT.format(domain, domain_prompt)
-        if self._domain_map[domain]["top_level"]:
-            query_prompt += f"\n{SUPPLEMENT_PROMPT}"
+                domain_llm_prompt += dependency_prompt
 
-        response_object = self._query_engine.query(query_prompt)
+        # full_prompt = f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)} {DELIMITER} {LLM_PROMPT.format(domain, domain_llm_prompt)}"
+        llm_prompt = f"{LLM_PROMPT.format(domain, domain_llm_prompt)}"
+        if self._domain_map[domain]["top_level"]:
+            llm_prompt += f"\n{SUPPLEMENT_PROMPT}"
+        query_bundle = QueryBundle(
+            query_str=llm_prompt,
+            custom_embedding_strs=[
+                f"{RETRIEVAL_PROMPT.format(domain, domain_retrieval_prompt)}"
+            ],
+            embedding=None,
+        )
+
+        response_object = self._query_engine.query(query_bundle)
+
         if isinstance(response_object, Response):
             response_object = Response(
                 response=response_object.response,
@@ -369,7 +400,14 @@ class BcoRag:
             source_str += "\n"
 
         if self._debug:
-            self._display_info(query_prompt, f"QUERY PROMPT for the {domain} domain:")
+            self._display_info(
+                query_bundle.query_str, f"LLM PROMPT for the {domain} domain:"
+            )
+            if query_bundle.custom_embedding_strs is not None:
+                self._display_info(
+                    query_bundle.custom_embedding_strs[0],
+                    f"RETRIEVAL PROMPT for the {domain} domain:",
+                )
             self._token_counts["input"] += self._token_counter.prompt_llm_token_count  # type: ignore
             self._token_counts["output"] += self._token_counter.completion_llm_token_count  # type: ignore
             self._token_counts["total"] += self._token_counter.total_llm_token_count  # type: ignore
