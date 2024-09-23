@@ -1,0 +1,740 @@
+
+--------------- Source Node '1/10' ---------------
+Node ID: '82844bd2-7ad9-434d-92e6-2715691963c1'
+Rerank Score: '0.5224757194519043'
+Metadata String:
+`page_label: 3
+file_name: High resolution measurement.pdf
+retrieval_score: 0.3760798283737895`
+Metadata Size: `92`
+Content Size: `2434`
+Retrieved Text:
+method and explore the possibility of aligning longer
+reads with increased specificity. The specificity would
+allow for the quantification of individual domains and
+DUF1220 sequences within genes.
+In this study, we explore how these strategies and
+various sequencing parameters affect the accuracy and
+precision of copy number estimation and demonstrate
+a method in which copies of DUF1220 and DUF1220
+encoding genes can be accurately estimated. We valid-
+ate this method with simulations, ddPCR, and apply it
+to data from the 1000 Genomes Project. We demon-
+strate not only the accurate estimation of DUF1220-
+clade specific copies, but also the delineation of clades,
+and in some cases domains, within individual NBPF genes.
+Such information allows one to determine if variations are
+due to changes in the copy number of whole genes or in-
+tragenic domain copy number expansions or contractions
+within specific individual NBPF genes. Together these ad-
+vances allow us to utilize whole genome sequence data toidentify copy number changes in DUF1220 sequences
+with unprecedented accuracy and precision, allowing po-
+tential disease associations to be examined at the highest
+level of resolution so far reported.
+Results
+Characterizing the read alignment ambiguity between
+DUF1220 domains
+Because some of the ~300 DUF1220 copies in the haploid
+human genome display high sequence similarity to one an-
+o t h e r[ 1 0 ] ,i ti sl i k e l yt h a ts o m es e q u e n c er e a d sw i l lm a p
+equally well to multiple locat ions. To further understand
+the relationship and sequence conservation between each
+of the 24 NBPF genes and respective domains or subtypes,
+we performed a detailed annotation of the NBPF genes in
+the most recent version of the human genome (hg38). We
+then used the sequences to carry out a detailed sequence
+analysis and clustering (Fig. 1). We have included the 8 pre-
+dicted NBPF pseudogenes (as annotated in hg38) in our
+Fig. 1 DUF1220 domains cluster by sequence similarity into six major clades. A Neighbor-Joining tree of DUF1220 domain protein sequences was
+constructed with Geneious v. 10.0.5. Branch colors represent the clade that each DUF1220 domain has been assigned to. DUF1220 domains for
+which the sequence is a hybrid of two major clades are in black. The aligned sequence data supporting the clade assignments can be found in
+Additional file 6Astling et al. BMC Genomics  (2017) 18:614 Page 3 of 16
+
+
+--------------- Source Node '2/10' ---------------
+Node ID: 'e03f4ce7-850f-4bab-a706-be174699e2a0'
+Rerank Score: '0.5051250457763672'
+Metadata String:
+`page_label: 14
+file_name: High resolution measurement.pdf
+retrieval_score: 0.3414651496974237`
+Metadata Size: `93`
+Content Size: `3489`
+Retrieved Text:
+Assignment of DUF1220 domains to appropriate clade
+As previously described, the majority of DUF1220 do-
+mains can be divided into 6 clades [10]. The domains of
+each clade can be distinguished by their position within
+the gene, their exon lengths (Additional file 5), and pro-
+tein sequence motifs unique to each clade (Additional file
+6). We assigned each DUF1220 domain to a clade based
+on the presence or absence of these characteristic protein
+sequence motifs. The validity of our clade assignments
+can be confirmed by viewing a phylogenetic tree of the
+protein sequences (Fig. 1). Furthermore, because the
+amino-acid motifs particular to each clade are highly
+conserved within clades, it is easy to view the distinctions
+between clades by viewing the aligned protein sequences
+(Additional file 6).
+Some (16/302) DUF1220 domains do not fit well
+within the previously established clades, but clearly
+form 5 distinct clusters based on sequence similarity.
+We have therefore established five new clades referred
+to as CON4 –8 (Additional file 5). In contrast to the
+domains belonging to the six clades described above,
+the majority of these DUF1220 domains are located be-
+tween 1p11.2 and 1p13.3. These were not analyzed in
+this study because of their non-canonical nature and
+their locations predominately within non- NBPF genes.
+A few (6/302) DUF1220 domains appear to be hybrid
+domains, that is, they contain a short exon characteris-
+tic of one domain and the long exon characteristic of a
+different domain. These domains were not included in
+our analysis.
+Individual DUF1220 domains are referred to by their
+gene name, the name of the clade to which the domain
+belongs, and a number reflecting the placement of that
+domain within the gene. For example, NBPF1_CON1_3
+refers to the third CON1 domain within NBPF1 and
+NBPF20_HLS1_8 refers to the eighth HLS1 domain
+within NBPF20 . Six DUF1220 containing genes currently
+lack formal gene names in either RefSeq or Ensembl but
+each of these has high sequence similarity to another
+gene (e.g. LOC102724250 is very similar to NBPF1 ). For
+clarity, in Additional file 5 and Additional file 2: Figure S1,
+we refer to these genes by descriptive names reflecting
+their similarity to named genes (LOC102724250: NBPF1L,
+LOC100996724: PDE4DIPL1 , RP11-744H18.1: PDE4-
+DIPL2 ). The three genes containing CON8 domains are
+similar to one another but not to any currently named
+gene, so they are referred to as CON8 containing 1, 2, and
+3 (LOC105369199: CON8C1, LOC105369140: CON8C2 ,
+LINC00869: CON8C3 ). In Additional file 5 we also label
+some exons as conserved exon 1 –7 (CE1-CE7) because
+the sequence of these exons is highly conserved across
+genes and, for CE1-CE3, at multiple locations within
+genes. Several non-coding exons also have high sequence
+similarity across genes and these are labeled UTR1-UTR20 (e.g. the sequence of UTR13 exons is highly con-
+served across different genes). Exons that do not meet any
+of the conditions described above are referred to as “exon ”
+with a number denoting the exon position in the gene.
+Measurement of DUF1220 by digital droplet PCR (ddPCR)
+We performed ddPCR essentially as previously described
+[17] to validate our copy number estimates for three rep-
+resentative DUF1220 clades. DNA samples were obtained
+from Coriell Biorepository and digested with the restric-
+tion enzyme DDE1. Digested DNA, primers, and fluores-
+cently labeled probes were then combined following the
+manufacturer ’s protocol.
+
+
+--------------- Source Node '3/10' ---------------
+Node ID: 'ef9add8f-656b-4b66-88a9-4f7fa31a2919'
+Rerank Score: '0.49403107166290283'
+Metadata String:
+`page_label: 12
+file_name: High resolution measurement.pdf
+retrieval_score: 0.3742694049356065`
+Metadata Size: `93`
+Content Size: `4031`
+Retrieved Text:
+Methods
+Simulation studies
+To assess the degree of read alignment ambiguity between
+DUF1220 domains, a ‘spike-in ’study was conducted,
+where reads from an individual domain were simulated
+and aligned back to the genome. Single and paired-reads,
+ranging in lengths from 36 bp to 300 bp, were randomly
+sampled from the reference genome (hg38). To simulate
+duplication or deletion events, the number of reads were
+varied to simulate one to ten copies of each DUF1220 do-
+main. To obtain reads for a single domain, reads overlap-
+ping a DUF1220 domain of interest were isolated and
+aligned back to the genome using each of the alignment
+strategies below. Afterwards we compared the degree to
+which reads aligned to the expected location.
+To assess the ability of each algorithm to account for all
+271 haploid DUF1220 copies, a ‘baseline ’study was con-
+ducted where all canonical DUF1220 domains were simu-
+lated at diploid coverage and aligned back to the genome.
+Reads were simulated as described for the ‘spike-in ’study
+but with 100 bp paired-end reads. 100 bp paired-end reads
+were chosen because this is the sequencing length and
+type available from the 1000 Genomes Project.
+For both simulation studies, the number of reads was
+adjusted to give a baseline diploid coverage of 30×. For
+paired-end reads the insert size was varied to match the
+variation found in the 1000 Genomes Project, normally
+distributed with a mean insert size of 350 bp and a
+standard deviation of 50 bp.
+Sequencing errors and quality scores could potentially
+increase the ambiguity of each read and impact the
+ability to distinguish between DUF1220 domains. Qual-
+ity scores from Illumina sequence data tend to decrease
+towards the end of each read. To model this, we mea-
+sured the mean quality score at each base for the 1000
+Genomes fastq files and used loess regression to model
+the distribution. The profile was extended so that each
+simulated read length would have the same quality score
+profile. This was done to simulate the quality score drop
+off rate relative to read length observed in data obtained
+from different generations of Illumina sequencers (GAIIx,
+HiSeq2000, MiSeq, etc). Each sequencing pair was
+modeled separately, since the second read tends to have
+lower quality scores than the first. Sequencing errors were
+modeled as described in [30]. The mean probability for a
+sequencing error for the first read was 0.0026 and 0.004
+for the second pair. The error rate was increased linearly
+such that the probability of a sequencing error was 1.5
+times more likely at the end of the read and 1/2 as likely
+at the beginning of the read.
+For alignment to the human genome reference, we
+tested various alignment strategies. Bowtie2 (version 2.2.9)
+[31] was used to find the ‘best ’alignment for each read,
+with the ‘–very-sensitive ’preset and a max-insert size of800 bp. For the ‘All Align ’strategy, mrsFast-Ultra (version
+3.3.11) [24] was used as described in [25], with the param-
+eters ‘–crop 36 ’and ‘-e 2 ’to crop 100 bp reads to 36 bp
+and aligned with up to two mismatches. As an alternative,
+Bowtie (version 1.1.2) [32] was also used for the ‘All Align ’
+strategy, with the following parameters ‘–all -v 2 -X 800 ’.
+For the multiread strategy, reads were aligned to the gen-
+ome using Bowtie v1.1.2 with the ‘–best –strata –all–v2’
+parameters. In this case, Bowtie attempts to find the best
+possible alignment for each read. If multiple valid align-
+ments are found, rather than choosing one at random, all
+ties are returned. Later the contribution of each read can
+be weighted as described below.
+After alignment, the BAM files were converted to BED
+format using bedtools (v2.17.0) [33]. Paired-end reads
+aligned as a proper pair were jo ined into a single fragment
+and discordant pairs were treated as single-end reads. The
+lengths of the discordant reads were extended to half mean
+insert size for that sample following a normal distribution.
+The resulting fragments were then intersected with each
+DUF1220 domain using bedtools.
+
+
+--------------- Source Node '4/10' ---------------
+Node ID: 'd2ca9a90-4cad-4f13-8280-0417e35dd9c1'
+Rerank Score: '0.4839733839035034'
+Metadata String:
+`file_path: README.md
+file_name: README.md
+url: https://github.com/dpastling/plethora/blob/master/README.md
+retrieval_score: 0.2956314292197833`
+Metadata Size: `142`
+Content Size: `3660`
+Retrieved Text:
+#### 4. (Optional) Remove temporary files
+
+```bash
+bsub < code/1000genomes/4_batch_clean.sh
+```
+
+This script removes intermediate files from earlier stages of the pipeline. This is useful because WGS files can take up a lot of disk space. This script first confirms that files from previous steps have been run correctly before removing them. 
+
+By default it assumes that the number of reads in the fastq file are
+correct (verified via checksum or read counting). Optionally you can provide a
+file with the expected number of reads. The script deletes the file from a
+prior step if the file in the next step has the correct number of reads (e.g.
+delete the original bam file if the sorted bam has the correct number of
+reads and delete the sorted bam if the resulting bed file has the correct number
+of reads).
+
+If the data have been downloaded from a public repository like the 1000 Genomes, this script can remove the fastq files by passing an optional flag.
+
+The script assumes the `.bam` file contains unaligned reads (e.g. the number of reads in the fastq file should match the number of reads in the .bam file).
+
+Behind the scenes the clean script runs `code/clean_files.pl`. For more information on how to run this directly:
+
+```bash
+code/clean_files.pl -h
+```
+
+
+#### 5. Calculate coverage for each region of interest
+
+```bash
+bsub < code/1000genomes/5_make_bed.sh
+```
+
+This script: 
+
+  - Coverts the .bam alignment file into bed format
+  - Parses the reads
+  - Calls the `merge_pairs.pl` script (described below) to combined proper pairs into a single
+fragment
+  - Finds overlaps with the reference bed file containing the regions of interest
+(e.g. DUF1220)
+  - Calculates the average coverage for each region: (number of bases that
+overlap) / (domain length)
+
+
+#### 6. (Optional) Remove temporary files
+
+```bash
+bsub < code/1000genomes/6_batch_clean.sh
+```
+
+This script is a link to the script above. At this stage it can remove the alignment and fastq files if present.
+
+
+#### 7. Correct coverage for GC bias
+
+```bash
+bsub < code/1000genomes/7_batch_gc_correction.sh
+```
+
+This script performs the GC correction step using conserved regions that are
+assumed to be found in diploid copy number. This script requires the `_read.depth.bed` file 
+generated in step 5 above as well as a file with the percent GC content for each domain.
+
+Behind the scenes, this shell script calls `code/gc_correction.R` which can be run manually like so:
+
+```bash
+code/gc_correction.R results/HG00250_read.depth.bed data/hg38_duf_full_domains_v2.3_GC.txt
+```
+
+## Other useful scripts
+
+#### preprocessing\_1000genomes.R
+
+This script is how we selected the ~300 samples from the full `sample.index`
+file for the 1000 Genomes Project. It filters out the exome sequencing data,
+selects samples with reasonably high coverage, etc. It tries to collect
+representative samples from each of the populations.
+
+
+#### gc\_from\_fasta.pl
+
+This script calculates the percent GC content for a set of domains and is called
+by the batch script above. Required are a set of domains in .bed file format and
+a .fasta file for the genome reference
+
+
+#### build\_gc\_model.sh
+
+This an LSF script for submitting a specific version of the DUF1220 annotation
+to the LSF queue.
+
+
+#### merge\_pairs.pl
+
+This is a helper script to `make_bed.sh` that combines proper pairs into a
+single fragment, and separates discordant pairs into single end reads. The
+lengths of the single end reads are extended by half the mean fragment size,
+which is determined from the data itself. The extended length is sampled from a
+normal distribution using the mean and standard deviation of the measured fragment sizes.
+
+
+--------------- Source Node '5/10' ---------------
+Node ID: 'da94c578-4d73-4f88-8f5e-527698159e71'
+Rerank Score: '0.4821885824203491'
+Metadata String:
+`page_label: 11
+file_name: High resolution measurement.pdf
+retrieval_score: 0.34818587992855676`
+Metadata Size: `94`
+Content Size: `1232`
+Retrieved Text:
+The ability to
+measure gene-specific clade groups allows researchers to
+test hypotheses related to the effects of DUF1220 changes
+in specific NBPF genes, which may reveal important
+disease associations not previously open to investigation.
+Because we can also determine gene copy number
+independently of DUF1220 domain number, this method
+allows the researcher to discriminate between CNVs
+involving gene duplication/deletion events and changes
+involving duplications/deletions of exons within a gene.
+Since DUF1220 domains show the greatest human
+lineage-specific copy number increase of any coding re-
+gion of the genome, the strategies employed here and the
+insights we obtained should serve to guide other efforts to
+use read depth to measure copy number of highly dupli-
+cated sequences. The result of the work presented here is
+a greatly enhanced capability to analyze the role that these
+sequences play in human variation and disease. This
+method can find additional applications in high-resolution
+analysis of other multi-copy gene families and of genes
+containing multiple duplicated domains, though this was
+outside of the immediate scope of the work presented here.Astling et al. BMC Genomics  (2017) 18:614 Page 11 of 16
+
+
+--------------- Source Node '6/10' ---------------
+Node ID: '42bb3d14-3c17-4fb4-b9b0-ca1c181dd308'
+Rerank Score: '0.4772888422012329'
+Metadata String:
+`file_path: code/1000genomes/config.sh
+file_name: config.sh
+url: https://github.com/dpastling/plethora/blob/master/code/1000genomes/config.sh
+retrieval_score: 0.2820062625936527`
+Metadata Size: `176`
+Content Size: `1295`
+Retrieved Text:
+#!/usr/bin/env bash
+
+sample_index=data/1000Genomes_samples.txt
+genome=$HOME/genomes/bowtie2.2.9_indicies/hg38/hg38
+master_ref=data/hg38_duf_full_domains_v2.3.bed
+
+# any additional parameters to be passed to bowtie should go here
+bowtie_params=""
+
+alignment_dir=alignments
+bed_dir=results
+
+if [[ ! -d $alignment_dir ]]; then
+        mkdir -p $alignment_dir
+fi
+if [[ ! -d $bed_dir ]]; then
+        mkdir -p $bed_dir
+fi
+if [[ ! -d logs ]]; then
+        mkdir logs
+fi
+
+SAMPLES=(
+NA19914
+HG00623
+HG01139
+HG01133
+HG01134
+HG01464
+HG00270
+HG00353
+HG00250
+HG00251
+HG00261
+HG01756
+HG01761
+NA19023
+NA19025
+NA19720
+HG00101
+HG00102
+HG00105
+HG00107
+HG00110
+HG00113
+HG00118
+HG00132
+HG00134
+HG00139
+HG00140
+HG00236
+HG00237
+HG00238
+HG00240
+HG00249
+HG00252
+HG00253
+HG00255
+HG00256
+HG00257
+HG00259
+HG00260
+HG00268
+HG00271
+HG00273
+HG00288
+HG00290
+HG00309
+HG00335
+HG00337
+HG00341
+HG00345
+HG00346
+HG00359
+HG00360
+HG00362
+HG00364
+HG00365
+HG00371
+HG00376
+HG00378
+HG00379
+HG00381
+HG00382
+HG00384
+HG00407
+HG00419
+HG00421
+HG00422
+HG00428
+HG00437
+HG00442
+HG00445
+HG00446
+HG00448
+HG00451
+HG00452
+HG00457
+HG00458
+HG00472
+HG00473
+HG00475
+HG00476
+HG00478
+HG00479
+HG00525
+HG00536
+HG00543
+HG00556
+HG01063
+HG01077
+HG01085
+HG01086
+HG01092
+HG01104
+HG01105
+HG01124
+HG01125
+HG01136
+HG01137
+HG01140
+HG01149
+HG01176
+HG01256
+HG01257
+HG01
+
+
+--------------- Source Node '7/10' ---------------
+Node ID: 'd19f6054-501c-4861-b37d-90a4134583ea'
+Rerank Score: '0.4731736481189728'
+Metadata String:
+`page_label: 5
+file_name: High resolution measurement.pdf
+retrieval_score: 0.2800738272161754`
+Metadata Size: `92`
+Content Size: `2098`
+Retrieved Text:
+simulated value). The high errors in Fig. 3 for NBPF10 ,
+NBPF14 ,NBPF19, and NBPF20 a r ed u et ot h eh i g hd e -
+gree of sequence similarity between these genes. Reads
+belonging to these genes often map to one another as
+s h o w ni nF i g .2 .T h eg r o u p i n gs t r a t e g ye m p l o y e dh e r e
+reduces the errors for NBPF10 ,NBPF14 ,NBPF19, and
+NBPF20 as well as for NBPF4 ,NBPF5P ,a n d NBPF6 .Evaluation of alignment strategies
+Using simulated data, we evaluated the accuracy of
+several alignments strategies, e.g. how well all DUF1220
+copies in the genome are accounted for, and whether the
+aligned reads can be resolved into their respective clades.
+The alignment strategies we tested were; 1) ‘best align-
+ment ’method (i.e. try to find the best possible alignment
+A CON1 HLS1 D
+CON2
+CON3HLS2
+HLS3B
+CE
+FNBPF3
+NBPF21P
+NBPF17P
+NBPF7
+NBPF13P
+NBPF20
+NBPF1
+NBPF1L
+NBPF11
+NBPF12
+NBPF8
+NBPF9
+NBPF26
+NBPF25P
+NBPF15
+NBPF6
+NBPF4
+NBPF5P
+NBPF19
+NBPF10
+NBPF14NBPF14NBPF10NBPF19NBPF5PNBPF4NBPF6NBPF15NBPF25PNBPF26NBPF9NBPF8NBPF12NBPF11NBPF1LNBPF1NBPF20NBPF13PNBPF7NBPF17PNBPF21PNBPF3NBPF13P
+NBPF17P
+NBPF3
+NBPF1
+NBPF1L
+NBPF11
+NBPF12
+NBPF25P
+NBPF20
+NBPF15
+NBPF9
+NBPF26
+NBPF8
+NBPF19
+NBPF10
+NBPF14NBPF14NBPF10NBPF19NBPF8NBPF26NBPF9NBPF15NBPF20NBPF25PNBPF12NBPF11NBPF1LNBPF1NBPF3NBPF17PNBPF13PNBPF17P
+NBPF2P
+NBPF3
+NBPF25P
+NBPF11
+NBPF26
+NBPF8
+NBPF12
+NBPF19
+NBPF9
+NBPF1
+NBPF1L
+NBPF10
+NBPF14
+NBPF15
+NBPF20NBPF20NBPF15NBPF14NBPF10NBPF1LNBPF1NBPF9NBPF19NBPF12NBPF8NBPF26NBPF11NBPF25PNBPF3NBPF2PNBPF17P
+NBPF8
+NBPF11
+NBPF25P
+NBPF1
+NBPF1L
+NBPF26
+NBPF15
+NBPF10
+NBPF14
+NBPF19
+NBPF20
+NBPF12
+NBPF9NBPF9NBPF12NBPF20NBPF19NBPF14NBPF10NBPF15NBPF26NBPF1LNBPF1NBPF25PNBPF11NBPF8NBPF11
+NBPF12
+NBPF15
+NBPF1L
+NBPF8
+NBPF10
+NBPF14
+NBPF9
+NBPF26
+NBPF19
+NBPF20NBPF20NBPF19NBPF26NBPF9NBPF14NBPF10NBPF8NBPF1LNBPF15NBPF12NBPF11NBPF17P
+NBPF1L
+NBPF2P
+NBPF3
+NBPF25P
+NBPF19
+NBPF11
+NBPF12
+NBPF1
+NBPF8
+NBPF9
+NBPF20
+NBPF10
+NBPF14
+NBPF15
+NBPF26NBPF26NBPF15NBPF14NBPF10NBPF20NBPF9NBPF8NBPF1NBPF12NBPF11NBPF19NBPF25PNBPF3NBPF2PNBPF1LNBPF17P
+Fig. 2 Read alignment ambiguity between NBPF genes using the ‘best ’alignment strategy with Bowtie2.
+
+
+--------------- Source Node '8/10' ---------------
+Node ID: '9d10bb6a-7a22-4e15-97bd-e1840cb3ce04'
+Rerank Score: '0.4611392319202423'
+Metadata String:
+`file_path: code/1000genomes/7_batch_gc_correction.sh
+file_name: 7_batch_gc_correction.sh
+url: https://github.com/dpastling/plethora/blob/master/code/1000genomes/7_batch_gc_correction.sh
+retrieval_score: 0.30313749218804137`
+Metadata Size: `222`
+Content Size: `561`
+Retrieved Text:
+#!/usr/bin/env bash
+#BSUB -J gc_correct[1-300]
+#BSUB -o logs/gc_correction_%J.out
+#BSUB -e logs/gc_correction_%J.err
+#BSUB -R "select[mem>10] rusage[mem=10]"
+#BSUB -P 1000Genomes
+
+# catch unset variables, non-zero exits in pipes and calls, enable x-trace.
+set -o nounset -o pipefail -o errexit -x
+
+source code/1000genomes/config.sh
+
+# LSB_JOBINDEX is the job array position
+sample=${SAMPLES[$(($LSB_JOBINDEX - 1))]}
+
+bed_file=$bed_dir/${sample}_read_depth.bed
+gc_model=`echo $master_ref | sed 's/.bed/_GC.txt/'`
+
+Rscript code/gc_correction.R $bed_file $gc_model
+
+
+--------------- Source Node '9/10' ---------------
+Node ID: '4c78a72c-bebf-4077-9440-3de291f9c8f9'
+Rerank Score: '0.46035343408584595'
+Metadata String:
+`page_label: 2
+file_name: High resolution measurement.pdf
+retrieval_score: 0.3097764986472598`
+Metadata Size: `92`
+Content Size: `1876`
+Retrieved Text:
+Sudmant et al. (2010) [21] reported on only 9 of
+the 24 NBPF genes, while Sudmant et al. (2015) [22] re-
+ported population stratification of NBPF gene copy num-
+ber without specifying which NBPF genes were involved.
+Sudmant et al. (2013) [23] reported on DUF1220 copy
+number within NBPF10 [22], however the values reported
+are consistent with haploid genome-wide DUF1220 copy
+number rather than NBPF10 DUF1220 copy number.
+Atthe basis of accurate quantification of read depth and
+copy number estimation lies the alignment strategy that is
+used to map reads back the genome reference. Previous
+studies have utilized a strategy which finds all possible
+alignments for each read has been used often [21, 24, 25].
+In brief, this strategy tries to maximize read ambiguity and
+cross alignment between different duplicated segments by
+shortening longer reads to 36 bp single-end reads and
+finding all possible alignments within two mismatches.
+The strength of this method is that it provides an aggre-
+gate measure of highly duplicated sequences as was dem-
+onstrated by Sudmant et al. 2010 [21]. However, this
+method lacks specificity within highly homologous seg-
+mental duplications. This can be partially addressed by
+the use of Singly Unique Nucleotides (SUN) identifiers
+[21], as long as there are enough diagnostic SUN posi-
+tions for each region. Due to their highly-duplicated na-
+ture, many DUF1220 domains lack single base differences
+so they would not be measured with a SUN-based ap-
+proach. Another limitation of the strategy of finding all
+possible alignments is that it is seven times slower than
+finding the best alignment and the resulting alignment
+files are often two orders of magnitude larger. We set out
+to test the accuracy and resolution of DUF1220 copy
+number measurement that can be obtained with thisAstling et al. BMC Genomics  (2017) 18:614 Page 2 of 16
+
+
+--------------- Source Node '10/10' ---------------
+Node ID: '3bef1df5-b8b0-4f1c-882f-7916d4d4c17c'
+Rerank Score: '0.45892533659935'
+Metadata String:
+`page_label: 4
+file_name: High resolution measurement.pdf
+retrieval_score: 0.42415185643805253`
+Metadata Size: `93`
+Content Size: `1652`
+Retrieved Text:
+To address this, we com-
+pared the effect of read length, as well as single and
+paired-end reads, on the accuracy of our read depth es-
+timate based on simulated data. We simulated reads
+from the sequences of each of the DUF1220 domains
+based on the human reference genome hg38 and
+aligned these back to the genome along with additional
+levels of the reads spiked in. The simulated read
+lengths were 36, 100, 150 or 300 bp long, both single-
+and paired end. For each of the read lengths, we com-
+pared the predicted and measured coverage and report
+the combined root mean squared error (RMSE) of the
+prediction for each of the four different levels of reso-
+lution (Fig. 3). Fig. 4 shows the average RMSE for
+domains within each gene when 100 bp, paired-end
+reads are utilized. A potential limitation of calculating
+the RMSE for the spike-in study is that the variances
+may not scale linearly for domains where the off-target
+alignment rate is high. In some cases we observed that
+t h ea b s o l u t ed i f f e r e n c eb e t w e e nt h em e a s u r e da n ds i m -
+ulated copy numbers to increase with increasing simu-
+lated coverage. By using the relative ratio between
+measured and simulated copy numbers the respective
+off-target alignments remain the same and are com-
+pared consistently throughout the entire simulation ex-
+periment (e.g. if for a particular domain, 10% of the
+reads align off target, one would measure a copy num-
+ber of 0.9 for 1 simulated copy, and a copy number of
+4.5 for 5 simulated copies. Both represent an increase
+in the absolute difference, but measure 90% of theAstling et al. BMC Genomics  (2017) 18:614 Page 4 of 16
+

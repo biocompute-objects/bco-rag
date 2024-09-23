@@ -1,0 +1,46 @@
+```json
+{
+  "input_subdomain": [
+    {
+      "uri": {
+        "filename": "1000Genomes_samples.txt",
+        "uri": "file://data/1000Genomes_samples.txt"
+      }
+    },
+    {
+      "uri": {
+        "filename": "hg38",
+        "uri": "file://$HOME/genomes/bowtie2.2.9_indicies/hg38/hg38"
+      }
+    },
+    {
+      "uri": {
+        "filename": "hg38_duf_full_domains_v2.3.bed",
+        "uri": "file://data/hg38_duf_full_domains_v2.3.bed"
+      }
+    },
+    {
+      "uri": {
+        "filename": "1000 Genomes fastq files",
+        "uri": "file://fastq/"
+      }
+    }
+  ],
+  "output_subdomain": [
+    {
+      "mediatype": "application/octet-stream",
+      "uri": {
+        "filename": "alignment BAM files",
+        "uri": "file://alignments/"
+      }
+    },
+    {
+      "mediatype": "application/octet-stream",
+      "uri": {
+        "filename": "coverage BED files",
+        "uri": "file://results/"
+      }
+    }
+  ]
+}
+```

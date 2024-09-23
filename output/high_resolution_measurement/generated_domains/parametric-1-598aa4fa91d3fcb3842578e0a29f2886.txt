@@ -1,0 +1,59 @@
+```json
+[
+    {
+        "param": "max-insert",
+        "value": "800",
+        "step": "3"
+    },
+    {
+        "param": "--very-sensitive",
+        "value": "",
+        "step": "3"
+    },
+    {
+        "param": "--crop",
+        "value": "36",
+        "step": "3"
+    },
+    {
+        "param": "-e",
+        "value": "2",
+        "step": "3"
+    },
+    {
+        "param": "--all",
+        "value": "",
+        "step": "3"
+    },
+    {
+        "param": "-v",
+        "value": "2",
+        "step": "3"
+    },
+    {
+        "param": "--best",
+        "value": "",
+        "step": "3"
+    },
+    {
+        "param": "--strata",
+        "value": "",
+        "step": "3"
+    },
+    {
+        "param": "--minins",
+        "value": "0",
+        "step": "3"
+    },
+    {
+        "param": "--maxins",
+        "value": "1000",
+        "step": "3"
+    },
+    {
+        "param": "-p",
+        "value": "12",
+        "step": "3"
+    }
+]
+```

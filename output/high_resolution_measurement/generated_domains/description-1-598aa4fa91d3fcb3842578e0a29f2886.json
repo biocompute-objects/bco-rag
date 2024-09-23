@@ -1,0 +1,130 @@
+{
+    "keywords": [
+        "DUF1220",
+        "copy number variation",
+        "1000 Genomes Project",
+        "read alignment",
+        "bioinformatics",
+        "sequence analysis",
+        "ddPCR",
+        "NBPF genes"
+    ],
+    "xref": [
+        {
+            "namespace": "pubmed",
+            "name": "PubMed",
+            "ids": [
+                "28797245"
+            ],
+            "access_time": "2023-10-05T12:00:00Z"
+        }
+    ],
+    "platform": [
+        "hive"
+    ],
+    "pipeline_steps": [
+        {
+            "step_number": 1,
+            "name": "Download Data",
+            "description": "Download sequencing data from the 1000 Genomes Project.",
+            "input_list": [
+                {
+                    "uri": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/raw_data/"
+                }
+            ]
+        },
+        {
+            "step_number": 2,
+            "name": "Trim Reads",
+            "description": "Trim low-quality bases from the sequencing reads.",
+            "input_list": [
+                {
+                    "uri": "file://local_path/1000genomes/raw_data/"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/trimmed_reads/"
+                }
+            ]
+        },
+        {
+            "step_number": 3,
+            "name": "Align Reads",
+            "description": "Align the trimmed reads to the human genome reference (hg38) using Bowtie2.",
+            "version": "2.2.9",
+            "prerequisite": [
+                {
+                    "name": "Bowtie2",
+                    "uri": "https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.9/"
+                }
+            ],
+            "input_list": [
+                {
+                    "uri": "file://local_path/1000genomes/trimmed_reads/"
+                },
+                {
+                    "uri": "file://local_path/genomes/bowtie-2.2.9/hg38/"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/aligned_reads/"
+                }
+            ]
+        },
+        {
+            "step_number": 4,
+            "name": "Clean Intermediate Files",
+            "description": "Remove intermediate files to save disk space.",
+            "input_list": [
+                {
+                    "uri": "file://local_path/1000genomes/aligned_reads/"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/cleaned_data/"
+                }
+            ]
+        },
+        {
+            "step_number": 5,
+            "name": "Convert BAM to BED",
+            "description": "Convert BAM alignment files to BED format and calculate coverage for each region of interest.",
+            "input_list": [
+                {
+                    "uri": "file://local_path/1000genomes/aligned_reads/"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/coverage_data/"
+                }
+            ]
+        },
+        {
+            "step_number": 6,
+            "name": "GC Correction",
+            "description": "Perform GC correction on the coverage data.",
+            "input_list": [
+                {
+                    "uri": "file://local_path/1000genomes/coverage_data/"
+                },
+                {
+                    "uri": "file://local_path/genomes/hg38_duf_full_domains_v2.3_GC.txt"
+                }
+            ],
+            "output_list": [
+                {
+                    "uri": "file://local_path/1000genomes/gc_corrected_data/"
+                }
+            ]
+        }
+    ]
+}

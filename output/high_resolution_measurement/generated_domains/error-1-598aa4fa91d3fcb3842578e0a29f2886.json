@@ -1,0 +1,11 @@
+{
+    "empirical_error": {
+        "http://example.org/empirical_error/limits_of_detectability": "The high sequence similarity between DUF1220 domains can lead to read alignment ambiguity, affecting the accuracy of copy number estimation. This was particularly evident for NBPF10, NBPF14, NBPF19, and NBPF20, where reads often mapped to one another.",
+        "http://example.org/empirical_error/false_positives": "The simulation studies indicated that off-target alignments could result in false positives, especially when the off-target alignment rate is high. For example, if 10% of the reads align off-target, this could lead to an overestimation of copy numbers.",
+        "http://example.org/empirical_error/statistical_confidence": "The root mean squared error (RMSE) was used to measure the accuracy of read depth estimates. Variances may not scale linearly for domains with high off-target alignment rates, potentially affecting the statistical confidence of the outcomes."
+    },
+    "algorithmic_error": {
+        "http://example.org/algorithmic_error/alignment_strategy": "Different alignment strategies were tested, including 'best alignment' and 'all possible alignments'. The 'best alignment' strategy with Bowtie2 showed read alignment ambiguity between NBPF genes, while the 'all possible alignments' strategy was slower and produced larger alignment files.",
+        "http://example.org/algorithmic_error/read_length": "The accuracy of read depth estimates was influenced by read length. Simulated reads of 36, 100, 150, and 300 bp were compared, and it was found that longer reads generally provided more accurate copy number estimates, but the variance in errors increased with read length."
+    }
+}

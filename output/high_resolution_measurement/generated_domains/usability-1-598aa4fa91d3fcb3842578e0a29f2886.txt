@@ -1,0 +1,5 @@
+```json
+[
+    "This study aimed to explore the accuracy and precision of copy number estimation for DUF1220 domains within NBPF genes using high-resolution sequencing data. The methodology involved aligning longer reads with increased specificity to quantify individual domains and DUF1220 sequences. The approach was validated through simulations and digital droplet PCR (ddPCR), and applied to data from the 1000 Genomes Project. The results demonstrated the ability to accurately estimate DUF1220-clade specific copies and delineate clades within individual NBPF genes, providing insights into gene and intragenic domain copy number variations. This method enhances the capability to analyze the role of DUF1220 sequences in human variation and disease, and can be applied to other multi-copy gene families."
+]
+```

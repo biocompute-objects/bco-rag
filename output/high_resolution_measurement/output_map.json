@@ -1,0 +1,308 @@
+{
+    "usability": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:12:26 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/usability-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/usability-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/usability-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 4.01,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ],
+    "io": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:12:37 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/io-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/io-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/io-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 6.41,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ],
+    "description": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:12:51 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/description-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/description-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/description-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 12.83,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ],
+    "execution": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:13:03 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/execution-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/execution-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/execution-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 10.87,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ],
+    "parametric": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:13:09 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/parametric-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/parametric-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/parametric-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 4.51,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ],
+    "error": [
+        {
+            "hash_str": "598aa4fa91d3fcb3842578e0a29f2886",
+            "entries": {
+                "curr_index": 1,
+                "params": {
+                    "loader": "PDFReader",
+                    "vector_store": "VectorStoreIndex",
+                    "llm": "gpt-4o",
+                    "embedding_model": "text-embedding-3-small",
+                    "similarity_top_k": 10,
+                    "chunking_config": "1024 chunk size/20 chunk overlap",
+                    "git_user": "dpastling",
+                    "git_repo": "plethora",
+                    "git_branch": "master",
+                    "directory_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                "data",
+                                "fastq",
+                                "logs"
+                            ]
+                        ]
+                    },
+                    "file_ext_git_filter": {
+                        "filter": [
+                            "exclude",
+                            [
+                                ".bed",
+                                ".gz",
+                                ".txt"
+                            ]
+                        ]
+                    },
+                    "other_docs": null
+                },
+                "runs": [
+                    {
+                        "index": 1,
+                        "timestamp": "2024-09-22 22:13:18 EDT-0400",
+                        "txt_file": "./output/high_resolution_measurement/generated_domains/error-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "json_file": "./output/high_resolution_measurement/generated_domains/error-1-598aa4fa91d3fcb3842578e0a29f2886.json",
+                        "source_node_file": "./output/high_resolution_measurement/reference_sources/error-1-598aa4fa91d3fcb3842578e0a29f2886.txt",
+                        "elapsed_time": 6.87,
+                        "version": "0.4.0"
+                    }
+                ]
+            }
+        }
+    ]
+}

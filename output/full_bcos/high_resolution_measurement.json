@@ -1,0 +1,350 @@
+{
+    "usability_domain": [
+        "This study aimed to explore the accuracy and precision of copy number estimation for DUF1220 domains within NBPF genes using high-resolution sequencing data. The methodology involved aligning longer reads with increased specificity to quantify individual domains and DUF1220 sequences. The approach was validated through simulations and digital droplet PCR (ddPCR), and applied to data from the 1000 Genomes Project. The results demonstrated the ability to accurately estimate DUF1220-clade specific copies and delineate clades within individual NBPF genes, providing insights into gene and intragenic domain copy number variations. This method enhances the capability to analyze the role of DUF1220 sequences in human variation and disease, and can be applied to other multi-copy gene families."
+    ],
+    "description_domain": {
+        "keywords": [
+            "DUF1220",
+            "copy number variation",
+            "1000 Genomes Project",
+            "read alignment",
+            "bioinformatics",
+            "sequence analysis",
+            "ddPCR",
+            "NBPF genes"
+        ],
+        "xref": [
+            {
+                "namespace": "pubmed",
+                "name": "PubMed",
+                "ids": [
+                    "28797245"
+                ],
+                "access_time": "2023-10-05T12:00:00Z"
+            }
+        ],
+        "platform": [
+            "hive"
+        ],
+        "pipeline_steps": [
+            {
+                "step_number": 1,
+                "name": "Download Data",
+                "description": "Download sequencing data from the 1000 Genomes Project.",
+                "input_list": [
+                    {
+                        "uri": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_project/"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/raw_data/"
+                    }
+                ]
+            },
+            {
+                "step_number": 2,
+                "name": "Trim Reads",
+                "description": "Trim low-quality bases from the sequencing reads.",
+                "input_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/raw_data/"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/trimmed_reads/"
+                    }
+                ]
+            },
+            {
+                "step_number": 3,
+                "name": "Align Reads",
+                "description": "Align the trimmed reads to the human genome reference (hg38) using Bowtie2.",
+                "version": "2.2.9",
+                "prerequisite": [
+                    {
+                        "name": "Bowtie2",
+                        "uri": "https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.9/"
+                    }
+                ],
+                "input_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/trimmed_reads/"
+                    },
+                    {
+                        "uri": "file://local_path/genomes/bowtie-2.2.9/hg38/"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/aligned_reads/"
+                    }
+                ]
+            },
+            {
+                "step_number": 4,
+                "name": "Clean Intermediate Files",
+                "description": "Remove intermediate files to save disk space.",
+                "input_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/aligned_reads/"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/cleaned_data/"
+                    }
+                ]
+            },
+            {
+                "step_number": 5,
+                "name": "Convert BAM to BED",
+                "description": "Convert BAM alignment files to BED format and calculate coverage for each region of interest.",
+                "input_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/aligned_reads/"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/coverage_data/"
+                    }
+                ]
+            },
+            {
+                "step_number": 6,
+                "name": "GC Correction",
+                "description": "Perform GC correction on the coverage data.",
+                "input_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/coverage_data/"
+                    },
+                    {
+                        "uri": "file://local_path/genomes/hg38_duf_full_domains_v2.3_GC.txt"
+                    }
+                ],
+                "output_list": [
+                    {
+                        "uri": "file://local_path/1000genomes/gc_corrected_data/"
+                    }
+                ]
+            }
+        ]
+    },
+    "execution_domain": {
+        "script": [
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/run.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/1_download.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/2_trim.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/3_batch_bowtie.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/4_batch_clean.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/5_batch_make_bed.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/6_batch_clean.sh"
+                }
+            },
+            {
+                "uri": {
+                    "uri": "https://github.com/dpastling/plethora/blob/master/code/1000genomes/7_batch_gc_correction.sh"
+                }
+            }
+        ],
+        "script_driver": "shell",
+        "software_prerequisites": [
+            {
+                "name": "samtools",
+                "version": "1.3.1",
+                "uri": {
+                    "uri": "https://github.com/samtools/samtools/releases/download/1.3.1/samtools-1.3.1.tar.bz2"
+                }
+            },
+            {
+                "name": "bedtools",
+                "version": "2.26.0",
+                "uri": {
+                    "uri": "https://github.com/arq5x/bedtools2/releases/download/v2.26.0/bedtools-2.26.0.tar.gz"
+                }
+            },
+            {
+                "name": "cutadapt",
+                "version": "",
+                "uri": {
+                    "uri": "https://cutadapt.readthedocs.io/en/stable/"
+                }
+            },
+            {
+                "name": "Bowtie2",
+                "version": "2.2.9",
+                "uri": {
+                    "uri": "https://downloads.sourceforge.net/project/bowtie-bio/bowtie2/2.2.9/bowtie2-2.2.9-linux-x86_64.zip"
+                }
+            },
+            {
+                "name": "perl",
+                "version": "",
+                "uri": {
+                    "uri": "https://www.perl.org/"
+                }
+            },
+            {
+                "name": "R",
+                "version": "",
+                "uri": {
+                    "uri": "https://www.r-project.org/"
+                }
+            }
+        ],
+        "external_data_endpoints": [
+            {
+                "name": "1000 Genomes Project",
+                "url": "ftp://ftp.ncbi.nlm.nih.gov/genomes/archive/old_genbank/Eukaryotes/vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index.tar.gz"
+            }
+        ],
+        "environment_variables": {
+            "PATH": "$PATH:$HOME/bin/samtools-1.3.1:$HOME/bin/bedtools-2.26.0:$HOME/bin/bowtie2-2.2.9",
+            "sample_index": "data/1000Genomes_samples.txt",
+            "genome": "$HOME/genomes/bowtie2.2.9_indicies/hg38/hg38",
+            "master_ref": "data/hg38_duf_full_domains_v2.3.bed",
+            "alignment_dir": "alignments",
+            "bed_dir": "results"
+        }
+    },
+    "io_domain": {
+        "input_subdomain": [
+            {
+                "uri": {
+                    "filename": "1000Genomes_samples.txt",
+                    "uri": "file://data/1000Genomes_samples.txt"
+                }
+            },
+            {
+                "uri": {
+                    "filename": "hg38",
+                    "uri": "file://$HOME/genomes/bowtie2.2.9_indicies/hg38/hg38"
+                }
+            },
+            {
+                "uri": {
+                    "filename": "hg38_duf_full_domains_v2.3.bed",
+                    "uri": "file://data/hg38_duf_full_domains_v2.3.bed"
+                }
+            },
+            {
+                "uri": {
+                    "filename": "1000 Genomes fastq files",
+                    "uri": "file://fastq/"
+                }
+            }
+        ],
+        "output_subdomain": [
+            {
+                "mediatype": "application/octet-stream",
+                "uri": {
+                    "filename": "alignment BAM files",
+                    "uri": "file://alignments/"
+                }
+            },
+            {
+                "mediatype": "application/octet-stream",
+                "uri": {
+                    "filename": "coverage BED files",
+                    "uri": "file://results/"
+                }
+            }
+        ]
+    },
+    "parametric_domain": [
+        {
+            "param": "max-insert",
+            "value": "800",
+            "step": "3"
+        },
+        {
+            "param": "--very-sensitive",
+            "value": "",
+            "step": "3"
+        },
+        {
+            "param": "--crop",
+            "value": "36",
+            "step": "3"
+        },
+        {
+            "param": "-e",
+            "value": "2",
+            "step": "3"
+        },
+        {
+            "param": "--all",
+            "value": "",
+            "step": "3"
+        },
+        {
+            "param": "-v",
+            "value": "2",
+            "step": "3"
+        },
+        {
+            "param": "--best",
+            "value": "",
+            "step": "3"
+        },
+        {
+            "param": "--strata",
+            "value": "",
+            "step": "3"
+        },
+        {
+            "param": "--minins",
+            "value": "0",
+            "step": "3"
+        },
+        {
+            "param": "--maxins",
+            "value": "1000",
+            "step": "3"
+        },
+        {
+            "param": "-p",
+            "value": "12",
+            "step": "3"
+        }
+    ],
+    "error_domain": {
+        "empirical_error": {
+            "http://example.org/empirical_error/limits_of_detectability": "The high sequence similarity between DUF1220 domains can lead to read alignment ambiguity, affecting the accuracy of copy number estimation. This was particularly evident for NBPF10, NBPF14, NBPF19, and NBPF20, where reads often mapped to one another.",
+            "http://example.org/empirical_error/false_positives": "The simulation studies indicated that off-target alignments could result in false positives, especially when the off-target alignment rate is high. For example, if 10% of the reads align off-target, this could lead to an overestimation of copy numbers.",
+            "http://example.org/empirical_error/statistical_confidence": "The root mean squared error (RMSE) was used to measure the accuracy of read depth estimates. Variances may not scale linearly for domains with high off-target alignment rates, potentially affecting the statistical confidence of the outcomes."
+        },
+        "algorithmic_error": {
+            "http://example.org/algorithmic_error/alignment_strategy": "Different alignment strategies were tested, including 'best alignment' and 'all possible alignments'. The 'best alignment' strategy with Bowtie2 showed read alignment ambiguity between NBPF genes, while the 'all possible alignments' strategy was slower and produced larger alignment files.",
+            "http://example.org/algorithmic_error/read_length": "The accuracy of read depth estimates was influenced by read length. Simulated reads of 36, 100, 150, and 300 bp were compared, and it was found that longer reads generally provided more accurate copy number estimates, but the variance in errors increased with read length."
+        }
+    }
+}
